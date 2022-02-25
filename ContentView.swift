@@ -8,14 +8,62 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var selection: Tab = .listofcoins
+    
+    enum Tab{
+        case listofcoins
+        case communities
+        case swap
+        case portfolio
+        
+    }
+    
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        ZStack{
+            Color.theme.backgroundcolor
+                .ignoresSafeArea()
+            //main view with tab selections
+            TabView(selection: $selection){
+                //CoinList view
+                NavigationView {
+                    VStack(spacing: 10) {
+                    }
+                }
+                    .tabItem { Label("List", systemImage: "list.bullet")
+                    }
+                    .tag(Tab.listofcoins)
+                
+                //Swap tab
+                NavigationView {
+                    VStack(spacing: 10) {
+                    }
+                }
+                    .tabItem { Label("List", systemImage: "list.bullet") }
+                    .tag(Tab.swap)
+                //Portfolio tab
+                NavigationView {
+                    VStack(spacing: 10) {
+                    }
+                }
+                    .tabItem { Label("List", systemImage: "list.bullet") }
+                    .tag(Tab.portfolio)
+                
+                //Communities tab
+                NavigationView {
+                    VStack(spacing: 10) {
+                    }
+                }
+                    .tabItem { Label("List", systemImage: "list.bullet") }
+                    .tag(Tab.communities)
+            }
+        }
+        
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .preferredColorScheme(.light)
     }
 }
