@@ -55,7 +55,6 @@ final class DataModel: ObservableObject{
     var image: UIImage = UIImage()
     var coinsub: AnyCancellable?
     var imagesub: AnyCancellable?
-    private let downloader = Downloader()
     init(){
         loadCoins()
        // coins.append(CoinModel(id: "teszt", symbol: "teszt", name: "teszt", image: "teszt", currentPrice: 10, marketCap: 10, marketCapRank: 10, fullyDilutedValuation: 10, totalVolume: 10, high24H: 10, low24H: 10, priceChange24H: 10, priceChangePercentage24H: 10, marketCapChange24H: 10, marketCapChangePercentage24H: 10, circulatingSupply: 10, totalSupply: 10, maxSupply: 10, ath: 10, athChangePercentage: 10, athDate: "teszt", atl: 10, atlChangePercentage: 10, atlDate: "teszt", lastUpdated: "teszt", sparklineIn7D: SparklineIn7D(price: []), priceChangePercentage24HInCurrency: 10))
@@ -99,7 +98,7 @@ final class DataModel: ObservableObject{
         else {
             return
         }
-        
+        let _ = print("loaded image")
         imagesub = URLSession.shared.dataTaskPublisher(for: url)
             .subscribe(on: DispatchQueue.global(qos: .default))
             .tryMap { (output) -> Data in
@@ -118,6 +117,7 @@ final class DataModel: ObservableObject{
             .sink{(completion) in
                 switch completion {
                 case .finished:
+                    let _ = print("successssss")
                     break
                 case .failure(let error):
                     print(error.localizedDescription)
@@ -127,7 +127,7 @@ final class DataModel: ObservableObject{
                 self?.imagesub?.cancel()
             }
         coinimages.append(self.image)
-        
+        let _ = print("\(coinimages.count)")
     }
     
     

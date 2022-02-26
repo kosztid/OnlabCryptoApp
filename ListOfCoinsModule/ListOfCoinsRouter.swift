@@ -9,7 +9,8 @@ import Foundation
 import SwiftUI
 
 class ListOfCoinsRouter{
-    func makeCoinDetailView() -> some View{
-        return Text("Részletes nézet")
+    func makeCoinDetailView(coin: CoinModel, model: DataModel) -> some View{
+        let presenter = CoinDetailPresenter(interactor: CoinDetailInteractor(coin: coin, model: model))
+        return CoinDetailView(presenter: presenter)
     }
 }

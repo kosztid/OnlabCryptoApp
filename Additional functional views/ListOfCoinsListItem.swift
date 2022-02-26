@@ -15,15 +15,14 @@ struct ListOfCoinsListItem: View {
             Color.theme.backgroundcolor
                 .ignoresSafeArea()
             
-        HStack{
+            HStack{
             Text("\(coin.rank)")
                 .font(.system(size: 15))
                 .foregroundColor(Color.theme.accentcolorsecondary)
                 .frame(minWidth:25)
                 .frame(alignment: .trailing)
-            presenter.makeimage()
-            /*
-            AsyncImage(url: URL(string: coin.image)){ image in
+            
+            CachedAsyncImage(url: URL(string: coin.image)){ image in
                 image
                     .resizable()
                     .scaledToFit()
@@ -34,7 +33,7 @@ struct ListOfCoinsListItem: View {
             .frame(width: 30, height: 30)
             .cornerRadius(20)
         
-             */
+            
             Text(coin.symbol.uppercased())
                 .foregroundColor(Color.theme.accentcolor)
                 .font(.system(size: 20))

@@ -14,6 +14,7 @@ class ListOfCoinsPresenter: ObservableObject{
     private let interactor: ListOfCoinsInteractor
     private var cancellables = Set<AnyCancellable>()
     private let router = ListOfCoinsRouter()
+    private let imagedownloader = ImageDownloader()
     
     init(interactor: ListOfCoinsInteractor){
         self.interactor = interactor
@@ -26,12 +27,9 @@ class ListOfCoinsPresenter: ObservableObject{
         for coin: CoinModel,
         @ViewBuilder content: () -> Content
     ) -> some View{
-            NavigationLink(destination:router.makeCoinDetailView()){
+        NavigationLink(destination:router.makeCoinDetailView(coin: coin,model: interactor.model)){
             }.buttonStyle(PlainButtonStyle())
             .opacity(0)
     }
-    func makeimage() -> some View{
-        return Image(uiImage: interactor.model.coinimages[0])
-            .frame(width: 30, height: 30)
-    }
+    
 }
