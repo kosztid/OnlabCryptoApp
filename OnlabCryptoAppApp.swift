@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct OnlabCryptoAppApp: App {
+    @StateObject private var modelData = DataModel()
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(modelData)
         }
     }
 }

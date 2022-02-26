@@ -1,0 +1,45 @@
+//
+//  DataFormatter.swift
+//  OnlabCryptoApp
+//
+//  Created by Kosztolánczi Dominik on 2022. 02. 26..
+//
+
+import Foundation
+
+extension Double {
+    
+    private var formattercurrency6digits: NumberFormatter{
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 6
+        return formatter
+    }
+    func formatcurrency6digits() -> String {
+        let number = NSNumber(value: self)
+        return formattercurrency6digits.string(from: number) ?? "$0.00"
+        
+        
+    }
+    
+    private var formattercurrency0digits: NumberFormatter{
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 0
+        return formatter
+    }
+    func formatcurrency0digits() -> String {
+        let number = NSNumber(value: self)
+        return formattercurrency0digits.string(from: number) ?? "$0"
+        
+        
+    }
+    
+    func formatpercent() -> String {
+        return (String(format: "%.2f", self) + "%")
+        
+        
+    }
+}

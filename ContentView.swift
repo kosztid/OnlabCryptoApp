@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var selection: Tab = .listofcoins
+    @EnvironmentObject var model: DataModel
     
     enum Tab{
         case listofcoins
@@ -26,9 +27,12 @@ struct ContentView: View {
             TabView(selection: $selection){
                 //CoinList view
                 NavigationView {
-                    VStack(spacing: 10) {
+                    VStack{
+                        ListOfCoinsView(presenter: ListOfCoinsPresenter(interactor: ListOfCoinsInteractor(model: model)))
                     }
                 }
+                .navigationBarHidden(true)
+                .ignoresSafeArea()
                     .tabItem { Label("List", systemImage: "list.bullet")
                     }
                     .tag(Tab.listofcoins)
@@ -64,6 +68,7 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .environmentObject(DataModel())
             .preferredColorScheme(.light)
     }
 }

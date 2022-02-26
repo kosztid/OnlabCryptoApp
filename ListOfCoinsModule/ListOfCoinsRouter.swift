@@ -6,7 +6,10 @@
 //
 
 import Foundation
+import SwiftUI
 
 class ListOfCoinsRouter{
-    
+    func makeCoinDetailView() -> some View{
+        return Text("Részletes nézet")
+    }
 }

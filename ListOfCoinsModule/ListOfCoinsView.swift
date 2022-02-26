@@ -8,13 +8,40 @@
 import SwiftUI
 
 struct ListOfCoinsView: View {
+    @ObservedObject var presenter: ListOfCoinsPresenter
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack{
+            Color.theme.backgroundcolor
+                .ignoresSafeArea()
+            
+            List{
+                ForEach(presenter.coins){ coin in
+                    ZStack{
+                        Color.theme.backgroundcolor
+                                .ignoresSafeArea()
+                            
+                        ListOfCoinsListItem(presenter: presenter, coin: coin)
+                            .frame(height: 40)
+                        self.presenter.linkBuilder(for: coin){
+                            EmptyView()
+                        }.buttonStyle(PlainButtonStyle())
+                    }
+                    
+                }
+                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+            }
+            .listStyle(PlainListStyle())
+        }
+        
     }
 }
 
 struct ListOfCoinsView_Previews: PreviewProvider {
     static var previews: some View {
-        ListOfCoinsView()
+        let model = DataModel()
+        let interactor = ListOfCoinsInteractor(model: model)
+        let presenter = ListOfCoinsPresenter(interactor: interactor)
+        ListOfCoinsView(presenter: presenter)
+            .environmentObject(DataModel())
     }
 }
