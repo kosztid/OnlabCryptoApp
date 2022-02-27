@@ -18,6 +18,7 @@ struct CoinDetailView: View {
                 Text("\(presenter.coin().currentPrice)")
                 Text("\(Double(presenter.coin().high24H ?? 0.0))")
                 Text("\(Double(presenter.coin().low24H ?? 0.0))")
+                Text(presenter.detailed().welcomeDescription?.en ?? "No description")
                 ChartView(values: presenter.values())
             }
         }

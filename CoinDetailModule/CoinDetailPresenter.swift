@@ -21,5 +21,8 @@ class CoinDetailPresenter: ObservableObject{
     func coin() -> CoinModel{
         return interactor.coin
     }
+    func detailed() -> CoinDetailModel{
+        return interactor.getcoindetail()
+    }
     
 }

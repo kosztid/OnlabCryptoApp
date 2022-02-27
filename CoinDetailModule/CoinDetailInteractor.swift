@@ -23,4 +23,8 @@ class CoinDetailInteractor{
         newData = olddata.map{CGFloat($0)}
         return newData
     }
+    
+    func getcoindetail() -> CoinDetailModel{
+        return model.loaddetailedcoin(coinid: coin.id)
+    }
 }
