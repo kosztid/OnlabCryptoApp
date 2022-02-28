@@ -24,7 +24,4 @@ class CoinDetailInteractor{
         return newData
     }
     
-    func getcoindetail() -> CoinDetailModel{
-        return model.loaddetailedcoin(coinid: coin.id)
-    }
 }

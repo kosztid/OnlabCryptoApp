@@ -18,4 +18,6 @@ struct ColorTheme {
     let backgroundcolor = Color("BackgroundColor")
     let green = Color("PriceUpGreen")
     let red = Color("PriceDownRed")
+    let redgraph = Color("PriceDownRedGraph")
+    let greengraph = Color("PriceUpGreenGraph")
 }

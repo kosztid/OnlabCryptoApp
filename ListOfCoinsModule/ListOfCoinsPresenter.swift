@@ -14,7 +14,6 @@ class ListOfCoinsPresenter: ObservableObject{
     private let interactor: ListOfCoinsInteractor
     private var cancellables = Set<AnyCancellable>()
     private let router = ListOfCoinsRouter()
-    private let imagedownloader = ImageDownloader()
     
     init(interactor: ListOfCoinsInteractor){
         self.interactor = interactor

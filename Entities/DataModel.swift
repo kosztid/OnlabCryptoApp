@@ -51,12 +51,12 @@ import Combine
  */
 final class DataModel: ObservableObject{
     @Published var coins: [CoinModel] = []
-    @Published var coindetail: CoinDetailModel = CoinDetailModel(id: "bitcoin", symbol: "bitcoin", name: "bitcoin", blockTimeInMinutes: 10, hashingAlgorithm: "bitcoin", categories: ["bitcoin"], welcomeDescription: CoinDetailModel.Description(en: "leiras"), countryOrigin: "bitcoin", genesisDate: "bitcoin", sentimentVotesUpPercentage: 10, sentimentVotesDownPercentage: 10, marketCapRank: 10, coingeckoRank: 10, coingeckoScore: 10, developerScore: 10, communityScore: 10, liquidityScore: 10, publicInterestScore: 10, lastUpdated: "bitcoin")
-    @Published var coinimages: [UIImage] = []
+    @Published var coindetail: [CoinDetailModel] = []
+    //@Published var coinimages: [UIImage] = []
     private let datadownloader = DataDownloader()
-    private let datadownloaderfordetail = SingleDataDownloader()
+    //private var datadownloaderfordetail = SingleDataDownloader(coinid: "ethereum")
+   // var singlecoinsub: AnyCancellable?
     private var cancellables = Set<AnyCancellable>()
-    private var cancellables2 = Set<AnyCancellable>()
     
     init(){
         addSub()
@@ -67,14 +67,54 @@ final class DataModel: ObservableObject{
         datadownloader.$coins
             .sink{ [weak self] (datareceived) in self?.coins = datareceived}
             .store(in: &cancellables)
-        
+                   
     }
-    func loaddetailedcoin(coinid: String) -> CoinDetailModel{
+   /* func loaddetailedcoin(coinid: String){
+        datadownloaderfordetail = SingleDataDownloader(coinid: coinid)
         datadownloaderfordetail.$coindetail
             .sink{ [weak self] (datareceived) in self?.coindetail = datareceived}
             .store(in: &cancellables2)
-        
-        return coindetail
+
+    
     }
+    */
+    /*
+    func loaddetailedcoin(){
+        for a in 0...200{
+            let urlstring = "https://api.coingecko.com/api/v3/coins/terra-luna?localization=false&tickers=false&market_data=false&community_data=false&developer_data=false&sparkline=false"
+                
+            guard let url = URL(string:urlstring)
+                else {
+                    return
+                }
+                
+                singlecoinsub = URLSession.shared.dataTaskPublisher(for: url)
+                    .subscribe(on: DispatchQueue.global(qos: .default))
+                    .tryMap { (output) -> Data in
+                        guard let response = output.response as? HTTPURLResponse,
+                        response.statusCode >= 200 && response.statusCode < 300 else {
+                            
+                            throw URLError(.badServerResponse)
+                        }
+                        return output.data
+                    }
+                    .receive(on: DispatchQueue.main)
+                    .decode(type: CoinDetailModel.self, decoder: JSONDecoder())
+                    .sink{(completion) in
+                        switch completion {
+                        case .finished:
+                            break
+                        case .failure(let error):
+                            print(error.localizedDescription)
+                        }
+                    } receiveValue: { [weak self] (returnedCoins) in
+                        //let _ = print("negyedik")
+                        self?.coindetail.append(returnedCoins)
+                        self?.singlecoinsub?.cancel()
+                        //let _ = print("otodik")
+                    }
+        }
+        }
+     */
         
 }

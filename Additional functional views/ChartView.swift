@@ -14,7 +14,7 @@ struct ChartView: View {
             LineGraph(values: values.normalized)
                 .stroke()
                 .stroke(lineWidth: 2)
-                .frame(width: .infinity, height: 300)
+                .frame(width: UIScreen.main.bounds.width * 0.95, height: 300)
         }
         
     }
