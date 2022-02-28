@@ -23,6 +23,20 @@ extension Double {
         
     }
     
+    private var formattercurrency4digits: NumberFormatter{
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.minimumFractionDigits = 2
+        formatter.maximumFractionDigits = 4
+        return formatter
+    }
+    func formatcurrency4digits() -> String {
+        let number = NSNumber(value: self)
+        return formattercurrency4digits.string(from: number) ?? "$0.00"
+        
+        
+    }
+    
     private var formattercurrency0digits: NumberFormatter{
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
@@ -42,4 +56,5 @@ extension Double {
         
         
     }
+
 }

@@ -21,14 +21,57 @@ struct CoinDetailView: View {
                                 .font(.system(size: 35))
                                 .foregroundColor(Color.theme.accentcolor)
                                 .frame(alignment:.trailing)
-                            Text("\(presenter.coin().priceChangePercentage24H?.formatpercent() ?? "0%" )")
-                                .foregroundColor((presenter.coin().priceChangePercentage24H ?? 0) >= 0 ? Color.theme.green : Color.theme.red)
+                            HStack{
+                                Text("\(presenter.coin().priceChangePercentage24H?.formatpercent() ?? "0%" )")
+                                    
+                                Text("(\(presenter.coin().priceChange24H?.formatcurrency4digits() ?? "0" ))")
+                            }.foregroundColor((presenter.coin().priceChangePercentage24H ?? 0) >= 0 ? Color.theme.green : Color.theme.red)
                         }
                         Spacer()
                     }
                     .frame(alignment: .trailing)
                     ChartView(values: presenter.values())
                         .foregroundColor((presenter.coin().priceChangePercentage24H ?? 0) >= 0 ? Color.theme.greengraph : Color.theme.redgraph)
+                    HStack{
+                        Text("MarketCap: ")
+                            .foregroundColor(Color.theme.accentcolorsecondary)
+                        Spacer()
+                        Text("\(presenter.coin().marketCap?.formatcurrency0digits() ?? "0")")
+                    }
+                    .font(.system(size: 18))
+                    .padding(5)
+                    .foregroundColor(Color.theme.accentcolor)
+                    HStack{
+                        VStack{
+                            Text("All-Time High")
+                                .font(.system(size: 18))
+                                .foregroundColor(Color.theme.accentcolorsecondary)
+                            HStack{
+                                Text("\(presenter.coin().ath?.formatcurrency6digits() ?? "0")")
+                                    .foregroundColor(Color.theme.accentcolor)
+                                    .font(.system(size: 18))
+                                Text("\(presenter.coin().athChangePercentage?.formatpercent() ?? "0%")")
+                                    .foregroundColor(Color.theme.green)
+                                    .font(.system(size: 14))
+                            }
+                        }
+                        Spacer()
+                        VStack{
+                            Text("All-Time Low")
+                                .font(.system(size: 18))
+                                .foregroundColor(Color.theme.accentcolorsecondary)
+                            HStack{
+                                Text("\(presenter.coin().atl?.formatcurrency6digits() ?? "0")")
+                                    .foregroundColor(Color.theme.accentcolor)
+                                    .font(.system(size: 18))
+                                Text("\(presenter.coin().atlChangePercentage?.formatpercent() ?? "0%")")
+                                    .foregroundColor(Color.theme.red)
+                                    .font(.system(size: 14))
+                            }
+                        }
+                    }
+                    .padding(5)
+                    
                     Text("\(Double(presenter.coin().high24H ?? 0.0))")
                     Text("\(Double(presenter.coin().low24H ?? 0.0))")
                     //Text(presenter.detailed().welcomeDescription?.en ?? "No description")
