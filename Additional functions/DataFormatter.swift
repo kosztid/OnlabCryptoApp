@@ -19,8 +19,7 @@ extension Double {
     func formatcurrency6digits() -> String {
         let number = NSNumber(value: self)
         return formattercurrency6digits.string(from: number) ?? "$0.00"
-        
-        
+
     }
     
     private var formattercurrency4digits: NumberFormatter{
@@ -33,8 +32,6 @@ extension Double {
     func formatcurrency4digits() -> String {
         let number = NSNumber(value: self)
         return formattercurrency4digits.string(from: number) ?? "$0.00"
-        
-        
     }
     
     private var formattercurrency0digits: NumberFormatter{
@@ -47,8 +44,10 @@ extension Double {
     func formatcurrency0digits() -> String {
         let number = NSNumber(value: self)
         return formattercurrency0digits.string(from: number) ?? "$0"
-        
-        
+    }
+    
+    func formatintstring() -> String{
+        return (String(Int(self)))
     }
     
     func formatpercent() -> String {

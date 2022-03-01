@@ -18,7 +18,7 @@ struct ListOfCoinsListItem: View {
             HStack{
             Text("\(coin.rank)")
                 .font(.system(size: 15))
-                .foregroundColor(Color.theme.accentcolorsecondary)
+                .foregroundColor(Color.theme.accentcolor)
                 .frame(minWidth:25)
                 .frame(alignment: .trailing)
             
@@ -44,7 +44,7 @@ struct ListOfCoinsListItem: View {
     
             VStack{
                 Text(coin.currentPrice.formatcurrency6digits())
-                    .foregroundColor(Color.theme.accentcolorsecondary)
+                    .foregroundColor(Color.theme.accentcolor)
                     .font(.system(size: 16))
                     .frame(alignment:.leading)
                 Text(coin.marketCap?.formatcurrency0digits() ?? "$0.00")

@@ -10,6 +10,10 @@ import SwiftUI
 struct ContentView: View {
     @State private var selection: Tab = .listofcoins
     @EnvironmentObject var model: DataModel
+    init() {
+        UITabBar.appearance().barTintColor = UIColor(Color.theme.backgroundcolor)
+        UINavigationBar.appearance().barTintColor = UIColor(Color.theme.backgroundcolor)
+       }
     
     enum Tab{
         case listofcoins
@@ -26,7 +30,7 @@ struct ContentView: View {
             //main view with tab selections
             TabView(selection: $selection){
                 //CoinList view
-                NavigationView {
+                NavigationView{
                     VStack{
                         ListOfCoinsView(presenter: ListOfCoinsPresenter(interactor: ListOfCoinsInteractor(model: model)))
                     }

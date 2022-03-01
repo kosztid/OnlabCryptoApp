@@ -42,21 +42,46 @@ struct CoinDetailView: View {
                     .padding(5)
                     .foregroundColor(Color.theme.accentcolor)
                     HStack{
-                        VStack{
+                        VStack(alignment:.leading){
+                            Text("24H High")
+                                .font(.system(size: 18))
+                                .foregroundColor(Color.theme.accentcolorsecondary)
+                            HStack{
+                                Text("\(presenter.coin().high24H?.formatcurrency6digits() ?? "0")")
+                                    .foregroundColor(Color.theme.accentcolor)
+                                    .font(.system(size: 18))
+                            }
+                        }
+                        Spacer()
+                        VStack(alignment:.trailing){
+                            Text("24H Low")
+                                .font(.system(size: 18))
+                                .foregroundColor(Color.theme.accentcolorsecondary)
+                            HStack{
+                                Text("\(presenter.coin().low24H?.formatcurrency6digits() ?? "0")")
+                                    .foregroundColor(Color.theme.accentcolor)
+                                    .font(.system(size: 18))
+                            }
+                        }
+                    }
+                    .padding(5)
+                    HStack{
+                        VStack(alignment:.leading){
                             Text("All-Time High")
                                 .font(.system(size: 18))
                                 .foregroundColor(Color.theme.accentcolorsecondary)
+                                .frame(alignment:.leading)
                             HStack{
                                 Text("\(presenter.coin().ath?.formatcurrency6digits() ?? "0")")
                                     .foregroundColor(Color.theme.accentcolor)
                                     .font(.system(size: 18))
                                 Text("\(presenter.coin().athChangePercentage?.formatpercent() ?? "0%")")
-                                    .foregroundColor(Color.theme.green)
+                                    .foregroundColor(Color.theme.red)
                                     .font(.system(size: 14))
                             }
                         }
                         Spacer()
-                        VStack{
+                        VStack(alignment:.trailing){
                             Text("All-Time Low")
                                 .font(.system(size: 18))
                                 .foregroundColor(Color.theme.accentcolorsecondary)
@@ -65,16 +90,38 @@ struct CoinDetailView: View {
                                     .foregroundColor(Color.theme.accentcolor)
                                     .font(.system(size: 18))
                                 Text("\(presenter.coin().atlChangePercentage?.formatpercent() ?? "0%")")
-                                    .foregroundColor(Color.theme.red)
+                                    .foregroundColor(Color.theme.greengraph)
                                     .font(.system(size: 14))
                             }
                         }
                     }
                     .padding(5)
                     
-                    Text("\(Double(presenter.coin().high24H ?? 0.0))")
-                    Text("\(Double(presenter.coin().low24H ?? 0.0))")
-                    //Text(presenter.detailed().welcomeDescription?.en ?? "No description")
+                    HStack{
+                        VStack(alignment:.leading){
+                            HStack(alignment: .top){
+                                Text("Available Supply")
+                                    .font(.system(size: 18))
+                                    .foregroundColor(Color.theme.accentcolorsecondary)
+                                Spacer()
+                                Text("Total Supply")
+                                    .font(.system(size: 18))
+                                    .foregroundColor(Color.theme.accentcolorsecondary)
+                            }
+                            HStack{
+                                Text("\(presenter.coin().circulatingSupply?.formatintstring() ?? "0")")
+                                    .foregroundColor(Color.theme.accentcolor)
+                                    .font(.system(size: 18))
+                                Spacer()
+                                Text("/")
+                                Spacer()
+                                Text("\(presenter.coin().totalSupply?.formatintstring() ?? "0")")
+                                    .foregroundColor(Color.theme.accentcolor)
+                                    .font(.system(size: 18))
+                            }
+                        }
+                    }
+                    .padding(5)
                     Spacer()
                 }
                 .padding(10)
