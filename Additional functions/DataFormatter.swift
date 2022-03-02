@@ -52,8 +52,17 @@ extension Double {
     
     func formatpercent() -> String {
         return (String(format: "%.2f", self) + "%")
-        
-        
+    }
+    
+    private var formatter2digits: NumberFormatter{
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
+        return formatter
+    }
+    func format2digits() -> String {
+        let number = NSNumber(value: self)
+        return formatter2digits.string(from: number) ?? "0.00"
     }
 
 }

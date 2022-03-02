@@ -9,8 +9,8 @@ import Foundation
 import SwiftUI
 
 class CoinDetailInteractor{
-    let coin: CoinModel
-    let model: DataModel
+    private let coin: CoinModel
+    private let model: DataModel
     
     init(coin: CoinModel, model: DataModel){
         self.coin = coin
@@ -22,6 +22,13 @@ class CoinDetailInteractor{
         let olddata = coin.sparklineIn7D?.price ?? []
         newData = olddata.map{CGFloat($0)}
         return newData
+    }
+    func getcoin() -> CoinModel {
+        return coin
+    }
+    
+    func getmodel() -> DataModel {
+        return model
     }
     
 }

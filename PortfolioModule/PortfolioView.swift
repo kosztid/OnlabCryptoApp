@@ -8,13 +8,49 @@
 import SwiftUI
 
 struct PortfolioView: View {
+    @ObservedObject var presenter: PortfolioPresenter
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack{
+            Color.theme.backgroundcolor
+                .ignoresSafeArea()
+            
+            VStack{
+                VStack{
+                    Text("Portfolio Total:")
+                    Text("100.000$")
+                }
+                List{
+                    ForEach(presenter.coins){ coin in
+                        if presenter.heldcoins().contains(coin.id) {
+                            ZStack{
+                                Color.theme.backgroundcolor
+                                        .ignoresSafeArea()
+                                    
+                                PortfolioListItem(presenter: presenter, coin: coin)
+                                    .frame(height: 80)
+                                self.presenter.linkBuilder(for: coin){
+                                    EmptyView()
+                                }.buttonStyle(PlainButtonStyle())
+                            }
+                            .frame(height: 60)
+                        }
+                        
+                    }
+                    .onDelete(perform: presenter.removeCoin)
+                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                }
+                .listStyle(PlainListStyle())
+            }
+        }
     }
 }
 
 struct PortfolioView_Previews: PreviewProvider {
     static var previews: some View {
-        PortfolioView()
+        let model = DataModel()
+        let interactor = PortfolioInteractor(model: model)
+        let presenter = PortfolioPresenter(interactor: interactor)
+        PortfolioView(presenter: presenter)
+            .environmentObject(DataModel())
     }
 }

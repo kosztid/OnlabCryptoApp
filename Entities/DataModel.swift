@@ -54,6 +54,7 @@ final class DataModel: ObservableObject{
     @Published var coindetail: [CoinDetailModel] = []
     //@Published var coinimages: [UIImage] = []
     private let datadownloader = DataDownloader()
+    @Published var heldcoins: [String] = ["terra-luna","ethereum-classic"]
     //private var datadownloaderfordetail = SingleDataDownloader(coinid: "ethereum")
    // var singlecoinsub: AnyCancellable?
     private var cancellables = Set<AnyCancellable>()
@@ -68,6 +69,21 @@ final class DataModel: ObservableObject{
             .sink{ [weak self] (datareceived) in self?.coins = datareceived}
             .store(in: &cancellables)
                    
+    }
+    
+    func addHolding(coinid: String){
+        if heldcoins.contains(coinid){
+            return
+        }
+        else {
+            heldcoins.append(coinid)
+        }
+    }
+    
+    func removeCoin(cointoremove: CoinModel){
+        if let index = heldcoins.firstIndex(where: { $0 == cointoremove.id }) {
+            heldcoins.remove(at: index)
+        }
     }
    /* func loaddetailedcoin(coinid: String){
         datadownloaderfordetail = SingleDataDownloader(coinid: coinid)

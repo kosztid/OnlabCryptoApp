@@ -10,6 +10,7 @@ import SwiftUI
 
 class CoinDetailPresenter: ObservableObject{
     private let interactor: CoinDetailInteractor
+    private let router = CoinDetailRouter()
     
     init(interactor: CoinDetailInteractor){
         self.interactor = interactor
@@ -18,8 +19,11 @@ class CoinDetailPresenter: ObservableObject{
     func values() -> [CGFloat]{
         return interactor.getvalues()
     }
-    func coin() -> CoinModel{
-        return interactor.coin
+    func getcoin() -> CoinModel{
+        return interactor.getcoin()
+    }
+    func getmodel() -> DataModel{
+        return interactor.getmodel()
     }
     /*
     func detailed() -> CoinDetailModel{
@@ -27,4 +31,7 @@ class CoinDetailPresenter: ObservableObject{
     }
     
      */
+    func makeButtonForPortfolioAdderView() -> some View {
+        NavigationLink("Add", destination: router.makeAdderView(coin:interactor.getcoin(), model: interactor.getmodel()))
+    }
 }
