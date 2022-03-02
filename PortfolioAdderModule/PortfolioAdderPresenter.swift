@@ -20,4 +20,5 @@ class PortfolioAdderPresenter: ObservableObject{
     func addCoin(count: Double){
         interactor.addCoin(count: count)
     }
+    
 }

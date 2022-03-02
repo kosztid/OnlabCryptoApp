@@ -10,9 +10,9 @@ import SwiftUI
 
 class CoinDetailRouter{
     
-    func makeAdderView(coin: CoinModel,model: DataModel) -> some View{
+    func makeAdderView(coincount: Double,coin: CoinModel,model: DataModel) -> some View{
         let presenter = PortfolioAdderPresenter(interactor: PortfolioAdderInteractor(coin: coin,model: model))
-        return PortfolioAdderView(presenter: presenter)
+        return PortfolioAdderView(presenter: presenter, coincount: coincount)
     }
     
 }

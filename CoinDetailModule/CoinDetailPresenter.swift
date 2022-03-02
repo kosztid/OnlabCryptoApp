@@ -32,6 +32,13 @@ class CoinDetailPresenter: ObservableObject{
     
      */
     func makeButtonForPortfolioAdderView() -> some View {
-        NavigationLink("Add", destination: router.makeAdderView(coin:interactor.getcoin(), model: interactor.getmodel()))
+        var buttontext: String
+        if interactor.held() {
+            buttontext = "Edit"
+        }
+        else {
+            buttontext = "Add"
+        }
+        return NavigationLink(buttontext, destination: router.makeAdderView(coincount: interactor.getCoinCount(), coin:interactor.getcoin(), model: interactor.getmodel()))
     }
 }

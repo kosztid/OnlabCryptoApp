@@ -74,7 +74,8 @@ final class DataModel: ObservableObject{
     
     func addHolding(coinid: String,coincount: Double){
         if heldcoins.contains(coinid){
-            return
+            let index = heldcoins.firstIndex(where: { $0 == coinid })
+            heldcoinscount[index!] = coincount
         }
         else {
             heldcoins.append(coinid)

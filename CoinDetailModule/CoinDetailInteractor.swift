@@ -30,5 +30,15 @@ class CoinDetailInteractor{
     func getmodel() -> DataModel {
         return model
     }
+    func held() -> Bool{
+        return model.heldcoins.contains(self.coin.id)
+    }
     
+    func getCoinCount() -> Double{
+        if let index = model.heldcoins.firstIndex(where: { $0 == coin.id }) {
+            return model.heldcoinscount[index]
+        } else {
+            return 0.0
+        }
+    }
 }
