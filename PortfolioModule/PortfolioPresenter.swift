@@ -37,4 +37,10 @@ class PortfolioPresenter: ObservableObject{
     func removeCoin(_ index: IndexSet){
         interactor.removeCoin(index)
     }
+    func getholdingcount(coin: CoinModel) -> Double {
+        return interactor.getholdingcount(coin: coin)
+    }
+    func portfoliototal()-> Double{
+        return interactor.portfoliototal()
+    }
 }

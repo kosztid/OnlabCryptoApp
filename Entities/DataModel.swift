@@ -55,6 +55,7 @@ final class DataModel: ObservableObject{
     //@Published var coinimages: [UIImage] = []
     private let datadownloader = DataDownloader()
     @Published var heldcoins: [String] = ["terra-luna","ethereum-classic"]
+    @Published var heldcoinscount: [Double] = [10,19.123]
     //private var datadownloaderfordetail = SingleDataDownloader(coinid: "ethereum")
    // var singlecoinsub: AnyCancellable?
     private var cancellables = Set<AnyCancellable>()
@@ -71,19 +72,33 @@ final class DataModel: ObservableObject{
                    
     }
     
-    func addHolding(coinid: String){
+    func addHolding(coinid: String,coincount: Double){
         if heldcoins.contains(coinid){
             return
         }
         else {
             heldcoins.append(coinid)
+            heldcoinscount.append(coincount)
         }
     }
     
     func removeCoin(cointoremove: CoinModel){
         if let index = heldcoins.firstIndex(where: { $0 == cointoremove.id }) {
             heldcoins.remove(at: index)
+            heldcoinscount.remove(at: index)
         }
+    }
+    
+    func portfoliototal() -> Double {
+        if heldcoins.count == 0 {
+            return 0
+        }
+        var total: Double = 0
+        for a in 0...(heldcoins.count-1) {
+            let currentprice = coins.first(where: {$0.id == heldcoins[a]})?.currentPrice ?? 0.0
+            total += (heldcoinscount[a] * currentprice)
+        }
+        return total
     }
    /* func loaddetailedcoin(coinid: String){
         datadownloaderfordetail = SingleDataDownloader(coinid: coinid)

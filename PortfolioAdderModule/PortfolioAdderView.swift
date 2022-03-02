@@ -10,16 +10,23 @@ import SwiftUI
 struct PortfolioAdderView: View {
     @Environment(\.presentationMode) private var presentationMode
     @ObservedObject var presenter: PortfolioAdderPresenter
-    
+    @State var coincount : Double = 0
     var body: some View {
         VStack{
             HStack{
                 Text("The selected coin is:")
                 Text(presenter.coindata().name)
+                TextField("Number to add", value: $coincount,format: .number)
+                    .padding(.horizontal)
+                    .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                    .font(.system(size: 20))
+                    .background(Color(#colorLiteral(red: 0.8875433803, green: 0.8876925111, blue: 0.8875238299, alpha: 1)))
+                    .cornerRadius(10)
+                    .disableAutocorrection(true)
             }
             
             Button{
-                presenter.addCoin()
+                presenter.addCoin(count:self.coincount)
                 self.presentationMode.wrappedValue.dismiss()
             } label : {
                 Text("Add")

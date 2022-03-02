@@ -17,7 +17,7 @@ class PortfolioAdderPresenter: ObservableObject{
     func coindata() -> CoinModel{
         return interactor.coindata()
     }
-    func addCoin(){
-        interactor.addCoin()
+    func addCoin(count: Double){
+        interactor.addCoin(count: count)
     }
 }

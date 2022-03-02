@@ -17,7 +17,7 @@ struct PortfolioView: View {
             VStack{
                 VStack{
                     Text("Portfolio Total:")
-                    Text("100.000$")
+                    Text("\(presenter.portfoliototal().formatcurrency4digits())")
                 }
                 List{
                     ForEach(presenter.coins){ coin in
@@ -26,7 +26,7 @@ struct PortfolioView: View {
                                 Color.theme.backgroundcolor
                                         .ignoresSafeArea()
                                     
-                                PortfolioListItem(presenter: presenter, coin: coin)
+                                PortfolioListItem(presenter: presenter,holding: presenter.getholdingcount(coin: coin), coin: coin)
                                     .frame(height: 80)
                                 self.presenter.linkBuilder(for: coin){
                                     EmptyView()
