@@ -31,14 +31,17 @@ struct PortfolioAdderView: View {
                 }
                 
                 Button{
-                    presenter.addCoin(count:self.coincount)
-                    self.presentationMode.wrappedValue.dismiss()
+                    if coincount > 0 {
+                        presenter.addCoin(count:self.coincount)
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
+                
                 } label : {
                     Text("Add")
                         .frame(height:50)
                         .frame(maxWidth: .infinity)
                         .font(.system(size: 20))
-                        .background(Color(#colorLiteral(red: 0.9607843161, green: 0.7058823705, blue: 0.200000003, alpha: 1)))
+                        .background(Color.gray)
                         .cornerRadius(10)
                 }
             }

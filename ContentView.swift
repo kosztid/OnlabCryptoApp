@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var selection: Tab = .portfolio
+    @State private var selection: Tab = .listofcoins
     @EnvironmentObject var model: DataModel
     init() {
         UITabBar.appearance().barTintColor = UIColor(Color.theme.backgroundcolor)
@@ -41,7 +41,7 @@ struct ContentView: View {
                     }
                     .tag(Tab.listofcoins)
                 
-                //Swap tab
+                //Portfolio tab
                 NavigationView {
                     VStack(spacing: 10) {
                         PortfolioView(presenter: PortfolioPresenter(interactor: PortfolioInteractor(model: model)))
@@ -49,7 +49,7 @@ struct ContentView: View {
                 }
                     .tabItem { Label("Portfolio", systemImage: "list.bullet") }
                     .tag(Tab.portfolio)
-                //Portfolio tab
+                //Swap tab
                 NavigationView {
                     VStack(spacing: 10) {
                     }
@@ -60,9 +60,10 @@ struct ContentView: View {
                 //Communities tab
                 NavigationView {
                     VStack(spacing: 10) {
+                        MessagerView(presenter: MessagerPresenter(interactor: MessagerInteractor(model: model)),newmessage: "")
                     }
                 }
-                    .tabItem { Label("List", systemImage: "list.bullet") }
+                    .tabItem { Label("Chat", systemImage: "list.bullet") }
                     .tag(Tab.communities)
             }
         }
