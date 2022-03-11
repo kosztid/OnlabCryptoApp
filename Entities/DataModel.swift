@@ -52,6 +52,7 @@ import Combine
 final class DataModel: ObservableObject{
     @Published var coins: [CoinModel] = []
     @Published var coindetail: [CoinDetailModel] = []
+    @Published var communities: [MessageGroup] = [MessageGroup(id: "1", name: "Bitcoin Community", messages:[Message(id: "123", sender: "Dominik", message: "Első üzenet", time: Date(), received: true),Message(id: "124", sender: "Dominik", message: "Második üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenet", time: Date(), received: false),Message(id: "125", sender: "Dominik", message: "Harmadik üzenet", time: Date(), received: true)]),MessageGroup(id: "2", name: "Ethereum Community", messages:[Message(id: "123", sender: "Dominik", message: "Hali", time: Date(), received: true),Message(id: "124", sender: "Dominik", message: "Szia", time: Date(), received: false),Message(id: "125", sender: "Dominik", message: "Vennél ma eth-t?", time: Date(), received: true)])]
     //@Published var coinimages: [UIImage] = []
     private let datadownloader = DataDownloader()
     @Published var heldcoins: [String] = ["terra-luna","ethereum-classic"]

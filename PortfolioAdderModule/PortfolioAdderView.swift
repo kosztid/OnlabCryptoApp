@@ -18,8 +18,11 @@ struct PortfolioAdderView: View {
             VStack{
                 HStack{
                     Text("The selected coin is:")
+                        .foregroundColor(Color.theme.accentcolor)
                     Text(presenter.coindata().name)
-                    TextField("Number to add", value: $coincount,format: .number)
+                        .font(.system(size: 20))
+                        .foregroundColor(Color.theme.accentcolor)
+                    TextField("Number to add", value: $coincount, format: .number)
                         .padding(.horizontal)
                         .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                         .font(.system(size: 20))
@@ -41,7 +44,8 @@ struct PortfolioAdderView: View {
                         .frame(height:50)
                         .frame(maxWidth: .infinity)
                         .font(.system(size: 20))
-                        .background(Color.gray)
+                        .foregroundColor(Color.theme.accentcolor)
+                        .background(Color.theme.backgroundsecondary)
                         .cornerRadius(10)
                 }
             }

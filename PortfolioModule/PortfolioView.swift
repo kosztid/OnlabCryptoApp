@@ -37,6 +37,7 @@ struct PortfolioView: View {
                         
                     }
                     .onDelete(perform: presenter.removeCoin)
+                    .listRowSeparatorTint(Color.theme.backgroundsecondary)
                     .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                 }
                 .listStyle(PlainListStyle())

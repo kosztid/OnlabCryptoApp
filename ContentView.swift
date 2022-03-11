@@ -60,7 +60,7 @@ struct ContentView: View {
                 //Communities tab
                 NavigationView {
                     VStack(spacing: 10) {
-                        MessagerView(presenter: MessagerPresenter(interactor: MessagerInteractor(model: model)),newmessage: "")
+                        CommunitiesView(presenter: CommunitiesPresenter(interactor: CommunitiesInteractor(model: model)))
                     }
                 }
                     .tabItem { Label("Chat", systemImage: "list.bullet") }

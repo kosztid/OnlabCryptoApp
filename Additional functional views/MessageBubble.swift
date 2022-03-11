@@ -14,11 +14,12 @@ struct MessageBubble: View {
             HStack{
                 Text(message.message)
                     .padding(10)
-                    .background(Color.blue)
+                    .background(Color.theme.backgroundsecondary)
                     .cornerRadius(20)
                     .fixedSize(horizontal: false, vertical: true)
+                    .foregroundColor(Color.theme.accentcolor)
             }
-            .frame(maxWidth: 300, alignment: message.received ? .leading : .trailing)
+            .frame(maxWidth: UIScreen.main.bounds.width*0.95, alignment: message.received ? .leading : .trailing)
         }.frame(maxWidth: .infinity)
     }
 }
