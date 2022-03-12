@@ -16,7 +16,10 @@ class MessagerPresenter: ObservableObject{
         self.community = community
     }
     func sendmessage(message: String){
-        community.messages.append(Message(id: "999", sender: "Dominik", message: message, time: Date(), received: false))
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+            let stringdate = dateFormatter.string(from: Date())
+        self.interactor.sendMessage(id: community.id,message: Message(id:"asd", sender: "Dominik", message: message, time: stringdate,received: false))
     }
     func messagesGet() -> [Message] {
         return community.messages

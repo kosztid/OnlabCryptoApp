@@ -40,6 +40,7 @@ struct MessagerView: View {
                     
                     Button(action: {
                         presenter.sendmessage(message: newmessage)
+                        newmessage = ""
                     }) {
                         Image(systemName: "paperplane")
                             .accentColor(.blue)
@@ -56,6 +57,6 @@ struct MessagerView: View {
 
 struct MessagerView_Previews: PreviewProvider {
     static var previews: some View {
-        MessagerView(presenter: MessagerPresenter(interactor: MessagerInteractor(model: DataModel()),community: MessageGroup(id: "1", name: "Bitcoin Community", messages:[Message(id: "123", sender: "Dominik", message: "Első üzenet", time: Date(), received: true),Message(id: "124", sender: "Dominik", message: "Második üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenet", time: Date(), received: false),Message(id: "125", sender: "Dominik", message: "Harmadik üzenet", time: Date(), received: true)])),newmessage: "Újüzenet")
+        MessagerView(presenter: MessagerPresenter(interactor: MessagerInteractor(model: DataModel()),community: MessageGroup(id: "1", name: "Bitcoin Community", messages:[Message(id: "123", sender: "Dominik", message: "Első üzenet", time: "2022-02-02", received: true),Message(id: "124", sender: "Dominik", message: "Második üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenet", time: "2022-02-02", received: false),Message(id: "125", sender: "Dominik", message: "Harmadik üzenet", time: "2022-02-02", received: true)])),newmessage: "Újüzenet")
     }
 }

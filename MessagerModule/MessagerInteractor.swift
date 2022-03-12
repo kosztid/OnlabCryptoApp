@@ -13,4 +13,7 @@ class MessagerInteractor{
     init(model: DataModel){
         self.model = model
     }
+    func sendMessage(id: String, message: Message){
+        model.sendMessage(id:id,message: message)
+    }
 }

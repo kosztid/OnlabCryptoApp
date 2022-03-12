@@ -8,6 +8,8 @@
 import Foundation
 import SwiftUI
 import Combine
+import Firebase
+import FirebaseFirestore
 
 /*
  URL for coins https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=200&page=1&sparkline=true&price_change_percentage=24h
@@ -52,7 +54,7 @@ import Combine
 final class DataModel: ObservableObject{
     @Published var coins: [CoinModel] = []
     @Published var coindetail: [CoinDetailModel] = []
-    @Published var communities: [MessageGroup] = [MessageGroup(id: "1", name: "Bitcoin Community", messages:[Message(id: "123", sender: "Dominik", message: "Első üzenet", time: Date(), received: true),Message(id: "124", sender: "Dominik", message: "Második üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenet", time: Date(), received: false),Message(id: "125", sender: "Dominik", message: "Harmadik üzenet", time: Date(), received: true)]),MessageGroup(id: "2", name: "Ethereum Community", messages:[Message(id: "123", sender: "Dominik", message: "Hali", time: Date(), received: true),Message(id: "124", sender: "Dominik", message: "Szia", time: Date(), received: false),Message(id: "125", sender: "Dominik", message: "Vennél ma eth-t?", time: Date(), received: true)])]
+    @Published var communities: [MessageGroup] = []
     //@Published var coinimages: [UIImage] = []
     private let datadownloader = DataDownloader()
     @Published var heldcoins: [String] = ["terra-luna","ethereum-classic"]
@@ -63,6 +65,7 @@ final class DataModel: ObservableObject{
     
     init(){
         addSub()
+        communitiesPullFromDB()
        // coins.append(CoinModel(id: "teszt", symbol: "teszt", name: "teszt", image: "teszt", currentPrice: 10, marketCap: 10, marketCapRank: 10, fullyDilutedValuation: 10, totalVolume: 10, high24H: 10, low24H: 10, priceChange24H: 10, priceChangePercentage24H: 10, marketCapChange24H: 10, marketCapChangePercentage24H: 10, circulatingSupply: 10, totalSupply: 10, maxSupply: 10, ath: 10, athChangePercentage: 10, athDate: "teszt", atl: 10, atlChangePercentage: 10, atlDate: "teszt", lastUpdated: "teszt", sparklineIn7D: SparklineIn7D(price: []), priceChangePercentage24HInCurrency: 10))
     }
     
@@ -102,6 +105,68 @@ final class DataModel: ObservableObject{
         }
         return total
     }
+    
+    func communitiesPullFromDB(){
+        let db = Firestore.firestore()
+        db.collection("communities").getDocuments { snapshot, error in
+            if error == nil {
+                if let snapshot = snapshot{
+                    DispatchQueue.main.async {
+                        self.communities = snapshot.documents.map { d in
+                            return MessageGroup(id: d.documentID, name: d["name"] as? String ?? "", messages: [])
+                        }
+                        for c in self.communities{
+                            
+                            self.messagesPullFromDB(idtoget: c.id)
+                        }
+                    }
+                    
+                }
+            }
+            else {
+                //error handling
+            }
+        }
+        
+    }
+    
+    func messagesPullFromDB(idtoget: String){
+        var messages: [Message] = []
+        let db = Firestore.firestore()
+        db.collection("communities").document(idtoget).collection("messages").getDocuments { snapshot, error in
+            if error == nil {
+                if let snapshot = snapshot{
+                    DispatchQueue.main.async {
+                        messages = snapshot.documents.map { d in
+                            return Message(id: d.documentID,sender: d["sender"] as? String ?? "Unknown", message: d["message"] as? String ?? "", time: d["time"] as? String ?? "2000-02-02 10:00", received: d["received"]  as? Bool ?? false )
+                        }
+                        
+                        if let i = self.communities.firstIndex(where: {$0.id == idtoget}) {
+                            self.communities[i].messages = messages
+                        }
+                    }
+                    
+                }
+            }
+            else {
+                //error handling
+            }
+        }
+        
+    }
+    
+    func sendMessage(id: String, message: Message){
+        let db = Firestore.firestore()
+        db.collection("communities").document(id).collection("messages").addDocument(data: ["sender":message.sender,"message":message.message,"time":message.time,"received":false]){
+            error in
+            if error == nil {
+            }
+            else {
+                //error handling
+            }
+        }
+    }
+    
    /* func loaddetailedcoin(coinid: String){
         datadownloaderfordetail = SingleDataDownloader(coinid: coinid)
         datadownloaderfordetail.$coindetail
