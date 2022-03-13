@@ -40,6 +40,11 @@ class PortfolioPresenter: ObservableObject{
     func getholdingcount(coin: CoinModel) -> Double {
         return interactor.getholdingcount(coin: coin)
     }
+    
+    func makeButtonForLogin() -> some View {
+        NavigationLink("Add", destination: router.makeLoginView(model: interactor.model))
+    }
+    
     func portfoliototal()-> Double{
         return interactor.portfoliototal()
     }

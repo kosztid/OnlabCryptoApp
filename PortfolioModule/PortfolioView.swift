@@ -40,6 +40,11 @@ struct PortfolioView: View {
                     .listRowSeparatorTint(Color.theme.backgroundsecondary)
                     .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                 }
+                .toolbar{
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        presenter.makeButtonForLogin()
+                    }
+                }
                 .listStyle(PlainListStyle())
             }
         }
