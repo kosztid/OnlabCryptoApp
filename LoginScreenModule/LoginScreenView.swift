@@ -64,11 +64,10 @@ struct LoginScreenView: View {
                     
 
                     Button{
-                       /* guard presenter.isValidEmail(email: self.email), !self.password.isEmpty else {
+                        guard presenter.isValidEmail(email: self.email), !self.password.isEmpty else {
                             return
                         }
                         presenter.signIn(email: self.email, password: self.password)
-                        */
                         self.presentationMode.wrappedValue.dismiss()
                     } label : {
                         Text("Bejelentkezés")

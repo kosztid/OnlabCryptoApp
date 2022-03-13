@@ -10,12 +10,17 @@ import SwiftUI
 
 class PortfolioPresenter: ObservableObject{
     @Published var coins: [CoinModel] = []
+    @Published var signedin : Bool = false
     private let interactor: PortfolioInteractor
     private var cancellables = Set<AnyCancellable>()
     private let router = PortfolioRouter()
     
     init(interactor: PortfolioInteractor){
         self.interactor = interactor
+        interactor.model.$isSignedIn
+            .assign(to: \.signedin, on: self)
+            .store(in: &cancellables)
+        
         interactor.model.$coins
             .assign(to: \.coins, on: self)
             .store(in: &cancellables)
@@ -42,7 +47,11 @@ class PortfolioPresenter: ObservableObject{
     }
     
     func makeButtonForLogin() -> some View {
-        NavigationLink("Add", destination: router.makeLoginView(model: interactor.model))
+        NavigationLink("Account", destination: router.makeLoginView(model: interactor.model))
+    }
+    
+    func makeButtonForAccount() -> some View {
+        NavigationLink("Account", destination: router.makeAccountView())
     }
     
     func portfoliototal()-> Double{

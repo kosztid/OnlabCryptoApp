@@ -10,6 +10,7 @@ import SwiftUI
 import Combine
 import Firebase
 import FirebaseFirestore
+import FirebaseAuth
 
 /*
  URL for coins https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=200&page=1&sparkline=true&price_change_percentage=24h
@@ -52,6 +53,9 @@ import FirebaseFirestore
  
  */
 final class DataModel: ObservableObject{
+    @Published var lastmessageId = ""
+    let auth : Auth
+    @Published var isSignedIn = false
     @Published var coins: [CoinModel] = []
     @Published var coindetail: [CoinDetailModel] = []
     @Published var communities: [MessageGroup] = []
@@ -64,6 +68,7 @@ final class DataModel: ObservableObject{
     private var cancellables = Set<AnyCancellable>()
     
     init(){
+        self.auth = Auth.auth()
         addSub()
         communitiesPullFromDB()
        // coins.append(CoinModel(id: "teszt", symbol: "teszt", name: "teszt", image: "teszt", currentPrice: 10, marketCap: 10, marketCapRank: 10, fullyDilutedValuation: 10, totalVolume: 10, high24H: 10, low24H: 10, priceChange24H: 10, priceChangePercentage24H: 10, marketCapChange24H: 10, marketCapChangePercentage24H: 10, circulatingSupply: 10, totalSupply: 10, maxSupply: 10, ath: 10, athChangePercentage: 10, athDate: "teszt", atl: 10, atlChangePercentage: 10, atlDate: "teszt", lastUpdated: "teszt", sparklineIn7D: SparklineIn7D(price: []), priceChangePercentage24HInCurrency: 10))
@@ -133,16 +138,24 @@ final class DataModel: ObservableObject{
     func messagesPullFromDB(idtoget: String){
         var messages: [Message] = []
         let db = Firestore.firestore()
-        db.collection("communities").document(idtoget).collection("messages").getDocuments { snapshot, error in
+        db.collection("communities").document(idtoget).collection("messages").addSnapshotListener { snapshot, error in
             if error == nil {
                 if let snapshot = snapshot{
                     DispatchQueue.main.async {
                         messages = snapshot.documents.map { d in
-                            return Message(id: d.documentID,sender: d["sender"] as? String ?? "Unknown", message: d["message"] as? String ?? "", time: d["time"] as? String ?? "2000-02-02 10:00", received: d["received"]  as? Bool ?? false )
+                            return Message(id: d.documentID,sender: d["sender"] as? String ?? "Unknown", message: d["message"] as? String ?? "", time: d["time"] as? String ?? "2000-02-02 10:00:00", received: d["received"]  as? Bool ?? false )
                         }
                         
                         if let i = self.communities.firstIndex(where: {$0.id == idtoget}) {
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                             self.communities[i].messages = messages
+                            self.communities[i].messages.sort {
+                                dateFormatter.date(from: $0.time)! < dateFormatter.date(from: $1.time)!
+                            }
+                            if let id = self.communities[i].messages.last?.id {
+                                self.lastmessageId = id
+                            }
                         }
                     }
                     
@@ -167,6 +180,34 @@ final class DataModel: ObservableObject{
         }
     }
     
+    func signIn(email: String, password: String){
+        auth.signIn(withEmail: email, password: password) { result, error in
+            guard result != nil, error == nil else {
+                return
+            }
+            DispatchQueue.main.async {
+                self.isSignedIn = true
+            }
+            
+        }
+    }
+    
+    func register(email: String, password: String){
+        auth.createUser(withEmail: email, password: password) { result, error in
+            guard result != nil, error == nil else {
+                print("error creating user")
+                return
+            }
+        }
+        
+    }
+    
+    func signOut(){
+        try?auth.signOut()
+        DispatchQueue.main.async {
+            self.isSignedIn = false
+        }
+    }
    /* func loaddetailedcoin(coinid: String){
         datadownloaderfordetail = SingleDataDownloader(coinid: coinid)
         datadownloaderfordetail.$coindetail

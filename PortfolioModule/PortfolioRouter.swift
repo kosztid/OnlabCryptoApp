@@ -14,6 +14,10 @@ class PortfolioRouter{
         return CoinDetailView(presenter: presenter)
     }
     
+    func makeAccountView() -> some View {
+        return AccountView()
+    }
+    
     func makeLoginView(model: DataModel) -> some View{
         let presenter = LoginScreenPresenter(interactor: LoginScreenInteractor(model: model))
         return LoginScreenView(presenter: presenter)

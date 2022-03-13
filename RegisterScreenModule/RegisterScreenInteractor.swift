@@ -14,6 +14,6 @@ class RegisterScreenInteractor {
         self.model = model
     }
     func register(email: String, password: String){
-      //  model.register(email: email, password: password)
+        model.register(email: email, password: password)
     }
 }

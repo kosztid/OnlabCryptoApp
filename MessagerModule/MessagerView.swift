@@ -16,17 +16,25 @@ struct MessagerView: View {
             Color.theme.backgroundcolor
                 .ignoresSafeArea()
             VStack{
-                ScrollView{
-                    ForEach(presenter.messagesGet()){ message in
-                        ZStack{
-                            Color.theme.backgroundcolor
-                                    .ignoresSafeArea()
-                            MessageBubble(message: message)
+                ScrollViewReader{ proxy in
+                    ScrollView{
+                        ForEach(presenter.community.messages){ message in
+                            ZStack{
+                                Color.theme.backgroundcolor
+                                        .ignoresSafeArea()
+                                MessageBubble(message: message)
+                            }
+                            
                         }
-                        
                     }
+                    .onChange(of: presenter.interactor.model.lastmessageId, perform: { id in
+                        withAnimation{
+                            proxy.scrollTo(id, anchor: .bottom)
+                        }
+                    })
+                
                 }
-                .listStyle(PlainListStyle())
+                
                 ZStack(alignment: .trailing){
                     Color.gray
                     TextField("Type in a new message", text: $newmessage)
@@ -57,6 +65,6 @@ struct MessagerView: View {
 
 struct MessagerView_Previews: PreviewProvider {
     static var previews: some View {
-        MessagerView(presenter: MessagerPresenter(interactor: MessagerInteractor(model: DataModel()),community: MessageGroup(id: "1", name: "Bitcoin Community", messages:[Message(id: "123", sender: "Dominik", message: "Első üzenet", time: "2022-02-02", received: true),Message(id: "124", sender: "Dominik", message: "Második üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenet", time: "2022-02-02", received: false),Message(id: "125", sender: "Dominik", message: "Harmadik üzenet", time: "2022-02-02", received: true)])),newmessage: "Újüzenet")
+        MessagerView(presenter: MessagerPresenter(interactor: MessagerInteractor(model: DataModel()),community: MessageGroup(id: "1", name: "Bitcoin Community", messages:[Message(id: "123", sender: "Dominik", message: "Első üzenet", time: "2022-02-02 10:00:00", received: true),Message(id: "124", sender: "Dominik", message: "Második üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenet", time: "2022-02-02 10:00:00", received: false),Message(id: "125", sender: "Dominik", message: "Harmadik üzenet", time: "2022-02-02", received: true)])),newmessage: "Újüzenet")
     }
 }

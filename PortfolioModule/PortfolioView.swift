@@ -42,7 +42,11 @@ struct PortfolioView: View {
                 }
                 .toolbar{
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        presenter.makeButtonForLogin()
+                        if presenter.signedin {
+                            presenter.makeButtonForAccount()
+                        } else {
+                            presenter.makeButtonForLogin()
+                        }
                     }
                 }
                 .listStyle(PlainListStyle())

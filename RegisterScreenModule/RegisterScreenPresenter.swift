@@ -16,7 +16,7 @@ class RegisterScreenPresenter: ObservableObject{
     }
     
     func register(email: String, password: String){
-     //   interactor.register(email: email, password: password)
+        interactor.register(email: email, password: password)
     }
     
     func isValidEmail(email: String) -> Bool {

@@ -8,7 +8,7 @@
 import Foundation
 
 class MessagerPresenter: ObservableObject{
-    private let interactor: MessagerInteractor
+    let interactor: MessagerInteractor
     @Published var community: MessageGroup
     
     init(interactor: MessagerInteractor,community: MessageGroup ){
@@ -17,7 +17,7 @@ class MessagerPresenter: ObservableObject{
     }
     func sendmessage(message: String){
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             let stringdate = dateFormatter.string(from: Date())
         self.interactor.sendMessage(id: community.id,message: Message(id:"asd", sender: "Dominik", message: message, time: stringdate,received: false))
     }
