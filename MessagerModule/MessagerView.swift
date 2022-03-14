@@ -64,7 +64,7 @@ struct MessagerView: View {
                         }
                     }) {
                         Image(systemName: "paperplane")
-                            .accentColor(.blue)
+                            .accentColor(Color.theme.accentcolorsecondary)
                             .font(.system(size: 18))
                     }.offset(x: -20)
                 }.frame(height: 40)

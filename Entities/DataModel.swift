@@ -61,8 +61,9 @@ final class DataModel: ObservableObject{
     @Published var communities: [MessageGroup] = []
     //@Published var coinimages: [UIImage] = []
     private let datadownloader = DataDownloader()
-    @Published var heldcoins: [String] = ["terra-luna","ethereum-classic"]
-    @Published var heldcoinscount: [Double] = [10,19.123]
+    @Published var heldcoinid: [String] = []
+    @Published var heldcoins: [String] = []
+    @Published var heldcoinscount: [Double] = []
     //private var datadownloaderfordetail = SingleDataDownloader(coinid: "ethereum")
    // var singlecoinsub: AnyCancellable?
     private var cancellables = Set<AnyCancellable>()
@@ -82,21 +83,25 @@ final class DataModel: ObservableObject{
                    
     }
     
-    func addHolding(coinid: String,coincount: Double){
-        if heldcoins.contains(coinid){
-            let index = heldcoins.firstIndex(where: { $0 == coinid })
-            heldcoinscount[index!] = coincount
-        }
-        else {
-            heldcoins.append(coinid)
-            heldcoinscount.append(coincount)
-        }
-    }
+    
     
     func removeCoin(cointoremove: CoinModel){
-        if let index = heldcoins.firstIndex(where: { $0 == cointoremove.id }) {
-            heldcoins.remove(at: index)
-            heldcoinscount.remove(at: index)
+        //let index = heldcoins.firstIndex(where: { $0 == cointoremove.id })
+        let firebaseid = self.heldcoinid[heldcoins.firstIndex(where: { $0 == cointoremove.id })!]
+        let db = Firestore.firestore()
+        let userid = self.auth.currentUser?.uid
+        DispatchQueue.main.async {
+            db.collection("users").document(userid!).collection("portfolio").document(firebaseid).delete { error in
+                if error == nil {
+                  //  self.heldcoinid.remove(at: index!)
+                   // self.heldcoins.remove(at: index!)
+                   // self.heldcoinscount.remove(at: index!)
+                }
+                else {
+                    //error handling
+                }
+                
+            }
         }
     }
     
@@ -110,6 +115,52 @@ final class DataModel: ObservableObject{
             total += (heldcoinscount[a] * currentprice)
         }
         return total
+    }
+    
+    func addHolding(coinid: String,coincount: Double){
+        let db = Firestore.firestore()
+        let user = self.auth.currentUser?.uid ?? ""
+        if self.heldcoins.contains(coinid){
+            let firebaseid = self.heldcoinid[heldcoins.firstIndex(where: { $0 == coinid })!]
+            db.collection("users").document(user).collection("portfolio").document(firebaseid).setData([ "count": coincount ], merge: true)
+        }
+        else {
+            db.collection("users").document(user).collection("portfolio").addDocument(data: ["coinid":coinid,"count":coincount]){
+                error in
+                if error == nil {
+                }
+                else {
+                    //error handling
+                }
+            }
+        }
+        
+    }
+    func portfolioPullFromDB(){
+        let db = Firestore.firestore()
+        let userid = self.auth.currentUser?.uid
+        db.collection("users").document(userid!).collection("portfolio").addSnapshotListener { snapshot, error in
+            if error == nil {
+                if let snapshot = snapshot{
+                    DispatchQueue.main.async {
+                        self.heldcoins = snapshot.documents.map { d in
+                            return String(d["coinid"] as? String ?? "")
+                           // MessageGroup(id: d.documentID, name: d["name"] as? String ?? "", messages: [], lastid: "")
+                        }
+                        self.heldcoinscount = snapshot.documents.map{ d in
+                            return Double(d["count"] as? Double ?? 0)
+                        }
+                        self.heldcoinid = snapshot.documents.map{ d in
+                            return String(d.documentID)
+                        }
+                    }
+                    
+                }
+            }
+            else {
+                //error handling
+            }
+        }
     }
     
     func communitiesPullFromDB(){
@@ -195,6 +246,7 @@ final class DataModel: ObservableObject{
                 self.isSignedIn = true
                 let _ = print(self.auth.currentUser!.uid)
                 let _ = print(self.auth.currentUser!.email ?? "")
+                self.portfolioPullFromDB()
             }
             
         }
@@ -206,6 +258,18 @@ final class DataModel: ObservableObject{
                 print("error creating user")
                 return
             }
+            DispatchQueue.main.async {
+                let db = Firestore.firestore()
+                let id = self.auth.currentUser?.uid
+                db.collection("users").document(id ?? "err").setData(["email": email]){
+                    error in
+                    if error == nil {
+                    }
+                    else {
+                        //error handling
+                    }
+                }
+            }
         }
         
     }
@@ -214,6 +278,8 @@ final class DataModel: ObservableObject{
         try?auth.signOut()
         DispatchQueue.main.async {
             self.isSignedIn = false
+            self.heldcoinscount = []
+            self.heldcoins = []
         }
     }
 }
