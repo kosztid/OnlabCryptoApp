@@ -15,15 +15,19 @@ class PortfolioInteractor{
     }
     
     func heldcoins() -> [String] {
-        return model.heldcoins
+        var arr: [String] = []
+        for a in model.heldcoins {
+            arr.append(a.coinid)
+        }
+        return arr
     }
     func removeCoin(_ index: IndexSet){
         model.removeCoin(cointoremove: model.coins[index.first!])
     }
     
     func getholdingcount(coin: CoinModel) -> Double {
-        if let index = model.heldcoins.firstIndex(where: { $0 == coin.id }) {
-            return model.heldcoinscount[index]
+        if let index = model.heldcoins.firstIndex(where: { $0.coinid == coin.id }) {
+            return model.heldcoins[index].count
         }
         else {
             return 0.0

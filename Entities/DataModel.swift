@@ -61,9 +61,10 @@ final class DataModel: ObservableObject{
     @Published var communities: [MessageGroup] = []
     //@Published var coinimages: [UIImage] = []
     private let datadownloader = DataDownloader()
-    @Published var heldcoinid: [String] = []
-    @Published var heldcoins: [String] = []
-    @Published var heldcoinscount: [Double] = []
+    //@Published var heldcoinid: [String] = []
+   // @Published var heldcoins: [String] = []
+    //@Published var heldcoinscount: [Double] = []
+    @Published var heldcoins: [CoinDataFirebase] = []
     //private var datadownloaderfordetail = SingleDataDownloader(coinid: "ethereum")
    // var singlecoinsub: AnyCancellable?
     private var cancellables = Set<AnyCancellable>()
@@ -87,7 +88,7 @@ final class DataModel: ObservableObject{
     
     func removeCoin(cointoremove: CoinModel){
         //let index = heldcoins.firstIndex(where: { $0 == cointoremove.id })
-        let firebaseid = self.heldcoinid[heldcoins.firstIndex(where: { $0 == cointoremove.id })!]
+        let firebaseid = self.heldcoins[heldcoins.firstIndex(where: { $0.coinid == cointoremove.id })!].firebaseid
         let db = Firestore.firestore()
         let userid = self.auth.currentUser?.uid
         DispatchQueue.main.async {
@@ -111,8 +112,8 @@ final class DataModel: ObservableObject{
         }
         var total: Double = 0
         for a in 0...(heldcoins.count-1) {
-            let currentprice = coins.first(where: {$0.id == heldcoins[a]})?.currentPrice ?? 0.0
-            total += (heldcoinscount[a] * currentprice)
+            let currentprice = coins.first(where: {$0.id == heldcoins[a].coinid})?.currentPrice ?? 0.0
+            total += (heldcoins[a].count * currentprice)
         }
         return total
     }
@@ -120,8 +121,8 @@ final class DataModel: ObservableObject{
     func addHolding(coinid: String,coincount: Double){
         let db = Firestore.firestore()
         let user = self.auth.currentUser?.uid ?? ""
-        if self.heldcoins.contains(coinid){
-            let firebaseid = self.heldcoinid[heldcoins.firstIndex(where: { $0 == coinid })!]
+        if self.heldcoins.filter({ $0.coinid == coinid }).isEmpty == false {
+            let firebaseid = self.heldcoins[heldcoins.firstIndex(where: { $0.coinid == coinid })!].firebaseid
             db.collection("users").document(user).collection("portfolio").document(firebaseid).setData([ "count": coincount ], merge: true)
         }
         else {
@@ -144,14 +145,8 @@ final class DataModel: ObservableObject{
                 if let snapshot = snapshot{
                     DispatchQueue.main.async {
                         self.heldcoins = snapshot.documents.map { d in
-                            return String(d["coinid"] as? String ?? "")
+                            return CoinDataFirebase(firebaseid: d.documentID, coinid: d["coinid"] as? String ?? "", count: Double(d["count"] as? Double ?? 0))
                            // MessageGroup(id: d.documentID, name: d["name"] as? String ?? "", messages: [], lastid: "")
-                        }
-                        self.heldcoinscount = snapshot.documents.map{ d in
-                            return Double(d["count"] as? Double ?? 0)
-                        }
-                        self.heldcoinid = snapshot.documents.map{ d in
-                            return String(d.documentID)
                         }
                     }
                     
@@ -278,7 +273,6 @@ final class DataModel: ObservableObject{
         try?auth.signOut()
         DispatchQueue.main.async {
             self.isSignedIn = false
-            self.heldcoinscount = []
             self.heldcoins = []
         }
     }

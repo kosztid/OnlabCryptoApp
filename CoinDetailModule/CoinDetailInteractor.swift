@@ -31,12 +31,12 @@ class CoinDetailInteractor{
         return model
     }
     func held() -> Bool{
-        return model.heldcoins.contains(self.coin.id)
+        return !(model.heldcoins.filter({ $0.coinid == self.coin.id }).isEmpty)
     }
     
     func getCoinCount() -> Double{
-        if let index = model.heldcoins.firstIndex(where: { $0 == coin.id }) {
-            return model.heldcoinscount[index]
+        if let index = model.heldcoins.firstIndex(where: { $0.coinid == coin.id }) {
+            return model.heldcoins[index].count
         } else {
             return 0.0
         }
