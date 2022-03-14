@@ -71,6 +71,7 @@ final class DataModel: ObservableObject{
         self.auth = Auth.auth()
         addSub()
         communitiesPullFromDB()
+        self.signOut()
        // coins.append(CoinModel(id: "teszt", symbol: "teszt", name: "teszt", image: "teszt", currentPrice: 10, marketCap: 10, marketCapRank: 10, fullyDilutedValuation: 10, totalVolume: 10, high24H: 10, low24H: 10, priceChange24H: 10, priceChangePercentage24H: 10, marketCapChange24H: 10, marketCapChangePercentage24H: 10, circulatingSupply: 10, totalSupply: 10, maxSupply: 10, ath: 10, athChangePercentage: 10, athDate: "teszt", atl: 10, atlChangePercentage: 10, atlDate: "teszt", lastUpdated: "teszt", sparklineIn7D: SparklineIn7D(price: []), priceChangePercentage24HInCurrency: 10))
     }
     
@@ -118,7 +119,7 @@ final class DataModel: ObservableObject{
                 if let snapshot = snapshot{
                     DispatchQueue.main.async {
                         self.communities = snapshot.documents.map { d in
-                            return MessageGroup(id: d.documentID, name: d["name"] as? String ?? "", messages: [])
+                            return MessageGroup(id: d.documentID, name: d["name"] as? String ?? "", messages: [], lastid: "")
                         }
                         for c in self.communities{
                             
@@ -154,7 +155,7 @@ final class DataModel: ObservableObject{
                                 dateFormatter.date(from: $0.time)! < dateFormatter.date(from: $1.time)!
                             }
                             if let id = self.communities[i].messages.last?.id {
-                                self.lastmessageId = id
+                                self.communities[i].lastid = id
                             }
                         }
                     }
@@ -168,9 +169,14 @@ final class DataModel: ObservableObject{
         
     }
     
+    func getAccountInfo() -> String{
+        return self.auth.currentUser?.uid ?? "nouser"
+    }
+    
     func sendMessage(id: String, message: Message){
         let db = Firestore.firestore()
-        db.collection("communities").document(id).collection("messages").addDocument(data: ["sender":message.sender,"message":message.message,"time":message.time,"received":false]){
+        let sender = self.auth.currentUser?.uid ?? message.sender
+        db.collection("communities").document(id).collection("messages").addDocument(data: ["sender":sender,"message":message.message,"time":message.time,"received":false]){
             error in
             if error == nil {
             }
@@ -187,6 +193,8 @@ final class DataModel: ObservableObject{
             }
             DispatchQueue.main.async {
                 self.isSignedIn = true
+                let _ = print(self.auth.currentUser!.uid)
+                let _ = print(self.auth.currentUser!.email ?? "")
             }
             
         }
@@ -208,52 +216,4 @@ final class DataModel: ObservableObject{
             self.isSignedIn = false
         }
     }
-   /* func loaddetailedcoin(coinid: String){
-        datadownloaderfordetail = SingleDataDownloader(coinid: coinid)
-        datadownloaderfordetail.$coindetail
-            .sink{ [weak self] (datareceived) in self?.coindetail = datareceived}
-            .store(in: &cancellables2)
-
-    
-    }
-    */
-    /*
-    func loaddetailedcoin(){
-        for a in 0...200{
-            let urlstring = "https://api.coingecko.com/api/v3/coins/terra-luna?localization=false&tickers=false&market_data=false&community_data=false&developer_data=false&sparkline=false"
-                
-            guard let url = URL(string:urlstring)
-                else {
-                    return
-                }
-                
-                singlecoinsub = URLSession.shared.dataTaskPublisher(for: url)
-                    .subscribe(on: DispatchQueue.global(qos: .default))
-                    .tryMap { (output) -> Data in
-                        guard let response = output.response as? HTTPURLResponse,
-                        response.statusCode >= 200 && response.statusCode < 300 else {
-                            
-                            throw URLError(.badServerResponse)
-                        }
-                        return output.data
-                    }
-                    .receive(on: DispatchQueue.main)
-                    .decode(type: CoinDetailModel.self, decoder: JSONDecoder())
-                    .sink{(completion) in
-                        switch completion {
-                        case .finished:
-                            break
-                        case .failure(let error):
-                            print(error.localizedDescription)
-                        }
-                    } receiveValue: { [weak self] (returnedCoins) in
-                        //let _ = print("negyedik")
-                        self?.coindetail.append(returnedCoins)
-                        self?.singlecoinsub?.cancel()
-                        //let _ = print("otodik")
-                    }
-        }
-        }
-     */
-        
 }

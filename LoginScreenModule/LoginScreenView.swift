@@ -33,6 +33,7 @@ struct LoginScreenView: View {
                         .background(Color.theme.backgroundsecondary)
                         .cornerRadius(10)
                         .disableAutocorrection(true)
+                        .autocapitalization(.none)
                 
                     
                     ZStack(alignment: .trailing) {

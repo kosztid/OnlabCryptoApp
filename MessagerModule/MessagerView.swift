@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import simd
 
 struct MessagerView: View {
     @ObservedObject var presenter: MessagerPresenter
@@ -22,14 +23,23 @@ struct MessagerView: View {
                             ZStack{
                                 Color.theme.backgroundcolor
                                         .ignoresSafeArea()
-                                MessageBubble(message: message)
+                                MessageBubble(message: message,sender: presenter.getAccountInfo())
                             }
                             
                         }
                     }
-                    .onChange(of: presenter.interactor.model.lastmessageId, perform: { id in
+                    .onChange(of: presenter.community.lastid, perform: { id in
                         withAnimation{
+                            DispatchQueue.main.async {
                             proxy.scrollTo(id, anchor: .bottom)
+                            }
+                        }
+                    })
+                    .onAppear(perform: {
+                        withAnimation{
+                            DispatchQueue.main.async {
+                                proxy.scrollTo(presenter.community.lastid, anchor: .bottom)
+                            }
                         }
                     })
                 
@@ -41,14 +51,17 @@ struct MessagerView: View {
                         .background(Color.gray)
                         .foregroundColor(Color.theme.accentcolor)
                         .font(.system(size: 20))
-                        
+                        .disableAutocorrection(true)
                         .frame(height: 40,alignment: .center)
                         .padding(10)
+                        .disabled(presenter.issignedin() == false)
                         
                     
                     Button(action: {
-                        presenter.sendmessage(message: newmessage)
-                        newmessage = ""
+                        if presenter.issignedin() == true {
+                            presenter.sendmessage(message: newmessage)
+                            newmessage = ""
+                        }
                     }) {
                         Image(systemName: "paperplane")
                             .accentColor(.blue)
@@ -65,6 +78,6 @@ struct MessagerView: View {
 
 struct MessagerView_Previews: PreviewProvider {
     static var previews: some View {
-        MessagerView(presenter: MessagerPresenter(interactor: MessagerInteractor(model: DataModel()),community: MessageGroup(id: "1", name: "Bitcoin Community", messages:[Message(id: "123", sender: "Dominik", message: "Első üzenet", time: "2022-02-02 10:00:00", received: true),Message(id: "124", sender: "Dominik", message: "Második üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenet", time: "2022-02-02 10:00:00", received: false),Message(id: "125", sender: "Dominik", message: "Harmadik üzenet", time: "2022-02-02", received: true)])),newmessage: "Újüzenet")
+        MessagerView(presenter: MessagerPresenter(interactor: MessagerInteractor(model: DataModel()),community: MessageGroup(id: "1", name: "Bitcoin Community", messages:[Message(id: "123", sender: "Dominik", message: "Első üzenet", time: "2022-02-02 10:00:00", received: true),Message(id: "124", sender: "Dominik", message: "Második üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenet", time: "2022-02-02 10:00:00", received: false),Message(id: "125", sender: "Dominik", message: "Harmadik üzenet", time: "2022-02-02", received: true)], lastid: "jasd")),newmessage: "Újüzenet")
     }
 }

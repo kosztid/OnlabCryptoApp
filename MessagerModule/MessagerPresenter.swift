@@ -8,7 +8,7 @@
 import Foundation
 
 class MessagerPresenter: ObservableObject{
-    let interactor: MessagerInteractor
+    private let interactor: MessagerInteractor
     @Published var community: MessageGroup
     
     init(interactor: MessagerInteractor,community: MessageGroup ){
@@ -24,4 +24,11 @@ class MessagerPresenter: ObservableObject{
     func messagesGet() -> [Message] {
         return community.messages
     }
+    func getAccountInfo() -> String{
+        return interactor.getAccountInfo()
+    }
+    func issignedin() -> Bool {
+        return interactor.issignedin()
+    }
+
 }

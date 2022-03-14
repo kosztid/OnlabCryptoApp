@@ -8,18 +8,25 @@
 import SwiftUI
 
 struct AccountView: View {
+    var presenter: AccountPresenter
     var body: some View {
         ZStack{
             Color.theme.backgroundcolor
-            Text("Account")
-                .foregroundColor(Color.theme.accentcolor)
+            VStack{
+                Text("Account")
+                    .foregroundColor(Color.theme.accentcolor)
+                Button("LogOut"){
+                    presenter.signOut()
+                }
+            }
         }
         
     }
 }
-
+/*
 struct AccountView_Previews: PreviewProvider {
     static var previews: some View {
         AccountView()
     }
 }
+*/

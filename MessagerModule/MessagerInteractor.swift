@@ -16,4 +16,11 @@ class MessagerInteractor{
     func sendMessage(id: String, message: Message){
         model.sendMessage(id:id,message: message)
     }
+    func getAccountInfo() -> String{
+        return model.getAccountInfo()
+    }
+    
+    func issignedin() -> Bool {
+        return model.isSignedIn
+    }
 }

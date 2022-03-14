@@ -51,7 +51,7 @@ class PortfolioPresenter: ObservableObject{
     }
     
     func makeButtonForAccount() -> some View {
-        NavigationLink("Account", destination: router.makeAccountView())
+        NavigationLink("Account", destination: router.makeAccountView(model: interactor.model))
     }
     
     func portfoliototal()-> Double{
