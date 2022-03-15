@@ -23,5 +23,7 @@ class PortfolioAdderInteractor{
     func addCoin(count: Double){
         model.addHolding(coinid: coin.id, coincount: count)
     }
-    
+    func addFavCoin(){
+        model.addFavCoin(coinid: coin.id)
+    }
 }

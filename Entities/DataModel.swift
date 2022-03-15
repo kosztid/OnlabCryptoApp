@@ -65,6 +65,7 @@ final class DataModel: ObservableObject{
    // @Published var heldcoins: [String] = []
     //@Published var heldcoinscount: [Double] = []
     @Published var heldcoins: [CoinDataFirebase] = []
+    @Published var favcoins: [CoinDataFirebase] = []
     //private var datadownloaderfordetail = SingleDataDownloader(coinid: "ethereum")
    // var singlecoinsub: AnyCancellable?
     private var cancellables = Set<AnyCancellable>()
@@ -73,6 +74,7 @@ final class DataModel: ObservableObject{
         self.auth = Auth.auth()
         addSub()
         communitiesPullFromDB()
+        favcoinPullFromDB()
         self.signOut()
        // coins.append(CoinModel(id: "teszt", symbol: "teszt", name: "teszt", image: "teszt", currentPrice: 10, marketCap: 10, marketCapRank: 10, fullyDilutedValuation: 10, totalVolume: 10, high24H: 10, low24H: 10, priceChange24H: 10, priceChangePercentage24H: 10, marketCapChange24H: 10, marketCapChangePercentage24H: 10, circulatingSupply: 10, totalSupply: 10, maxSupply: 10, ath: 10, athChangePercentage: 10, athDate: "teszt", atl: 10, atlChangePercentage: 10, atlDate: "teszt", lastUpdated: "teszt", sparklineIn7D: SparklineIn7D(price: []), priceChangePercentage24HInCurrency: 10))
     }
@@ -84,6 +86,54 @@ final class DataModel: ObservableObject{
                    
     }
     
+    func addFavCoin(coinid: String){
+        let db = Firestore.firestore()
+        let user = self.auth.currentUser?.uid ?? ""
+        if self.favcoins.filter({ $0.coinid == coinid }).isEmpty == false {
+            let firebaseid = self.favcoins[favcoins.firstIndex(where: { $0.coinid == coinid })!].firebaseid
+            db.collection("users").document(user).collection("favfolio").document(firebaseid).delete { error in
+                if error == nil {
+                  //  self.heldcoinid.remove(at: index!)
+                   // self.heldcoins.remove(at: index!)
+                   // self.heldcoinscount.remove(at: index!)
+                }
+                else {
+                    //error handling
+                }
+                
+            }
+        }
+        else {
+            db.collection("users").document(user).collection("favfolio").addDocument(data: ["coinid":coinid,"count":0]){
+                error in
+                if error == nil {
+                }
+                else {
+                    //error handling
+                }
+            }
+        }
+    }
+    
+    func favcoinPullFromDB(){
+        let db = Firestore.firestore()
+        let userid = self.auth.currentUser?.uid
+        db.collection("users").document(userid!).collection("favfolio").addSnapshotListener { snapshot, error in
+            if error == nil {
+                if let snapshot = snapshot{
+                    DispatchQueue.main.async {
+                        self.favcoins = snapshot.documents.map { d in
+                            return CoinDataFirebase(firebaseid: d.documentID, coinid: d["coinid"] as? String ?? "", count: Double(d["count"] as? Double ?? 0))
+                        }
+                    }
+                    
+                }
+            }
+            else {
+                //error handling
+            }
+        }
+    }
     
     
     func removeCoin(cointoremove: CoinModel){
@@ -105,6 +155,9 @@ final class DataModel: ObservableObject{
             }
         }
     }
+    
+    
+    
     
     func portfoliototal() -> Double {
         if heldcoins.count == 0 {

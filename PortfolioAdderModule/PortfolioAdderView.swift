@@ -48,6 +48,19 @@ struct PortfolioAdderView: View {
                         .background(Color.theme.backgroundsecondary)
                         .cornerRadius(10)
                 }
+                Button{
+                        presenter.addFavCoin()
+                        self.presentationMode.wrappedValue.dismiss()
+                
+                } label : {
+                    Text("Fav")
+                        .frame(height:50)
+                        .frame(maxWidth: .infinity)
+                        .font(.system(size: 20))
+                        .foregroundColor(Color.theme.accentcolor)
+                        .background(Color.theme.backgroundsecondary)
+                        .cornerRadius(10)
+                }
             }
         }.padding(10)
             .background(Color.theme.backgroundcolor)
