@@ -28,6 +28,7 @@ struct CoinDetailView: View {
                             }.foregroundColor((presenter.getcoin().priceChangePercentage24H ?? 0) >= 0 ? Color.theme.green : Color.theme.red)
                         }
                         Spacer()
+                        presenter.makeFavButton()
                     }
                     .frame(alignment: .trailing)
                     ChartView(values: presenter.values())

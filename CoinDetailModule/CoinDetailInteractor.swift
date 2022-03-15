@@ -41,4 +41,11 @@ class CoinDetailInteractor{
             return 0.0
         }
     }
+    
+    func addFavCoin(){
+        model.addFavCoin(coinid: coin.id)
+    }
+    func isFav()->Bool{
+        return !(model.favcoins.filter({ $0.coinid == self.coin.id }).isEmpty)
+    }
 }

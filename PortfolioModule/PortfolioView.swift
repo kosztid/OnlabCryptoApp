@@ -18,28 +18,11 @@ struct PortfolioView: View {
                 VStack{
                     Text("Portfolio Total:")
                     Text("\(presenter.portfoliototal().formatcurrency4digits())")
-                }
-                List{
-                    ForEach(presenter.coins){ coin in
-                        if presenter.heldcoins().contains(coin.id) {
-                            ZStack{
-                                Color.theme.backgroundcolor
-                                        .ignoresSafeArea()
-                                    
-                                PortfolioListItem(presenter: presenter,holding: presenter.getholdingcount(coin: coin), coin: coin)
-                                    .frame(height: 80)
-                                self.presenter.linkBuilder(for: coin){
-                                    EmptyView()
-                                }.buttonStyle(PlainButtonStyle())
-                            }
-                            .frame(height: 60)
-                        }
-                        
+                    Button("VÁLTÁS"){
+                        presenter.changeView()
                     }
-                    .onDelete(perform: presenter.removeCoin)
-                    .listRowSeparatorTint(Color.theme.backgroundsecondary)
-                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                 }
+                presenter.makeList(selected: presenter.selection)
                 .toolbar{
                     ToolbarItem(placement: .navigationBarTrailing) {
                         if presenter.signedin {

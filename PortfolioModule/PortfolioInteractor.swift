@@ -21,6 +21,15 @@ class PortfolioInteractor{
         }
         return arr
     }
+    
+    func heldfavcoins() -> [String] {
+        var arr: [String] = []
+        for a in model.favcoins {
+            arr.append(a.coinid)
+        }
+        return arr
+    }
+    
     func removeCoin(_ index: IndexSet){
         model.removeCoin(cointoremove: model.coins[index.first!])
     }
@@ -35,5 +44,9 @@ class PortfolioInteractor{
     }
     func portfoliototal() -> Double{
         return model.portfoliototal()
+    }
+    
+    func changeView(){
+        model.changePortfolioView()
     }
 }

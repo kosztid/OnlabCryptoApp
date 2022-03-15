@@ -41,4 +41,15 @@ class CoinDetailPresenter: ObservableObject{
         }
         return NavigationLink(buttontext, destination: router.makeAdderView(coincount: interactor.getCoinCount(), coin:interactor.getcoin(), model: interactor.getmodel()))
     }
+    
+    func makeFavButton() -> some View {
+        Button(){
+            self.interactor.addFavCoin()
+        } label: {
+            Label("",systemImage: interactor.isFav() ? "star.fill" : "star")
+                .foregroundColor(Color.theme.accentcolor)
+                .font(.system(size: 25))
+        }
+        .buttonStyle(BorderlessButtonStyle())
+    }
 }

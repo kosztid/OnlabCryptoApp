@@ -9,7 +9,9 @@ import Foundation
 import SwiftUI
 
 class PortfolioPresenter: ObservableObject{
+    @Published var selection: String = "portfolio"
     @Published var coins: [CoinModel] = []
+    @Published var favcoins: [CoinDataFirebase] = []
     @Published var signedin : Bool = false
     private let interactor: PortfolioInteractor
     private var cancellables = Set<AnyCancellable>()
@@ -17,6 +19,11 @@ class PortfolioPresenter: ObservableObject{
     
     init(interactor: PortfolioInteractor){
         self.interactor = interactor
+        
+        interactor.model.$selection
+            .assign(to: \.selection, on: self)
+            .store(in: &cancellables)
+        
         interactor.model.$isSignedIn
             .assign(to: \.signedin, on: self)
             .store(in: &cancellables)
@@ -24,6 +31,14 @@ class PortfolioPresenter: ObservableObject{
         interactor.model.$coins
             .assign(to: \.coins, on: self)
             .store(in: &cancellables)
+        
+        interactor.model.$favcoins
+            .assign(to: \.favcoins, on: self)
+            .store(in: &cancellables)
+    }
+    
+    func changeView(){
+        interactor.changeView()
     }
     
     func linkBuilder<Content: View>(
@@ -37,6 +52,10 @@ class PortfolioPresenter: ObservableObject{
     
     func heldcoins() -> [String] {
         return interactor.heldcoins()
+    }
+    
+    func heldfavcoins() -> [String] {
+        return interactor.heldfavcoins()
     }
     
     func removeCoin(_ index: IndexSet){
@@ -56,5 +75,53 @@ class PortfolioPresenter: ObservableObject{
     
     func portfoliototal()-> Double{
         return interactor.portfoliototal()
+    }
+    
+    func makeList(selected: String) -> AnyView{
+        if selected == "portfolio" {
+        return AnyView(
+        List{
+            ForEach(self.coins){ coin in
+                if self.heldcoins().contains(coin.id) {
+                    ZStack{
+                        Color.theme.backgroundcolor
+                                .ignoresSafeArea()
+                            
+                        PortfolioListItem(presenter: self,holding: self.getholdingcount(coin: coin), coin: coin)
+                            .frame(height: 80)
+                        self.linkBuilder(for: coin){
+                            EmptyView()
+                        }.buttonStyle(PlainButtonStyle())
+                    }
+                    .frame(height: 60)
+                }
+                
+            }
+            .onDelete(perform: self.removeCoin)
+            .listRowSeparatorTint(Color.theme.backgroundsecondary)
+            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+        })}
+        else { return AnyView(
+            List{
+                ForEach(self.coins){ coin in
+                    if self.heldfavcoins().contains(coin.id) {
+                        ZStack{
+                            Color.theme.backgroundcolor
+                                    .ignoresSafeArea()
+                                
+                            PortfolioListItem(presenter: self,holding: 0, coin: coin)
+                                .frame(height: 80)
+                            self.linkBuilder(for: coin){
+                                EmptyView()
+                            }.buttonStyle(PlainButtonStyle())
+                        }
+                        .frame(height: 60)
+                    }
+                    
+                }
+                //.onDelete(perform: self.removeCoin)
+                .listRowSeparatorTint(Color.theme.backgroundsecondary)
+                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+            })}
     }
 }

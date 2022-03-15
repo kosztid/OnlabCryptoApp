@@ -69,12 +69,13 @@ final class DataModel: ObservableObject{
     //private var datadownloaderfordetail = SingleDataDownloader(coinid: "ethereum")
    // var singlecoinsub: AnyCancellable?
     private var cancellables = Set<AnyCancellable>()
+    @Published var selection: String
     
     init(){
+        self.selection = "portfolio"
         self.auth = Auth.auth()
         addSub()
         communitiesPullFromDB()
-        favcoinPullFromDB()
         self.signOut()
        // coins.append(CoinModel(id: "teszt", symbol: "teszt", name: "teszt", image: "teszt", currentPrice: 10, marketCap: 10, marketCapRank: 10, fullyDilutedValuation: 10, totalVolume: 10, high24H: 10, low24H: 10, priceChange24H: 10, priceChangePercentage24H: 10, marketCapChange24H: 10, marketCapChangePercentage24H: 10, circulatingSupply: 10, totalSupply: 10, maxSupply: 10, ath: 10, athChangePercentage: 10, athDate: "teszt", atl: 10, atlChangePercentage: 10, atlDate: "teszt", lastUpdated: "teszt", sparklineIn7D: SparklineIn7D(price: []), priceChangePercentage24HInCurrency: 10))
     }
@@ -84,6 +85,13 @@ final class DataModel: ObservableObject{
             .sink{ [weak self] (datareceived) in self?.coins = datareceived}
             .store(in: &cancellables)
                    
+    }
+    func changePortfolioView(){
+        if self.selection == "portfolio" {
+            self.selection = "favfolio"
+        } else {
+            self.selection = "portfolio"
+        }
     }
     
     func addFavCoin(coinid: String){
@@ -295,6 +303,7 @@ final class DataModel: ObservableObject{
                 let _ = print(self.auth.currentUser!.uid)
                 let _ = print(self.auth.currentUser!.email ?? "")
                 self.portfolioPullFromDB()
+                self.favcoinPullFromDB()
             }
             
         }
