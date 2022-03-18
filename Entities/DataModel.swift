@@ -57,6 +57,7 @@ final class DataModel: ObservableObject{
     let auth : Auth
     @Published var isSignedIn = false
     @Published var coins: [CoinModel] = []
+    @Published var news = News(status: nil, totalResults: nil, articles: nil)
     @Published var coindetail: [CoinDetailModel] = []
     @Published var communities: [MessageGroup] = []
     //@Published var coinimages: [UIImage] = []
@@ -84,7 +85,10 @@ final class DataModel: ObservableObject{
         datadownloader.$coins
             .sink{ [weak self] (datareceived) in self?.coins = datareceived}
             .store(in: &cancellables)
-                   
+        
+        datadownloader.$news
+            .sink{ [weak self] (datareceived) in self?.news = datareceived}
+            .store(in: &cancellables)
     }
     func changePortfolioView(){
         if self.selection == "portfolio" {

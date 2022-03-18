@@ -52,6 +52,7 @@ struct ContentView: View {
                 //Swap tab
                 NavigationView {
                     VStack(spacing: 10) {
+                        NewsView(presenter: NewsPresenter(interactor: NewsInteractor(model: model)))
                     }
                 }
                     .tabItem { Label("List", systemImage: "list.bullet") }
