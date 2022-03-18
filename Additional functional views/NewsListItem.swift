@@ -17,8 +17,12 @@ struct NewsListItem: View {
             
             HStack{
                 Text(article.title!)
+                    .font(.system(size: 16))
+                    .frame(alignment: .leading)
                     .foregroundColor(Color.theme.accentcolor)
-            }
+                Spacer()
+            }.frame(alignment: .leading)
+                .padding(5)
         }
     }
 }

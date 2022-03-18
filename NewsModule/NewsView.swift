@@ -21,7 +21,7 @@ struct NewsView: View {
                                 .ignoresSafeArea()
                             
                         NewsListItem(presenter: presenter, article: article)
-                            .frame(height: 40)
+                            .frame(height: 60)
                         self.presenter.linkBuilder(for: article){
                             EmptyView()
                         }.buttonStyle(PlainButtonStyle())

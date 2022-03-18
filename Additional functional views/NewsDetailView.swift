@@ -13,21 +13,40 @@ struct NewsDetailView: View {
         ZStack{
             Color.theme.backgroundcolor
                 .ignoresSafeArea()
-            VStack{
-                HStack{
-                    VStack{
-                        Text(article.title ?? "Nincs cím")
-                            .frame(alignment: .leading)
-                            .font(.system(size: 20))
-                        Text(article.author ?? "Nincs szerző")
-                            .frame(alignment: .leading)
-                            .font(.system(size: 16))
+            ScrollView{
+                VStack{
+                    CachedAsyncImage(url: URL(string: article.urlToImage ?? "")){ image in
+                        image
+                            .resizable()
+                            .scaledToFit()
+                    } placeholder: {
+                        Circle()
+                            .frame(width: UIScreen.main.bounds.width*0.95)
                     }
+                    .frame(width: UIScreen.main.bounds.width*0.95)
+                    .cornerRadius(20)
+                    HStack{
+                        Text(article.title ?? "Nincs cím")
+                            .font(.system(size: 20))
+                            .frame(alignment: .leading)
+                            .foregroundColor(Color.theme.accentcolor)
+                    }.frame(alignment: .leading)
+                    HStack{
+                        Text(article.author ?? "Nincs szerző")
+                            .font(.system(size: 16))
+                            .frame(alignment: .leading)
+                            .foregroundColor(Color.theme.accentcolorsecondary)
+                    }.frame(alignment: .leading)
                 }
+                .padding(.bottom,10)
+                .frame(alignment: .leading)
                 HStack{
-                    
+                    Text(article.content ?? "Nincs szöveg")
+                        .font(.system(size: 16))
+                        .foregroundColor(Color.theme.accentcolor)
                 }
             }
+            .padding(10)
         }
             
     }

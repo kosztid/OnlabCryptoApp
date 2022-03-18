@@ -54,7 +54,11 @@ class DataDownloader{
     }
     
     func loadnews(){
-        guard let url = URL(string:"https://newsapi.org/v2/everything?q=crypto&from=2022-02-18&sortBy=publishedAt&apiKey=2755ba3f91f94ff890427a7629def7f6")
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let stringdate = dateFormatter.string(from: Date())
+        
+        guard let url = URL(string:"https://newsapi.org/v2/everything?q=crypto&from="+stringdate+"&sortBy=publishedAt&apiKey=2755ba3f91f94ff890427a7629def7f6")
         else {
             return
         }
