@@ -32,6 +32,16 @@ struct CommunitiesView: View {
                 .listRowSeparator(.hidden)
                 .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
             }
+            .toolbar{
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    if presenter.signedin {
+                        presenter.makeButtonForAccount()
+                    } else {
+                        presenter.makeButtonForLogin()
+                    }
+                }
+            }
+            .listStyle(PlainListStyle())
             .listStyle(PlainListStyle())
         }
     }

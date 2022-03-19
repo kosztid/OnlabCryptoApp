@@ -37,8 +37,8 @@ class PortfolioPresenter: ObservableObject{
             .store(in: &cancellables)
     }
     
-    func changeView(){
-        interactor.changeView()
+    func changeViewTo(viewname: String){
+        interactor.changeViewTo(viewname: viewname)
     }
     
     func linkBuilder<Content: View>(
@@ -56,6 +56,9 @@ class PortfolioPresenter: ObservableObject{
     
     func heldfavcoins() -> [String] {
         return interactor.heldfavcoins()
+    }
+    func isSelected(selected: String) -> Bool {
+        return selected == self.selection
     }
     
     func removeCoin(_ index: IndexSet){
@@ -109,7 +112,7 @@ class PortfolioPresenter: ObservableObject{
                             Color.theme.backgroundcolor
                                     .ignoresSafeArea()
                                 
-                            PortfolioListItem(presenter: self,holding: 0, coin: coin)
+                            FavfolioListItemView(presenter: FavfolioListItemPresenter(interactor: FavfolioListItemInteractor(coin: coin,model: self.interactor.getmodel())))
                                 .frame(height: 80)
                             self.linkBuilder(for: coin){
                                 EmptyView()

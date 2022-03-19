@@ -90,12 +90,8 @@ final class DataModel: ObservableObject{
             .sink{ [weak self] (datareceived) in self?.news = datareceived}
             .store(in: &cancellables)
     }
-    func changePortfolioView(){
-        if self.selection == "portfolio" {
-            self.selection = "favfolio"
-        } else {
-            self.selection = "portfolio"
-        }
+    func changePortfolioViewTo(viewname: String){
+        self.selection = viewname
     }
     
     func addFavCoin(coinid: String){

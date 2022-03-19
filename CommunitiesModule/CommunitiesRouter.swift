@@ -13,4 +13,13 @@ class CommunitiesRouter{
         let presenter = MessagerPresenter(interactor: MessagerInteractor(model: model),community: community)
         return MessagerView(presenter: presenter)
     }
+    
+    func makeAccountView(model: DataModel) -> some View {
+        return AccountView(presenter: AccountPresenter(interactor: AccountInteractor(model: model)))
+    }
+    
+    func makeLoginView(model: DataModel) -> some View{
+        let presenter = LoginScreenPresenter(interactor: LoginScreenInteractor(model: model))
+        return LoginScreenView(presenter: presenter)
+    }
 }

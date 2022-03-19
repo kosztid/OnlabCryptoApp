@@ -18,10 +18,33 @@ struct PortfolioView: View {
                 VStack{
                     Text("Portfolio Total:")
                     Text("\(presenter.portfoliototal().formatcurrency4digits())")
-                    Button("VÁLTÁS"){
-                        presenter.changeView()
-                    }
-                }
+                    HStack{
+                        Spacer()
+                        Button{
+                            presenter.changeViewTo(viewname: "portfolio")
+                        }
+                    label: {
+                       Text("Portfolio")
+                           .frame(height:30)
+                           .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
+                           .font(.system(size: 20))
+                           .background(presenter.isSelected(selected: "portfolio") ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
+                           .foregroundColor(presenter.isSelected(selected: "portfolio") ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
+                           .cornerRadius(10)
+                   }
+                        Button{
+                            presenter.changeViewTo(viewname: "favfolio")
+                        } label: {
+                            Text("Favorites")
+                                .frame(height:30)
+                                .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
+                                .font(.system(size: 20))
+                                .background(presenter.isSelected(selected: "favfolio") ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
+                                .foregroundColor(presenter.isSelected(selected: "favfolio") ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
+                                .cornerRadius(10)
+                        }
+                    Spacer()
+                    }.padding(5)
                 presenter.makeList(selected: presenter.selection)
                 .toolbar{
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -34,6 +57,7 @@ struct PortfolioView: View {
                 }
                 .listStyle(PlainListStyle())
             }
+        }
         }
     }
 }

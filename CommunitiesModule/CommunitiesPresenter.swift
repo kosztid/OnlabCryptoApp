@@ -13,12 +13,17 @@ class CommunitiesPresenter: ObservableObject{
     @Published var communities: [MessageGroup] = []
     private var cancellables = Set<AnyCancellable>()
     private let interactor: CommunitiesInteractor
+    @Published var signedin : Bool = false
     private let router = CommunitiesRouter()
     
     init(interactor: CommunitiesInteractor){
         self.interactor = interactor
         interactor.model.$communities
             .assign(to: \.communities, on:self)
+            .store(in: &cancellables)
+        
+        interactor.model.$isSignedIn
+            .assign(to: \.signedin, on: self)
             .store(in: &cancellables)
     }
     
@@ -30,5 +35,11 @@ class CommunitiesPresenter: ObservableObject{
             }.buttonStyle(PlainButtonStyle())
             .opacity(0)
     }
+    func makeButtonForLogin() -> some View {
+        NavigationLink("Account", destination: router.makeLoginView(model: interactor.model))
+    }
     
+    func makeButtonForAccount() -> some View {
+        NavigationLink("Account", destination: router.makeAccountView(model: interactor.model))
+    }
 }

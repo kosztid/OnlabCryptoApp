@@ -29,6 +29,9 @@ class PortfolioInteractor{
         }
         return arr
     }
+    func getmodel() -> DataModel {
+        return model
+    }
     
     func removeCoin(_ index: IndexSet){
         model.removeCoin(cointoremove: model.coins[index.first!])
@@ -46,7 +49,7 @@ class PortfolioInteractor{
         return model.portfoliototal()
     }
     
-    func changeView(){
-        model.changePortfolioView()
+    func changeViewTo(viewname: String){
+        model.changePortfolioViewTo(viewname: viewname)
     }
 }
