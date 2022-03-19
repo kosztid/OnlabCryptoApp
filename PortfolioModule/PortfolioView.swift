@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PortfolioView: View {
     @ObservedObject var presenter: PortfolioPresenter
+    
     var body: some View {
         ZStack{
             Color.theme.backgroundcolor
@@ -16,35 +17,49 @@ struct PortfolioView: View {
             
             VStack{
                 VStack{
-                    Text("Portfolio Total:")
-                    Text("\(presenter.portfoliototal().formatcurrency4digits())")
+                    HStack{
+                        VStack{
+                            HStack{
+                                Spacer()
+                                Text("Portfolio Total:")
+                                    .font(.system(size: 20))
+                                Spacer()
+                                HStack{
+                                    VStack{
+                                        Text("\(presenter.portfoliototal().formatcurrency4digits())")
+                                            .font(.system(size: 20))
+                                            .frame(alignment:.leading)
+                                        Text("\(presenter.inputtotal().formatcurrency4digits())")
+                                            .foregroundColor(Color.theme.accentcolorsecondary)
+                                            .font(.system(size: 18))
+                                            .frame(alignment:.leading)
+                                    }.frame(alignment:.leading)
+                                    VStack{
+                                        HStack{
+                                            Text("\(presenter.winlosepercent().formatpercent())")
+                                                .foregroundColor((presenter.winlosepercent() >= 0) ? Color.theme.green : Color.theme.red )
+                                                .frame(alignment:.leading)
+                                            Spacer()
+                                        }
+                                    }
+                                
+                                }
+                                Spacer()
+                            }.padding(5)
+                            
+                        }.frame(alignment:.leading)
+                    }.padding(10)
+                        .foregroundColor(Color.theme.accentcolor)
                     HStack{
                         Spacer()
-                        Button{
-                            presenter.changeViewTo(viewname: "portfolio")
-                        }
-                    label: {
-                       Text("Portfolio")
-                           .frame(height:30)
-                           .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
-                           .font(.system(size: 20))
-                           .background(presenter.isSelected(selected: "portfolio") ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
-                           .foregroundColor(presenter.isSelected(selected: "portfolio") ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
-                           .cornerRadius(10)
-                   }
-                        Button{
-                            presenter.changeViewTo(viewname: "favfolio")
-                        } label: {
-                            Text("Favorites")
-                                .frame(height:30)
-                                .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
-                                .font(.system(size: 20))
-                                .background(presenter.isSelected(selected: "favfolio") ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
-                                .foregroundColor(presenter.isSelected(selected: "favfolio") ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
-                                .cornerRadius(10)
-                        }
+                        presenter.makeButtonforPortfolioList()
+                        presenter.makeButtonforFavfolioList()
                     Spacer()
-                    }.padding(5)
+                    }
+                    Spacer()
+                }
+                .padding(5)
+                .frame(alignment: .leading)
                 presenter.makeList(selected: presenter.selection)
                 .toolbar{
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -56,7 +71,6 @@ struct PortfolioView: View {
                     }
                 }
                 .listStyle(PlainListStyle())
-            }
         }
         }
     }

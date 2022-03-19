@@ -10,6 +10,7 @@ import SwiftUI
 
 class PortfolioPresenter: ObservableObject{
     @Published var selection: String = "portfolio"
+    let inputprice: Double = 10500.23
     @Published var coins: [CoinModel] = []
     @Published var favcoins: [CoinDataFirebase] = []
     @Published var signedin : Bool = false
@@ -68,6 +69,12 @@ class PortfolioPresenter: ObservableObject{
         return interactor.getholdingcount(coin: coin)
     }
     
+    func winlosepercent()->Double{
+            return (1-(self.inputprice/self.portfoliototal()))*100
+    }
+    
+    
+    
     func makeButtonForLogin() -> some View {
         NavigationLink("Account", destination: router.makeLoginView(model: interactor.model))
     }
@@ -78,6 +85,9 @@ class PortfolioPresenter: ObservableObject{
     
     func portfoliototal()-> Double{
         return interactor.portfoliototal()
+    }
+    func inputtotal() -> Double{
+        return 10500.20
     }
     
     func makeList(selected: String) -> AnyView{
@@ -127,4 +137,33 @@ class PortfolioPresenter: ObservableObject{
                 .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
             })}
     }
+    
+    func makeButtonforPortfolioList() -> some View{
+        Button{
+            self.changeViewTo(viewname: "portfolio")
+        }
+    label: {
+       Text("Portfolio")
+           .frame(height:30)
+           .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
+           .font(.system(size: 20))
+           .background(self.isSelected(selected: "portfolio") ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
+           .foregroundColor(self.isSelected(selected: "portfolio") ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
+           .cornerRadius(10)
+    }
+    }
+    func makeButtonforFavfolioList() -> some View{
+        Button{
+            self.changeViewTo(viewname: "favfolio")
+        } label: {
+            Text("Favorites")
+                .frame(height:30)
+                .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
+                .font(.system(size: 20))
+                .background(self.isSelected(selected: "favfolio") ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
+                .foregroundColor(self.isSelected(selected: "favfolio") ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
+                .cornerRadius(10)
+        }
+    }
+    
 }
