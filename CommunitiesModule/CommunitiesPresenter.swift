@@ -42,4 +42,8 @@ class CommunitiesPresenter: ObservableObject{
     func makeButtonForAccount() -> some View {
         NavigationLink("Account", destination: router.makeAccountView(model: interactor.model))
     }
+    
+    func addCommunity(){
+        interactor.addCommunity()
+    }
 }

@@ -33,6 +33,11 @@ struct CommunitiesView: View {
                 .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
             }
             .toolbar{
+                ToolbarItem(placement: .navigationBarLeading){
+                    Button("Add Community"){
+                        presenter.addCommunity()
+                    }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if presenter.signedin {
                         presenter.makeButtonForAccount()
@@ -41,7 +46,6 @@ struct CommunitiesView: View {
                     }
                 }
             }
-            .listStyle(PlainListStyle())
             .listStyle(PlainListStyle())
         }
     }

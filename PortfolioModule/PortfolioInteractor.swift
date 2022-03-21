@@ -48,6 +48,9 @@ class PortfolioInteractor{
     func portfoliototal() -> Double{
         return model.portfoliototal()
     }
+    func portfoliobuytotal() -> Double{
+        return model.portfoliobuytotal()
+    }
     
     func changeViewTo(viewname: String){
         model.changePortfolioViewTo(viewname: viewname)

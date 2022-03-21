@@ -17,50 +17,45 @@ struct PortfolioView: View {
             
             VStack{
                 VStack{
-                    HStack{
+                    VStack{
                         VStack{
                             HStack{
-                                Spacer()
-                                Text("Portfolio Total:")
-                                    .font(.system(size: 20))
-                                Spacer()
-                                HStack{
-                                    VStack{
+                                VStack(alignment: .leading){
+                                    HStack{
+                                        Text("Portfolio Total:")
+                                            .font(.system(size: 20))
+                                        Spacer()
                                         Text("\(presenter.portfoliototal().formatcurrency4digits())")
                                             .font(.system(size: 20))
                                             .frame(alignment:.leading)
-                                        Text("\(presenter.inputtotal().formatcurrency4digits())")
+                                    }
+                                    HStack{
+                                        Text("Portfolio invested:")
+                                            .font(.system(size: 18))
+                                        Spacer()
+                                        Text("\(presenter.portfoliobuytotal().formatcurrency4digits())")
                                             .foregroundColor(Color.theme.accentcolorsecondary)
                                             .font(.system(size: 18))
                                             .frame(alignment:.leading)
-                                    }.frame(alignment:.leading)
-                                    VStack{
-                                        HStack{
-                                            Text("\(presenter.winlosepercent().formatpercent())")
-                                                .foregroundColor((presenter.winlosepercent() >= 0) ? Color.theme.green : Color.theme.red )
-                                                .frame(alignment:.leading)
-                                            Spacer()
-                                        }
                                     }
-                                
-                                }
+                                }.frame(width:UIScreen.main.bounds.width*0.75)
                                 Spacer()
-                            }.padding(5)
-                            
-                        }.frame(alignment:.leading)
+                                Text("\(presenter.winlosepercent().formatpercent())")
+                                    .foregroundColor((presenter.winlosepercent() >= 0) ? Color.theme.green : Color.theme.red )
+                                    .frame(alignment:.leading)
+                                Spacer()
+                            }
+                        }
                     }
-                    .padding(10)
-                        .foregroundColor(Color.theme.accentcolor)
                     HStack{
                         Spacer()
                         presenter.makeButtonforPortfolioList()
                         presenter.makeButtonforFavfolioList()
-                    Spacer()
+                        Spacer()
                     }
-                    Spacer()
                 }
-                .padding(5)
-                .frame(height: 300,alignment: .leading)
+                .padding(.horizontal,5)
+                .frame(height: 100,alignment: .leading)
                 presenter.makeList(selected: presenter.selection)
                 .toolbar{
                     ToolbarItem(placement: .navigationBarTrailing) {
@@ -72,7 +67,7 @@ struct PortfolioView: View {
                     }
                 }
                 .listStyle(PlainListStyle())
-        }
+            }
         }
     }
 }

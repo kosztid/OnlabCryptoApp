@@ -77,9 +77,11 @@ final class DataModel: ObservableObject{
         self.auth = Auth.auth()
         addSub()
         communitiesPullFromDB()
-        self.signOut()
-       // coins.append(CoinModel(id: "teszt", symbol: "teszt", name: "teszt", image: "teszt", currentPrice: 10, marketCap: 10, marketCapRank: 10, fullyDilutedValuation: 10, totalVolume: 10, high24H: 10, low24H: 10, priceChange24H: 10, priceChangePercentage24H: 10, marketCapChange24H: 10, marketCapChangePercentage24H: 10, circulatingSupply: 10, totalSupply: 10, maxSupply: 10, ath: 10, athChangePercentage: 10, athDate: "teszt", atl: 10, atlChangePercentage: 10, atlDate: "teszt", lastUpdated: "teszt", sparklineIn7D: SparklineIn7D(price: []), priceChangePercentage24HInCurrency: 10))
+        
+        userreload()
     }
+    
+    
     
     func addSub(){
         datadownloader.$coins
@@ -179,6 +181,17 @@ final class DataModel: ObservableObject{
         return total
     }
     
+    func portfoliobuytotal() -> Double{
+        if heldcoins.count == 0 {
+            return 0
+        }
+        var total: Double = 0
+        for a in 0...(heldcoins.count-1) {
+            total += (heldcoins[a].buytotal)
+        }
+        return total
+    }
+    
     func addHolding(coinid: String,coincount: Double,currprice: Double){
         let db = Firestore.firestore()
         let user = self.auth.currentUser?.uid ?? ""
@@ -229,7 +242,7 @@ final class DataModel: ObservableObject{
     
     func communitiesPullFromDB(){
         let db = Firestore.firestore()
-        db.collection("communities").getDocuments { snapshot, error in
+        db.collection("communities").addSnapshotListener { snapshot, error in
             if error == nil {
                 if let snapshot = snapshot{
                     DispatchQueue.main.async {
@@ -250,6 +263,8 @@ final class DataModel: ObservableObject{
         }
         
     }
+    
+    
     
     func messagesPullFromDB(idtoget: String){
         var messages: [Message] = []
@@ -287,7 +302,17 @@ final class DataModel: ObservableObject{
     func getAccountInfo() -> String{
         return self.auth.currentUser?.uid ?? "nouser"
     }
-    
+    func addCommunity(){
+        let db = Firestore.firestore()
+        db.collection("communities").addDocument(data: ["name":"Tesztcommunity"]){
+            error in
+            if error == nil{
+                //good
+            } else{
+                //error handling
+            }
+        }
+    }
     func sendMessage(id: String, message: Message){
         let db = Firestore.firestore()
         let sender = self.auth.currentUser?.uid ?? message.sender
@@ -299,6 +324,23 @@ final class DataModel: ObservableObject{
                 //error handling
             }
         }
+    }
+    
+    func userreload(){
+        auth.currentUser?.reload(completion: { (error) in
+            if let error = error {
+                print(String(describing: error))
+            } else{
+                DispatchQueue.main.async {
+                    self.isSignedIn = true
+                    let _ = print(self.auth.currentUser!.uid)
+                    let _ = print(self.auth.currentUser!.email ?? "")
+                    self.portfolioPullFromDB()
+                    self.favcoinPullFromDB()
+                }
+                
+            }
+        })
     }
     
     func signIn(email: String, password: String){

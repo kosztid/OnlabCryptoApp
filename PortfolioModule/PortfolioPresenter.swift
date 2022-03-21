@@ -70,7 +70,7 @@ class PortfolioPresenter: ObservableObject{
     }
     
     func winlosepercent()->Double{
-            return (1-(self.inputprice/self.portfoliototal()))*100
+            return (1-(self.portfoliobuytotal()/self.portfoliototal()))*100
     }
     
     
@@ -86,8 +86,9 @@ class PortfolioPresenter: ObservableObject{
     func portfoliototal()-> Double{
         return interactor.portfoliototal()
     }
-    func inputtotal() -> Double{
-        return 10500.20
+    
+    func portfoliobuytotal()->Double{
+        return interactor.portfoliobuytotal()
     }
     
     func makeList(selected: String) -> AnyView{

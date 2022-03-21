@@ -14,7 +14,29 @@ struct NewsDetailView: View {
             Color.theme.backgroundcolor
                 .ignoresSafeArea()
             ScrollView{
-                VStack{
+                VStack(alignment: .leading){
+                    HStack{
+                        Text(article.title ?? "Nincs cím")
+                            .font(.system(size: 26))
+                            .frame(alignment: .leading)
+                            .foregroundColor(Color.theme.accentcolor)
+                    }.frame(alignment: .leading)
+                    HStack{
+                        HStack{
+                            Text(article.author ?? "Nincs szerző")
+                                .font(.system(size: 16))
+                                .frame(alignment: .leading)
+                                .foregroundColor(Color.theme.accentcolorsecondary)
+                        }
+                        Spacer()
+                        HStack{
+                            Text(article.publishedAt ?? "PublishDate")
+                                .font(.system(size: 16))
+                                .frame(alignment: .leading)
+                                .foregroundColor(Color.theme.accentcolorsecondary)
+                        }
+                    }
+                    .padding(.horizontal, 5.0)
                     CachedAsyncImage(url: URL(string: article.urlToImage ?? "")){ image in
                         image
                             .resizable()
@@ -25,25 +47,15 @@ struct NewsDetailView: View {
                     }
                     .frame(width: UIScreen.main.bounds.width*0.95)
                     .cornerRadius(20)
-                    HStack{
-                        Text(article.title ?? "Nincs cím")
-                            .font(.system(size: 20))
-                            .frame(alignment: .leading)
-                            .foregroundColor(Color.theme.accentcolor)
-                    }.frame(alignment: .leading)
-                    HStack{
-                        Text(article.author ?? "Nincs szerző")
-                            .font(.system(size: 16))
-                            .frame(alignment: .leading)
-                            .foregroundColor(Color.theme.accentcolorsecondary)
-                    }.frame(alignment: .leading)
                 }
                 .padding(.bottom,10)
-                .frame(alignment: .leading)
-                HStack{
-                    Text(article.content ?? "Nincs szöveg")
-                        .font(.system(size: 16))
+                VStack{
+                    Text(article.content?.dropLast(13) ?? "Nincs szöveg")
+                        .font(.body)
                         .foregroundColor(Color.theme.accentcolor)
+                        .multilineTextAlignment(.leading)
+                    Link("Continue reading", destination: URL(string: article.url!)!)
+                        .foregroundColor(Color.theme.accentcolorsecondary)
                 }
             }
             .padding(10)
@@ -51,10 +63,10 @@ struct NewsDetailView: View {
             
     }
 }
-/*
+
 struct NewsDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        NewsDetailView()
+        NewsDetailView(article: Article(source: Source(id: "asdasdasd", name: "asdasdasd"), author: "asdasdasd", title: "asdasdasd", articleDescription: "asdasdasd", url: "asdasdasd", urlToImage: "asdasdasd", publishedAt: "asdasdasd", content: "asdasdasd"))
     }
 }
-*/
+
