@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 class CoinDetailPresenter: ObservableObject{
+    @State var showalert : Bool = false
     private let interactor: CoinDetailInteractor
     private let router = CoinDetailRouter()
     
@@ -51,5 +52,13 @@ class CoinDetailPresenter: ObservableObject{
                 .font(.system(size: 25))
         }
         .buttonStyle(BorderlessButtonStyle())
+    }
+    func makeAddButton() -> some View{
+        Button("ADD"){
+            self.showalert = true
+        }
+        .alert(isPresented:$showalert){
+            Alert(title: Text("Add"), message: Text("type in the amount"), primaryButton: .destructive(Text("Add")){}, secondaryButton: .cancel())
+        }
     }
 }

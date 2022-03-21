@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CoinDetailView: View {
+    @State var showalert : Bool = false
     @ObservedObject var presenter: CoinDetailPresenter
     var body: some View {
         ZStack{
@@ -28,6 +29,13 @@ struct CoinDetailView: View {
                             }.foregroundColor((presenter.getcoin().priceChangePercentage24H ?? 0) >= 0 ? Color.theme.green : Color.theme.red)
                         }
                         Spacer()
+                     /*   Button("ADD"){
+                            self.showalert = true
+                        }
+                        .alert(isPresented:$showalert){
+                            Alert(title: Text("Add"), message: Text("type in the amount"), primaryButton: .destructive(Text("Add")){}, secondaryButton: .cancel())
+                        }
+                        }*/
                         presenter.makeFavButton()
                     }
                     .frame(alignment: .trailing)

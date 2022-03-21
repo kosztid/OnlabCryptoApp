@@ -48,7 +48,8 @@ struct PortfolioView: View {
                             }.padding(5)
                             
                         }.frame(alignment:.leading)
-                    }.padding(10)
+                    }
+                    .padding(10)
                         .foregroundColor(Color.theme.accentcolor)
                     HStack{
                         Spacer()
@@ -59,7 +60,7 @@ struct PortfolioView: View {
                     Spacer()
                 }
                 .padding(5)
-                .frame(alignment: .leading)
+                .frame(height: 300,alignment: .leading)
                 presenter.makeList(selected: presenter.selection)
                 .toolbar{
                     ToolbarItem(placement: .navigationBarTrailing) {

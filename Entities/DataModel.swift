@@ -131,7 +131,7 @@ final class DataModel: ObservableObject{
                 if let snapshot = snapshot{
                     DispatchQueue.main.async {
                         self.favcoins = snapshot.documents.map { d in
-                            return CoinDataFirebase(firebaseid: d.documentID, coinid: d["coinid"] as? String ?? "", count: Double(d["count"] as? Double ?? 0))
+                            return CoinDataFirebase(firebaseid: d.documentID, coinid: d["coinid"] as? String ?? "", count: Double(d["count"] as? Double ?? 0), buytotal: Double(d["count"] as? Double ?? 0))
                         }
                     }
                     
@@ -179,15 +179,23 @@ final class DataModel: ObservableObject{
         return total
     }
     
-    func addHolding(coinid: String,coincount: Double){
+    func addHolding(coinid: String,coincount: Double,currprice: Double){
         let db = Firestore.firestore()
         let user = self.auth.currentUser?.uid ?? ""
         if self.heldcoins.filter({ $0.coinid == coinid }).isEmpty == false {
-            let firebaseid = self.heldcoins[heldcoins.firstIndex(where: { $0.coinid == coinid })!].firebaseid
-            db.collection("users").document(user).collection("portfolio").document(firebaseid).setData([ "count": coincount ], merge: true)
+            let dx = heldcoins.firstIndex(where: { $0.coinid == coinid })!
+            let firebaseid = self.heldcoins[dx].firebaseid
+            var holdingtotal = self.heldcoins[dx].buytotal
+            let holdingcount = self.heldcoins[dx].count
+            if holdingcount < coincount {
+                holdingtotal += (coincount - holdingcount) * currprice
+            } else {
+                holdingtotal = holdingtotal * coincount / holdingcount
+            }
+            db.collection("users").document(user).collection("portfolio").document(firebaseid).setData([ "count": coincount, "buytotal":holdingtotal ], merge: true)
         }
         else {
-            db.collection("users").document(user).collection("portfolio").addDocument(data: ["coinid":coinid,"count":coincount]){
+            db.collection("users").document(user).collection("portfolio").addDocument(data: ["coinid":coinid,"count":coincount,"buytotal":(coincount*currprice)]){
                 error in
                 if error == nil {
                 }
@@ -206,7 +214,7 @@ final class DataModel: ObservableObject{
                 if let snapshot = snapshot{
                     DispatchQueue.main.async {
                         self.heldcoins = snapshot.documents.map { d in
-                            return CoinDataFirebase(firebaseid: d.documentID, coinid: d["coinid"] as? String ?? "", count: Double(d["count"] as? Double ?? 0))
+                            return CoinDataFirebase(firebaseid: d.documentID, coinid: d["coinid"] as? String ?? "", count: Double(d["count"] as? Double ?? 0),buytotal: Double(d["buytotal"] as? Double ?? 0))
                            // MessageGroup(id: d.documentID, name: d["name"] as? String ?? "", messages: [], lastid: "")
                         }
                     }

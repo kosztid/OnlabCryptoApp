@@ -11,4 +11,5 @@ struct CoinDataFirebase{
     var firebaseid: String
     var coinid: String
     var count: Double
+    var buytotal: Double
 }

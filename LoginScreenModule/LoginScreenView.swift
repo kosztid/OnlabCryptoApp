@@ -20,7 +20,7 @@ struct LoginScreenView: View {
                 Color.theme.backgroundcolor.ignoresSafeArea(.all)
                 
                 VStack{
-                    Label("",systemImage: "house")
+                    Label("",systemImage: "bitcoinsign.circle")
                         .font(.system(size: 200))
                         .foregroundColor(Color.theme.accentcolor)
                     Text("Bejelentkezés")
