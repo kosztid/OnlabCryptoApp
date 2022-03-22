@@ -46,13 +46,30 @@ class PortfolioInteractor{
         }
     }
     func portfoliototal() -> Double{
-        return model.portfoliototal()
+        
+        if model.heldcoins.count == 0 {
+            return 0
+        }
+        var total: Double = 0
+        for a in 0...(model.heldcoins.count-1) {
+            let currentprice = model.coins.first(where: {$0.id == model.heldcoins[a].coinid})?.currentPrice ?? 0.0
+            total += (model.heldcoins[a].count * currentprice)
+        }
+        return total
     }
+    
     func portfoliobuytotal() -> Double{
-        return model.portfoliobuytotal()
+        if model.heldcoins.count == 0 {
+            return 0
+        }
+        var total: Double = 0
+        for a in 0...(model.heldcoins.count-1) {
+            total += (model.heldcoins[a].buytotal)
+        }
+        return total
     }
     
     func changeViewTo(viewname: String){
-        model.changePortfolioViewTo(viewname: viewname)
+        model.selection = viewname
     }
 }

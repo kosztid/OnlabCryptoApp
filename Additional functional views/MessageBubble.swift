@@ -27,6 +27,6 @@ struct MessageBubble: View {
 
 struct MessageBubble_Previews: PreviewProvider {
     static var previews: some View {
-        MessageBubble(message: Message(id: "123", sender: "Dominik", message: "Tesztüzem", time: "2022-02-02", received: true), sender: "")
+        MessageBubble(message: Message(id: "123", sender: "Dominik", message: "Tesztüzem", time: "2022-02-02"), sender: "")
     }
 }

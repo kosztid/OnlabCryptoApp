@@ -15,7 +15,13 @@ class AccountInteractor{
         self.model = model
     }
     func signOut(){
-        model.signOut()
+       // model.signOut()
+        try?model.auth.signOut()
+        DispatchQueue.main.async {
+            self.model.isSignedIn = false
+            self.model.heldcoins = []
+            self.model.favcoins = []
+        }
     }
     
     func currentUserEmail() -> String {

@@ -12,5 +12,4 @@ struct Message: Identifiable, Codable{
     var sender: String
     var message: String
     var time: String
-    var received: Bool
 }

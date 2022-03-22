@@ -17,7 +17,7 @@ class MessagerInteractor{
         model.sendMessage(id:id,message: message)
     }
     func getAccountInfo() -> String{
-        return model.getAccountInfo()
+        return model.auth.currentUser?.uid ?? "nouser"
     }
     
     func issignedin() -> Bool {

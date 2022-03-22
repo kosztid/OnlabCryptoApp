@@ -77,7 +77,6 @@ final class DataModel: ObservableObject{
         self.auth = Auth.auth()
         addSub()
         communitiesPullFromDB()
-        
         userreload()
     }
     
@@ -92,10 +91,11 @@ final class DataModel: ObservableObject{
             .sink{ [weak self] (datareceived) in self?.news = datareceived}
             .store(in: &cancellables)
     }
+    /*
     func changePortfolioViewTo(viewname: String){
         self.selection = viewname
     }
-    
+    */
     func addFavCoin(coinid: String){
         let db = Firestore.firestore()
         let user = self.auth.currentUser?.uid ?? ""
@@ -169,7 +169,7 @@ final class DataModel: ObservableObject{
     
     
     
-    func portfoliototal() -> Double {
+   /* func portfoliototal() -> Double {
         if heldcoins.count == 0 {
             return 0
         }
@@ -180,7 +180,8 @@ final class DataModel: ObservableObject{
         }
         return total
     }
-    
+    */
+    /*
     func portfoliobuytotal() -> Double{
         if heldcoins.count == 0 {
             return 0
@@ -191,7 +192,7 @@ final class DataModel: ObservableObject{
         }
         return total
     }
-    
+    */
     func addHolding(coinid: String,coincount: Double,currprice: Double){
         let db = Firestore.firestore()
         let user = self.auth.currentUser?.uid ?? ""
@@ -274,7 +275,7 @@ final class DataModel: ObservableObject{
                 if let snapshot = snapshot{
                     DispatchQueue.main.async {
                         messages = snapshot.documents.map { d in
-                            return Message(id: d.documentID,sender: d["sender"] as? String ?? "Unknown", message: d["message"] as? String ?? "", time: d["time"] as? String ?? "2000-02-02 10:00:00", received: d["received"]  as? Bool ?? false )
+                            return Message(id: d.documentID,sender: d["sender"] as? String ?? "Unknown", message: d["message"] as? String ?? "", time: d["time"] as? String ?? "2000-02-02 10:00:00")
                         }
                         
                         if let i = self.communities.firstIndex(where: {$0.id == idtoget}) {
@@ -298,10 +299,10 @@ final class DataModel: ObservableObject{
         }
         
     }
-    
+    /*
     func getAccountInfo() -> String{
         return self.auth.currentUser?.uid ?? "nouser"
-    }
+    }*/
     func addCommunity(){
         let db = Firestore.firestore()
         db.collection("communities").addDocument(data: ["name":"Tesztcommunity"]){
@@ -316,7 +317,7 @@ final class DataModel: ObservableObject{
     func sendMessage(id: String, message: Message){
         let db = Firestore.firestore()
         let sender = self.auth.currentUser?.uid ?? message.sender
-        db.collection("communities").document(id).collection("messages").addDocument(data: ["sender":sender,"message":message.message,"time":message.time,"received":false]){
+        db.collection("communities").document(id).collection("messages").addDocument(data: ["sender":sender,"message":message.message,"time":message.time]){
             error in
             if error == nil {
             }
@@ -380,12 +381,13 @@ final class DataModel: ObservableObject{
         }
         
     }
-    
+    /*
     func signOut(){
         try?auth.signOut()
-        DispatchQueue.main.async {
+        /*DispatchQueue.main.async {
             self.isSignedIn = false
-            self.heldcoins = []
-        }
-    }
+            //self.heldcoins = []
+           // self.favcoins = []
+        }*/
+    }*/
 }

@@ -24,6 +24,6 @@ struct CommunitiesListItem: View {
 
 struct CommunitiesListItem_Previews: PreviewProvider {
     static var previews: some View {
-        CommunitiesListItem(community: MessageGroup(id: "1", name: "Bitcoin Community", messages:[Message(id: "123", sender: "Dominik", message: "Első üzenet", time: "2022-02-02", received: true),Message(id: "124", sender: "Dominik", message: "Második üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenet", time:"2022-02-02" , received: false),Message(id: "125", sender: "Dominik", message: "Harmadik üzenet", time: "2022-02-02", received: true)], lastid: "jasd"))
+        CommunitiesListItem(community: MessageGroup(id: "1", name: "Bitcoin Community", messages:[Message(id: "123", sender: "Dominik", message: "Első üzenet", time: "2022-02-02"),Message(id: "124", sender: "Dominik", message: "Második üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenet", time:"2022-02-02"),Message(id: "125", sender: "Dominik", message: "Harmadik üzenet", time: "2022-02-02")], lastid: "jasd"))
     }
 }
