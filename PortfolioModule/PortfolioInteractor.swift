@@ -29,6 +29,15 @@ class PortfolioInteractor{
         }
         return arr
     }
+    
+    func ownedcoins() -> [String] {
+        var arr: [String] = []
+        for a in model.ownedcoins {
+            arr.append(a.coinid)
+        }
+        return arr
+    }
+    
     func getmodel() -> DataModel {
         return model
     }
@@ -45,6 +54,16 @@ class PortfolioInteractor{
             return 0.0
         }
     }
+    
+    func getownedcount(coin: CoinModel) -> Double{
+        if let index = model.ownedcoins.firstIndex(where: { $0.coinid == coin.id }) {
+            return model.ownedcoins[index].count
+        }
+        else {
+            return 0.0
+        }
+    }
+    
     func portfoliototal() -> Double{
         
         if model.heldcoins.count == 0 {

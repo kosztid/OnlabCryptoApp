@@ -67,13 +67,14 @@ final class DataModel: ObservableObject{
     //@Published var heldcoinscount: [Double] = []
     @Published var heldcoins: [CoinDataFirebase] = []
     @Published var favcoins: [CoinDataFirebase] = []
+    @Published var ownedcoins: [CoinDataFirebase] = []
     //private var datadownloaderfordetail = SingleDataDownloader(coinid: "ethereum")
    // var singlecoinsub: AnyCancellable?
     private var cancellables = Set<AnyCancellable>()
     @Published var selection: String
     
     init(){
-        self.selection = "portfolio"
+        self.selection = "wallet"
         self.auth = Auth.auth()
         addSub()
         communitiesPullFromDB()
@@ -124,6 +125,8 @@ final class DataModel: ObservableObject{
             }
         }
     }
+    
+    
     
     func favcoinPullFromDB(){
         let db = Firestore.firestore()
@@ -218,8 +221,49 @@ final class DataModel: ObservableObject{
                 }
             }
         }
-        
     }
+    
+    func modifywallet(coinid: String,coincount: Double){
+        let db = Firestore.firestore()
+        let user = self.auth.currentUser?.uid ?? ""
+        if self.ownedcoins.filter({ $0.coinid == coinid }).isEmpty == false {
+            let dx = ownedcoins.firstIndex(where: { $0.coinid == coinid })!
+            let firebaseid = self.ownedcoins[dx].firebaseid
+            db.collection("users").document(user).collection("wallet").document(firebaseid).setData(["count": coincount], merge: true)
+        }
+        else {
+            db.collection("users").document(user).collection("wallet").addDocument(data: ["coinid":coinid,"count":coincount]){
+                error in
+                if error == nil {
+                }
+                else {
+                    //error handling
+                }
+            }
+        }
+    }
+    
+    func walletPullFromDB(){
+        let db = Firestore.firestore()
+        let userid = self.auth.currentUser?.uid
+        db.collection("users").document(userid!).collection("wallet").addSnapshotListener { snapshot, error in
+            if error == nil {
+                if let snapshot = snapshot{
+                    DispatchQueue.main.async {
+                        self.ownedcoins = snapshot.documents.map { d in
+                            return CoinDataFirebase(firebaseid: d.documentID, coinid: d["coinid"] as? String ?? "", count: Double(d["count"] as? Double ?? 0),buytotal:0)
+                           // MessageGroup(id: d.documentID, name: d["name"] as? String ?? "", messages: [], lastid: "")
+                        }
+                    }
+                    
+                }
+            }
+            else {
+                //error handling
+            }
+        }
+    }
+    
     func portfolioPullFromDB(){
         let db = Firestore.firestore()
         let userid = self.auth.currentUser?.uid
@@ -338,6 +382,7 @@ final class DataModel: ObservableObject{
                     let _ = print(self.auth.currentUser!.email ?? "")
                     self.portfolioPullFromDB()
                     self.favcoinPullFromDB()
+                    self.walletPullFromDB()
                 }
                 
             }

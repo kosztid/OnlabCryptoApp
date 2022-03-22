@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 class PortfolioPresenter: ObservableObject{
-    @Published var selection: String = "portfolio"
+    @Published var selection: String = "wallet"
     let inputprice: Double = 10500.23
     @Published var coins: [CoinModel] = []
     @Published var favcoins: [CoinDataFirebase] = []
@@ -58,6 +58,9 @@ class PortfolioPresenter: ObservableObject{
     func heldfavcoins() -> [String] {
         return interactor.heldfavcoins()
     }
+    func ownedcoins() -> [String] {
+        return interactor.ownedcoins()
+    }
     func isSelected(selected: String) -> Bool {
         return selected == self.selection
     }
@@ -65,10 +68,11 @@ class PortfolioPresenter: ObservableObject{
     func removeCoin(_ index: IndexSet){
         interactor.removeCoin(index)
     }
+    /*
     func getholdingcount(coin: CoinModel) -> Double {
         return interactor.getholdingcount(coin: coin)
     }
-    
+    */
     func winlosepercent()->Double{
             return (1-(self.portfoliobuytotal()/self.portfoliototal()))*100
     }
@@ -101,7 +105,7 @@ class PortfolioPresenter: ObservableObject{
                         Color.theme.backgroundcolor
                                 .ignoresSafeArea()
                             
-                        PortfolioListItem(presenter: self,holding: self.getholdingcount(coin: coin), coin: coin)
+                        PortfolioListItem(presenter: self,holding: self.interactor.getholdingcount(coin: coin), coin: coin)
                             .frame(height: 80)
                         self.linkBuilder(for: coin){
                             EmptyView()
@@ -115,7 +119,7 @@ class PortfolioPresenter: ObservableObject{
             .listRowSeparatorTint(Color.theme.backgroundsecondary)
             .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
         })}
-        else { return AnyView(
+        else if selected == "favfolio" { return AnyView(
             List{
                 ForEach(self.coins){ coin in
                     if self.heldfavcoins().contains(coin.id) {
@@ -136,7 +140,29 @@ class PortfolioPresenter: ObservableObject{
                 //.onDelete(perform: self.removeCoin)
                 .listRowSeparatorTint(Color.theme.backgroundsecondary)
                 .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-            })}
+            })} else {
+                return AnyView(
+                List{
+                    ForEach(self.coins){ coin in
+                        if self.ownedcoins().contains(coin.id) {
+                            ZStack{
+                                Color.theme.backgroundcolor
+                                        .ignoresSafeArea()
+                                    
+                                PortfolioListItem(presenter: self,holding: self.interactor.getownedcount(coin: coin), coin: coin)
+                                    .frame(height: 80)
+                                self.linkBuilder(for: coin){
+                                    EmptyView()
+                                }.buttonStyle(PlainButtonStyle())
+                            }
+                            .frame(height: 60)
+                        }
+                        
+                    }
+                    .listRowSeparatorTint(Color.theme.backgroundsecondary)
+                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                })
+            }
     }
     
     func makeButtonforPortfolioList() -> some View{
