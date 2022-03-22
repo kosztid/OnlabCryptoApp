@@ -46,9 +46,9 @@ struct MessagerView: View {
                 }
                 
                 ZStack(alignment: .trailing){
-                    Color.gray
+                    Color.theme.textbox
                     TextField("Type in a new message", text: $newmessage)
-                        .background(Color.gray)
+                        .background(Color.theme.textbox)
                         .foregroundColor(Color.theme.accentcolor)
                         .font(.system(size: 20))
                         .disableAutocorrection(true)

@@ -21,5 +21,8 @@ struct ColorTheme {
     let red = Color("PriceDownRed")
     let redgraph = Color("PriceDownRedGraph")
     let greengraph = Color("PriceUpGreenGraph")
+    let messagesent = Color("MessageBubbleSent")
+    let messagereceived = Color("MessageBubbleReceived")
+    let textbox = Color("TextboxColor")
     
 }

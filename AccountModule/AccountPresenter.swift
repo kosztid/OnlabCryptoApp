@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class AccountPresenter{
     private let interactor: AccountInteractor
@@ -14,7 +15,19 @@ class AccountPresenter{
         self.interactor = interactor
     }
     
-    func signOut(){
-        interactor.signOut()
+    func currentUserEmail() -> String{
+        return interactor.currentUserEmail()
+    }
+    
+    func makeLogoutButton () -> some View{
+        Button{
+            self.interactor.signOut()
+        } label : {
+            Text("Kijelentkezés")
+                .font(.system(size: 20))
+                .frame(height: 30)
+                .cornerRadius(5)
+                .padding(5)
+        }
     }
 }

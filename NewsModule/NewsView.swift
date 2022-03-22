@@ -15,6 +15,7 @@ struct NewsView: View {
                 .ignoresSafeArea()
             
             List{
+                //Array(Set(presenter.news.articles!))
                 ForEach(presenter.news.articles!, id:\.self){ article in
                     ZStack{
                         Color.theme.backgroundcolor

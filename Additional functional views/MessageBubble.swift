@@ -15,10 +15,10 @@ struct MessageBubble: View {
             HStack{
                 Text(message.message)
                     .padding(10)
-                    .background((message.sender == sender) ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
+                    .background((message.sender == sender) ? Color.theme.messagesent : Color.theme.messagereceived)
                     .cornerRadius(20)
                     .fixedSize(horizontal: false, vertical: true)
-                    .foregroundColor((message.sender == sender) ? Color.theme.backgroundsecondary : Color.theme.accentcolor )
+                    .foregroundColor((message.sender == sender) ? Color.theme.backgroundcolor : Color.theme.accentcolor )
             }
             .frame(maxWidth: UIScreen.main.bounds.width*0.95, alignment: (message.sender == sender) ? .trailing : .leading)
         }.frame(maxWidth: .infinity)

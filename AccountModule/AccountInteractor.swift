@@ -17,4 +17,8 @@ class AccountInteractor{
     func signOut(){
         model.signOut()
     }
+    
+    func currentUserEmail() -> String {
+        return (model.auth.currentUser?.email)!
+    }
 }

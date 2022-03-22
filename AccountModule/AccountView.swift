@@ -13,20 +13,24 @@ struct AccountView: View {
         ZStack{
             Color.theme.backgroundcolor
             VStack{
-                Text("Account")
-                    .foregroundColor(Color.theme.accentcolor)
-                Button("LogOut"){
-                    presenter.signOut()
+                HStack{
+                    Text("Email address:")
+                    Text("teszt@gmail.com")
                 }
+                .font(.title)
+                .foregroundColor(Color.theme.accentcolor)
+                
+                presenter.makeLogoutButton()
             }
-        }
+            .padding(10)
+        }.background(Color.theme.backgroundcolor)
         
     }
 }
-/*
+
 struct AccountView_Previews: PreviewProvider {
     static var previews: some View {
-        AccountView()
+        AccountView(presenter: AccountPresenter(interactor: AccountInteractor(model: DataModel())))
     }
 }
-*/
+

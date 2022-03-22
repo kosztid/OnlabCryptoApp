@@ -81,8 +81,8 @@ class DataDownloader{
                 case .failure(let error):
                     print(String(describing: error))
                 }
-            } receiveValue: { [weak self] (returnedCoins) in
-                self?.news = returnedCoins
+            } receiveValue: { [weak self] (returnednews) in
+                self?.news = returnednews
                 self?.newssub?.cancel()
             }
         
