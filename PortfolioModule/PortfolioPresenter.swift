@@ -10,7 +10,6 @@ import SwiftUI
 
 class PortfolioPresenter: ObservableObject{
     @Published var selection: String = "wallet"
-    let inputprice: Double = 10500.23
     @Published var coins: [CoinModel] = []
     @Published var favcoins: [CoinDataFirebase] = []
     @Published var signedin : Bool = false

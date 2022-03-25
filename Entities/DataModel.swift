@@ -74,7 +74,7 @@ final class DataModel: ObservableObject{
     @Published var selection: String
     
     init(){
-        self.selection = "wallet"
+        self.selection = "portfolio"
         self.auth = Auth.auth()
         addSub()
         communitiesPullFromDB()

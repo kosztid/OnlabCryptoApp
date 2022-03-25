@@ -12,6 +12,7 @@ extension Double {
     private var formattercurrency6digits: NumberFormatter{
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
+        formatter.locale = Locale(identifier: "en_US")
         formatter.minimumFractionDigits = 2
         formatter.maximumFractionDigits = 6
         return formatter
@@ -25,6 +26,7 @@ extension Double {
     private var formattercurrency4digits: NumberFormatter{
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
+        formatter.locale = Locale(identifier: "en_US")
         formatter.minimumFractionDigits = 2
         formatter.maximumFractionDigits = 4
         return formatter
@@ -37,6 +39,7 @@ extension Double {
     private var formattercurrency0digits: NumberFormatter{
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
+        formatter.locale = Locale(identifier: "en_US")
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 0
         return formatter

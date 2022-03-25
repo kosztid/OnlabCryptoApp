@@ -8,5 +8,9 @@
 import Foundation
 
 class SwapInteractor{
+    let model: DataModel
     
+    init(model: DataModel){
+        self.model = model
+    }
 }

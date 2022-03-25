@@ -42,7 +42,7 @@ struct ListOfCoinsListItem: View {
                 .foregroundColor((coin.priceChangePercentage24H ?? 0) >= 0 ? Color.theme.green : Color.theme.red)
                 .font(.system(size: 12))
     
-            VStack{
+                VStack(alignment: .trailing){
                 Text(coin.currentPrice.formatcurrency6digits())
                     .foregroundColor(Color.theme.accentcolor)
                     .font(.system(size: 16))

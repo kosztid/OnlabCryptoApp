@@ -20,6 +20,7 @@ struct ContentView: View {
         case communities
         case swap
         case portfolio
+        case news
         
     }
     
@@ -49,14 +50,24 @@ struct ContentView: View {
                 }
                     .tabItem { Label("Portfolio", systemImage: "list.bullet") }
                     .tag(Tab.portfolio)
-                //Swap tab
+                
+                //swap tab
+                NavigationView {
+                    VStack(spacing: 10) {
+                        SwapView(presenter: SwapPresenter(interactor: SwapInteractor(model: model)))
+                    }
+                }
+                    .tabItem { Label("Swap", systemImage: "list.bullet") }
+                    .tag(Tab.swap)
+                
+                //News tab
                 NavigationView {
                     VStack(spacing: 10) {
                         NewsView(presenter: NewsPresenter(interactor: NewsInteractor(model: model)))
                     }
                 }
-                    .tabItem { Label("List", systemImage: "list.bullet") }
-                    .tag(Tab.swap)
+                    .tabItem { Label("News", systemImage: "list.bullet") }
+                    .tag(Tab.news)
                 
                 //Communities tab
                 NavigationView {

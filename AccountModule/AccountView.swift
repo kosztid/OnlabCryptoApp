@@ -13,11 +13,11 @@ struct AccountView: View {
         ZStack{
             Color.theme.backgroundcolor
             VStack{
-                HStack{
+                VStack(alignment:.center){
                     Text("Email address:")
-                    Text("teszt@gmail.com")
+                    Text(presenter.currentUserEmail())
                 }
-                .font(.title)
+                .font(.system(size: 18))
                 .foregroundColor(Color.theme.accentcolor)
                 
                 presenter.makeLogoutButton()

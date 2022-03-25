@@ -49,7 +49,7 @@ struct MessagerView: View {
                     Color.theme.textbox
                     TextField("Type in a new message", text: $newmessage)
                         .background(Color.theme.textbox)
-                        .foregroundColor(Color.theme.backgroundcolor)
+                        .foregroundColor(Color.black)
                         .font(.system(size: 20))
                         .disableAutocorrection(true)
                         .frame(height: 40,alignment: .center)
