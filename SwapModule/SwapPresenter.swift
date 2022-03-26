@@ -10,8 +10,8 @@ import Combine
 import SwiftUI
 
 class SwapPresenter:ObservableObject{
-    @State var coin : String = ""
-    @State var searchTerm: String = ""
+    @Published var coin1 : String = "Bitcoin"
+    @Published var coin2 : String = ""
     private let router = SwapRouter()
     private let interactor: SwapInteractor
     @Published var coins: [CoinModel] = []
@@ -27,5 +27,8 @@ class SwapPresenter:ObservableObject{
     
     func makeButtonForSelector() -> some View {
         NavigationLink("Select coin", destination: router.makeSelectorView(presenter: self))
+    }
+    func selected(coin:String)->String{
+        return interactor.selected(coin: coin)
     }
 }

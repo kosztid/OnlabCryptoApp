@@ -1,30 +1,27 @@
 //
-//  SwapView.swift
+//  SearchView.swift
 //  OnlabCryptoApp
 //
-//  Created by Kosztolánczi Dominik on 2022. 02. 25..
+//  Created by Kosztolánczi Dominik on 2022. 03. 26..
 //
 
 import SwiftUI
 
-
-
-struct SwapView: View {
+struct SearchView: View {
+    @State var searchText = ""
+    @State var searching = false
     @ObservedObject var presenter: SwapPresenter
     var body: some View {
-        
-        presenter.makeButtonForSelector()
-        Text(presenter.selected(coin: presenter.coin1))
-    }
-        /*
         NavigationView {
                     VStack(alignment: .leading) {
                         SearchBar(searchText: $searchText, searching: $searching)
                         List {
                             ForEach(presenter.coins.filter({ (coin) -> Bool in
-                                return coin.name.hasPrefix(searchText) || coin.id.hasPrefix(searchText) || searchText == ""
+                                return coin.name.hasPrefix(searchText) || coin.symbol.hasPrefix(searchText.lowercased()) || searchText == ""
                             })) { coin in
-                                Text(coin.name)
+                                Button(coin.name){
+                                    presenter.coin1 = coin.name
+                                }
                             }
                         }
                             .listStyle(GroupedListStyle())
@@ -47,41 +44,8 @@ struct SwapView: View {
                             )
                     }
                 }
-    }*/
-        /* VStack{
-            HStack{
-                VStack{
-                    Text("Coin to sell")
-                }
-                VStack{
-                    Text("Coin to buy")
-                    Text("Selector")
-                }
-            }
-        ZStack{
-            Color.theme.backgroundcolor
-            HStack{
-                VStack{
-                    Text("Egyik coin")
-                    presenter.makeButtonForSelector()
-                    
-                }
-                VStack{
-                    Text("Másik coin")
-                    
-                    
-                }
-            }
-            
-        }
-           
-            Picker("Flavor", selection: $coin) {
-                ForEach(presenter.coins) { coin in
-                    Text(coin.name)
-                }
-            } */
+    }
 }
-/*
 struct SearchBar: View {
     
     @Binding var searchText: String
@@ -104,6 +68,7 @@ struct SearchBar: View {
                         searching = false
                     }
                 }
+                .disableAutocorrection(true)
             }
             .foregroundColor(.gray)
             .padding(.leading, 13)
@@ -120,48 +85,10 @@ extension UIApplication {
          sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
      }
  }
-
 /*
-struct SearchBar: UIViewRepresentable {
-
-    @Binding var text: String
-    var placeholder: String
-
-    func makeUIView(context: UIViewRepresentableContext<SearchBar>) -> UISearchBar {
-        let searchBar = UISearchBar(frame: .zero)
-        searchBar.delegate = context.coordinator
-
-        searchBar.placeholder = placeholder
-        searchBar.autocapitalizationType = .none
-        searchBar.searchBarStyle = .minimal
-        return searchBar
-    }
-
-    func updateUIView(_ uiView: UISearchBar, context: UIViewRepresentableContext<SearchBar>) {
-        uiView.text = text
-    }
-
-    func makeCoordinator() -> SearchBar.Coordinator {
-        return Coordinator(text: $text)
-    }
-
-    class Coordinator: NSObject, UISearchBarDelegate {
-
-        @Binding var text: String
-
-        init(text: Binding<String>) {
-            _text = text
-        }
-
-        func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-            text = searchText
-        }
+struct SearchView_Previews: PreviewProvider {
+    static var previews: some View {
+        SearchView()
     }
 }
-
-struct SwapView_Previews: PreviewProvider {
-    static var previews: some View {
-        SwapView(presenter: SwapPresenter(interactor: SwapInteractor(model: DataModel())))
-    }
-}*/
- */
+*/

@@ -13,4 +13,8 @@ class SwapInteractor{
     init(model: DataModel){
         self.model = model
     }
+    
+    func selected(coin:String)->String{
+        return model.coins.first(where: {$0.name == coin})?.name ?? "nincsnev"
+    }
 }
