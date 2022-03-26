@@ -11,11 +11,12 @@ import SwiftUI
 
 class SwapPresenter:ObservableObject{
     @Published var coin1 : String = "Bitcoin"
-    @Published var coin2 : String = ""
+    @Published var coin2 : String = "Tether"
     private let router = SwapRouter()
     private let interactor: SwapInteractor
     @Published var coins: [CoinModel] = []
     private var cancellables = Set<AnyCancellable>()
+    @State private var showingAlert = false
     
     init(interactor: SwapInteractor){
         self.interactor = interactor
@@ -25,10 +26,10 @@ class SwapPresenter:ObservableObject{
             .store(in: &cancellables)
     }
     
-    func makeButtonForSelector() -> some View {
-        NavigationLink("Select coin", destination: router.makeSelectorView(presenter: self))
+    func makeButtonForSelector(coin: String) -> some View {
+        NavigationLink("Select coin", destination: router.makeSelectorView(presenter: self,coin: coin))
     }
-    func selected(coin:String)->String{
+    func selected(coin:String)->CoinModel{
         return interactor.selected(coin: coin)
     }
 }

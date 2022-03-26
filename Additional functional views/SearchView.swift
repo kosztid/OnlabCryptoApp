@@ -8,42 +8,41 @@
 import SwiftUI
 
 struct SearchView: View {
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State var searchText = ""
     @State var searching = false
+    var coinname: String = "coin1"
     @ObservedObject var presenter: SwapPresenter
+    
     var body: some View {
-        NavigationView {
-                    VStack(alignment: .leading) {
-                        SearchBar(searchText: $searchText, searching: $searching)
-                        List {
-                            ForEach(presenter.coins.filter({ (coin) -> Bool in
-                                return coin.name.hasPrefix(searchText) || coin.symbol.hasPrefix(searchText.lowercased()) || searchText == ""
-                            })) { coin in
-                                Button(coin.name){
+        ZStack{
+            Color.theme.backgroundcolor
+            VStack(alignment: .leading) {
+                SearchBar(searchText: $searchText, searching: $searching)
+                    .frame(height:40)
+                List {
+                    ForEach(presenter.coins.filter({ (coin) -> Bool in
+                        return coin.name.hasPrefix(searchText) || coin.symbol.hasPrefix(searchText.lowercased()) || searchText == ""
+                    })) { coin in
+                        ZStack{
+                            Button(""){
+                                if coinname == "coin1" {
                                     presenter.coin1 = coin.name
+                                } else {
+                                    presenter.coin2 = coin.name
                                 }
+                                
+                                self.presentationMode.wrappedValue.dismiss()
                             }
+                            SearchListItem(coin: coin)
                         }
-                            .listStyle(GroupedListStyle())
-                            .navigationTitle("Select a coin")
-                            .toolbar {
-                                if searching {
-                                    Button("Cancel") {
-                                        searchText = ""
-                                        withAnimation {
-                                           searching = false
-                                           UIApplication.shared.dismissKeyboard()
-                                        }
-                                    }
-                                }
-                            }
-                            .gesture(DragGesture()
-                                        .onChanged({ _ in
-                                UIApplication.shared.dismissKeyboard()
-                                        })
-                            )
-                    }
+                        
+                    }.listRowSeparatorTint(Color.theme.backgroundsecondary)
+                        .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                 }
+                .listStyle(PlainListStyle())
+            }
+        }.background(Color.theme.backgroundcolor)
     }
 }
 struct SearchBar: View {

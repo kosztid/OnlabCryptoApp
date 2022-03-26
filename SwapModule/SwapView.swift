@@ -11,10 +11,114 @@ import SwiftUI
 
 struct SwapView: View {
     @ObservedObject var presenter: SwapPresenter
+    @State private var showingAlert = false
+    @State var coinstobuy : Double = 0
+    @State var coinstosell : Double = 0
     var body: some View {
+        ZStack{
+            Color.theme.backgroundcolor
+            
+            VStack{
+                HStack{
+                    Spacer()
+                    VStack{
+                        Text("From")
+                            .font(.system(size: 26))
+                            .bold()
+                        presenter.makeButtonForSelector(coin: "coin1")
+                        HStack{
+                            CachedAsyncImage(url: URL(string: presenter.selected(coin: presenter.coin1).image)){ image in
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                            } placeholder: {
+                                Circle()
+                                    .frame(width: 30, height: 30)
+                            }
+                            .frame(width: 30, height: 30)
+                            .cornerRadius(20)
+                            Text(presenter.selected(coin: presenter.coin1).name)
+                                .font(.system(size: 20))
+                        }
+                        TextField("Amount to sell", value: $coinstosell, format: .number)
+                            .padding(.horizontal)
+                            .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            .font(.system(size: 20))
+                            .foregroundColor(Color.theme.accentcolor)
+                            .background(Color.theme.backgroundcolor)
+                            .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.theme.accentcolorsecondary, lineWidth: 2))
+                            .cornerRadius(10)
+                            .disableAutocorrection(true)
+                    }
+                    .font(.system(size: 24))
+                    .foregroundColor(Color.theme.accentcolor)
+                    Spacer()
+                    Image(systemName: "arrow.right")
+                        .font(.system(size: 26))
+                    Spacer()
+                    VStack{
+                        Text("To")
+                            .font(.system(size: 26))
+                            .bold()
+                        presenter.makeButtonForSelector(coin: "coin2")
+                        HStack{
+                            CachedAsyncImage(url: URL(string: presenter.selected(coin: presenter.coin2).image)){ image in
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                            } placeholder: {
+                                Circle()
+                                    .frame(width: 30, height: 30)
+                            }
+                            .frame(width: 30, height: 30)
+                            .cornerRadius(20)
+                            Text(presenter.selected(coin: presenter.coin2).name)
+                                .font(.system(size: 20))
+                        }
+                        TextField("Amount to buy", value: $coinstobuy, format: .number)
+                            .padding(.horizontal)
+                            .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            .font(.system(size: 20))
+                            .foregroundColor(Color.theme.accentcolor)
+                            .background(Color.theme.backgroundcolor)
+                            .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.theme.accentcolorsecondary, lineWidth: 2))
+                            .cornerRadius(10)
+                            .disableAutocorrection(true)
+                    }
+                    .font(.system(size: 24))
+                    .foregroundColor(Color.theme.accentcolor)
+                    Spacer()
+                }
+                .padding(10)
+                HStack(alignment:.center){
+                    Button{
+                        self.showingAlert = true
+                        //swap interactor
+                    } label: {
+                        Text("Swap")
+                            .frame(height:30)
+                            .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
+                            .font(.system(size: 20))
+                            .foregroundColor(Color.theme.accentcolor)
+                            .background(Color.theme.backgroundsecondary)
+                            .cornerRadius(10)
+                    }
+                    .alert(isPresented:$showingAlert) {
+                                Alert(
+                                    title: Text("Are you sure you want to make a trade?"),
+                                    message: Text("\(self.coinstosell.format2digits()) \(self.presenter.coin1) For \(self.coinstobuy.format2digits()) \(self.presenter.coin2)"),
+                                    primaryButton: .destructive(Text("Confirm")) {
+                                        print("Swapping")
+                                    },
+                                    secondaryButton: .cancel()
+                                )
+                            }
+                }
+            }
+            
+        }
+        .background(Color.theme.backgroundcolor)
         
-        presenter.makeButtonForSelector()
-        Text(presenter.selected(coin: presenter.coin1))
     }
         /*
         NavigationView {
@@ -158,10 +262,10 @@ struct SearchBar: UIViewRepresentable {
         }
     }
 }
-
+*/
+ */
 struct SwapView_Previews: PreviewProvider {
     static var previews: some View {
-        SwapView(presenter: SwapPresenter(interactor: SwapInteractor(model: DataModel())))
+        SwapView(presenter: SwapPresenter(interactor: SwapInteractor(model: DataModel())),coinstobuy: 1,coinstosell: 44000)
     }
-}*/
- */
+}

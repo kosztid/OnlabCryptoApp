@@ -10,7 +10,7 @@ import SwiftUI
 
 class SwapRouter{
     
-    func makeSelectorView(presenter: SwapPresenter) -> some View {
-            SearchView(presenter: presenter)
+    func makeSelectorView(presenter: SwapPresenter,coin:String) -> some View {
+        SearchView(coinname: coin, presenter: presenter)
     }
 }
