@@ -28,8 +28,12 @@ struct SearchView: View {
                             Button(""){
                                 if coinname == "coin1" {
                                     presenter.coin1 = coin.name
+                                    presenter.buyorsell = "buy"
+                                    presenter.setSellAmount()
                                 } else {
                                     presenter.coin2 = coin.name
+                                    presenter.buyorsell = "sell"
+                                    presenter.setBuyAmount()
                                 }
                                 
                                 self.presentationMode.wrappedValue.dismiss()

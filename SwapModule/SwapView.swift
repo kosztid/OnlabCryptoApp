@@ -12,8 +12,13 @@ import SwiftUI
 struct SwapView: View {
     @ObservedObject var presenter: SwapPresenter
     @State private var showingAlert = false
-    @State var coinstobuy : Double = 0
-    @State var coinstosell : Double = 0
+   // @State var coinstobuy : Double = 0
+   // @State var coinstosell : Double = 0
+    let formatter: NumberFormatter = {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            return formatter
+        }()
     var body: some View {
         ZStack{
             Color.theme.backgroundcolor
@@ -40,8 +45,15 @@ struct SwapView: View {
                             Text(presenter.selected(coin: presenter.coin1).name)
                                 .font(.system(size: 20))
                         }
-                        TextField("Amount to sell", value: $coinstosell, format: .number)
-                            .padding(.horizontal)
+                        TextField("Amount to sell", value: $presenter.coinstosell, formatter: formatter, onEditingChanged: { (changed) in
+                            //presenter.self.coinstosell = self.coinstosell
+                            if changed {
+                                presenter.buyorsell = "sell"
+                                } else {
+                                    presenter.setBuyAmount()
+                                }
+                            
+                        }).padding(.horizontal)
                             .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                             .font(.system(size: 20))
                             .foregroundColor(Color.theme.accentcolor)
@@ -75,7 +87,15 @@ struct SwapView: View {
                             Text(presenter.selected(coin: presenter.coin2).name)
                                 .font(.system(size: 20))
                         }
-                        TextField("Amount to buy", value: $coinstobuy, format: .number)
+                        TextField("Amount to buy", value: $presenter.coinstobuy, formatter:formatter, onEditingChanged: { (changed) in
+                            //presenter.self.coinstobuy = self.coinstobuy
+                           // presenter.setSellAmount()
+                            if changed {
+                                presenter.buyorsell = "buy"
+                                } else {
+                                    presenter.setSellAmount()
+                                }
+                        })
                             .padding(.horizontal)
                             .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                             .font(.system(size: 20))
@@ -84,6 +104,7 @@ struct SwapView: View {
                             .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.theme.accentcolorsecondary, lineWidth: 2))
                             .cornerRadius(10)
                             .disableAutocorrection(true)
+                           // .onChange(of: presenter.coinstobuy){presenter.setSellAmount()}
                     }
                     .font(.system(size: 24))
                     .foregroundColor(Color.theme.accentcolor)
@@ -106,7 +127,7 @@ struct SwapView: View {
                     .alert(isPresented:$showingAlert) {
                                 Alert(
                                     title: Text("Are you sure you want to make a trade?"),
-                                    message: Text("\(self.coinstosell.format2digits()) \(self.presenter.coin1) For \(self.coinstobuy.format2digits()) \(self.presenter.coin2)"),
+                                    message: Text("\(self.presenter.coinstosell.format2digits()) \(self.presenter.coin1) For \(self.presenter.coinstobuy.format2digits()) \(self.presenter.coin2)"),
                                     primaryButton: .destructive(Text("Confirm")) {
                                         print("Swapping")
                                     },
@@ -266,6 +287,6 @@ struct SearchBar: UIViewRepresentable {
  */
 struct SwapView_Previews: PreviewProvider {
     static var previews: some View {
-        SwapView(presenter: SwapPresenter(interactor: SwapInteractor(model: DataModel())),coinstobuy: 1,coinstosell: 44000)
+        SwapView(presenter: SwapPresenter(interactor: SwapInteractor(model: DataModel())))
     }
 }
