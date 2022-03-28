@@ -8,7 +8,7 @@
 import Foundation
 
 class SwapInteractor{
-    let model: DataModel
+    var model: DataModel
     
     init(model: DataModel){
         self.model = model
@@ -34,5 +34,21 @@ class SwapInteractor{
             ownedamountfrombuy = 0
         }
         model.modifywallet(coinid: cointobuy, coincount: buyamount+ownedamountfrombuy)
+    }
+    
+    func setCoin1(coin1: String){
+        model.coin1 = coin1
+    }
+    func setCoin2(coin2: String){
+        model.coin2 = coin2
+    }
+    func setBuyorSell(boolean: String){
+        model.buyorsell = boolean
+    }
+    func setCoinstoBuy(amount: Double){
+        model.coinstobuy = amount
+    }
+    func setCoinstoSell(amount: Double){
+        model.coinstosell = amount
     }
 }

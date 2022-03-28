@@ -27,12 +27,16 @@ struct SearchView: View {
                         ZStack{
                             Button(""){
                                 if coinname == "coin1" {
-                                    presenter.coin1 = coin.id
-                                    presenter.buyorsell = "sell"
+                                    presenter.setCoin1(coin1: coin.id)
+                                    //presenter.coin1 = coin.id
+                                    presenter.setBuyorSell(boolean: "sell")
+                                    //presenter.buyorsell = "sell"
                                     presenter.setBuyAmount()
                                 } else {
-                                    presenter.coin2 = coin.id
-                                    presenter.buyorsell = "buy"
+                                    presenter.setCoin2(coin2: coin.id)
+                                    //presenter.coin2 = coin.id
+                                    presenter.setBuyorSell(boolean: "buy")
+                                    //presenter.buyorsell = "buy"
                                     presenter.setSellAmount()
                                 }
                                 

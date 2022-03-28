@@ -16,7 +16,7 @@ class SwapPresenter:ObservableObject{
     @Published var coinstobuy : Double = 0
     @Published var coinstosell : Double = 0
     private let router = SwapRouter()
-    private let interactor: SwapInteractor
+    var interactor: SwapInteractor
     @Published var coins: [CoinModel] = []
     @Published var ownedcoins: [CoinDataFirebase] = []
     private var cancellables = Set<AnyCancellable>()
@@ -24,6 +24,26 @@ class SwapPresenter:ObservableObject{
     
     init(interactor: SwapInteractor){
         self.interactor = interactor
+        
+        interactor.model.$coin1
+            .assign(to: \.coin1, on: self)
+            .store(in: &cancellables)
+        
+        interactor.model.$coin2
+            .assign(to: \.coin2, on: self)
+            .store(in: &cancellables)
+        
+        interactor.model.$coinstobuy
+            .assign(to: \.coinstobuy, on: self)
+            .store(in: &cancellables)
+        
+        interactor.model.$coinstosell
+            .assign(to: \.coinstosell, on: self)
+            .store(in: &cancellables)
+        
+        interactor.model.$buyorsell
+            .assign(to: \.buyorsell, on: self)
+            .store(in: &cancellables)
         
         interactor.model.$coins
             .assign(to: \.coins, on: self)
@@ -40,25 +60,25 @@ class SwapPresenter:ObservableObject{
     
     func setSellAmount(){
         if self.buyorsell == "buy" {
-            self.buyorsell = "none"
+            interactor.setBuyorSell(boolean: "none")
             let coin1 = self.selected(coin: coin1)
             let coin2 = self.selected(coin: coin2)
             let amount = coin2.currentPrice*coinstobuy
-            self.coinstosell = amount / coin1.currentPrice
+            interactor.setCoinstoSell(amount: amount / coin1.currentPrice)
         } else {
-            self.buyorsell = "none"
+            interactor.setBuyorSell(boolean: "none")
         }
     }
     
     func setBuyAmount(){
         if self.buyorsell == "sell" {
-            self.buyorsell = "none"
+            interactor.setBuyorSell(boolean: "none")
             let coin1 = self.selected(coin: coin1)
             let coin2 = self.selected(coin: coin2)
             let amount = coin1.currentPrice*coinstosell
-            self.coinstobuy = amount / coin2.currentPrice
+            interactor.setCoinstoBuy(amount: amount / coin2.currentPrice )
         } else {
-            self.buyorsell = "none"
+            interactor.setBuyorSell(boolean: "none")
         }
     }
     
@@ -67,5 +87,15 @@ class SwapPresenter:ObservableObject{
     }
     func swap(){
         interactor.swap(cointosell: coin1, sellamount: coinstosell, cointobuy: coin2, buyamount: coinstobuy)
+    }
+    
+    func setCoin1(coin1: String){
+        interactor.setCoin1(coin1: coin1)
+    }
+    func setCoin2(coin2: String){
+        interactor.setCoin2(coin2: coin2)
+    }
+    func setBuyorSell(boolean: String){
+        interactor.setBuyorSell(boolean: boolean)
     }
 }

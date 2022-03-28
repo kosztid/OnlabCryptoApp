@@ -68,6 +68,11 @@ final class DataModel: ObservableObject{
     @Published var heldcoins: [CoinDataFirebase] = []
     @Published var favcoins: [CoinDataFirebase] = []
     @Published var ownedcoins: [CoinDataFirebase] = []
+    @Published var buyorsell : String = "none"
+    @Published var coin1 : String = "ethereum"
+    @Published var coin2 : String = "tether"
+    @Published var coinstobuy : Double = 0
+    @Published var coinstosell : Double = 0
     //private var datadownloaderfordetail = SingleDataDownloader(coinid: "ethereum")
    // var singlecoinsub: AnyCancellable?
     private var cancellables = Set<AnyCancellable>()

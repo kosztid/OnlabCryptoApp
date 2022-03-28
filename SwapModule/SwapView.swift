@@ -45,10 +45,10 @@ struct SwapView: View {
                             Text(presenter.selected(coin: presenter.coin1).name)
                                 .font(.system(size: 20))
                         }
-                        TextField("Amount to sell", value: $presenter.coinstosell, formatter: formatter, onEditingChanged: { (changed) in
+                        TextField("Amount to sell", value: $presenter.interactor.model.coinstosell, formatter: formatter, onEditingChanged: { (changed) in
                             //presenter.self.coinstosell = self.coinstosell
                             if changed {
-                                presenter.buyorsell = "sell"
+                                presenter.setBuyorSell(boolean: "sell")
                                 } else {
                                     presenter.setBuyAmount()
                                 }
@@ -87,11 +87,12 @@ struct SwapView: View {
                             Text(presenter.selected(coin: presenter.coin2).name)
                                 .font(.system(size: 20))
                         }
-                        TextField("Amount to buy", value: $presenter.coinstobuy, formatter:formatter, onEditingChanged: { (changed) in
+                        TextField("Amount to buy", value: $presenter.interactor.model.coinstobuy, formatter:formatter, onEditingChanged: { (changed) in
                             //presenter.self.coinstobuy = self.coinstobuy
                            // presenter.setSellAmount()
                             if changed {
-                                presenter.buyorsell = "buy"
+                                presenter.setBuyorSell(boolean: "buy")
+                                //presenter.buyorsell = "buy"
                                 } else {
                                     presenter.setSellAmount()
                                 }
