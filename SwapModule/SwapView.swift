@@ -113,17 +113,19 @@ struct SwapView: View {
                 .padding(10)
                 HStack(alignment:.center){
                     Button{
-                        self.showingAlert = true
+                        //self.showingAlert = true
+                        presenter.swap()
                         //swap interactor
                     } label: {
                         Text("Swap")
-                            .frame(height:30)
+                            .frame(height:60)
                             .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
                             .font(.system(size: 20))
                             .foregroundColor(Color.theme.accentcolor)
                             .background(Color.theme.backgroundsecondary)
                             .cornerRadius(10)
                     }
+                    /*
                     .alert(isPresented:$showingAlert) {
                                 Alert(
                                     title: Text("Are you sure you want to make a trade?"),
@@ -133,7 +135,7 @@ struct SwapView: View {
                                     },
                                     secondaryButton: .cancel()
                                 )
-                            }
+                            }*/
                 }
             }
             

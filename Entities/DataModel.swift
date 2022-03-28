@@ -149,6 +149,7 @@ final class DataModel: ObservableObject{
     }
     
     
+    
     func removeCoin(cointoremove: CoinModel){
         //let index = heldcoins.firstIndex(where: { $0 == cointoremove.id })
         let firebaseid = self.heldcoins[heldcoins.firstIndex(where: { $0.coinid == cointoremove.id })!].firebaseid
@@ -229,9 +230,19 @@ final class DataModel: ObservableObject{
         if self.ownedcoins.filter({ $0.coinid == coinid }).isEmpty == false {
             let dx = ownedcoins.firstIndex(where: { $0.coinid == coinid })!
             let firebaseid = self.ownedcoins[dx].firebaseid
-            db.collection("users").document(user).collection("wallet").document(firebaseid).setData(["count": coincount], merge: true)
+            if coincount == 0 {
+                db.collection("users").document(user).collection("wallet").document(firebaseid).delete { error in
+                    if error == nil {
+                    }
+                    else {
+                    }
+                    
+                }
+            } else {
+                db.collection("users").document(user).collection("wallet").document(firebaseid).setData(["count": coincount], merge: true)
+            }
         }
-        else {
+        else{
             db.collection("users").document(user).collection("wallet").addDocument(data: ["coinid":coinid,"count":coincount]){
                 error in
                 if error == nil {
@@ -241,6 +252,7 @@ final class DataModel: ObservableObject{
                 }
             }
         }
+        
     }
     
     func walletPullFromDB(){

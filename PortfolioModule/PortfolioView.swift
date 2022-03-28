@@ -51,6 +51,7 @@ struct PortfolioView: View {
                         Spacer()
                         presenter.makeButtonforPortfolioList()
                         presenter.makeButtonforFavfolioList()
+                        presenter.makeButtonforWalletList()
                         Spacer()
                     }
                 }

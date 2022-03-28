@@ -11,13 +11,14 @@ import SwiftUI
 
 class SwapPresenter:ObservableObject{
     @Published var buyorsell : String = "none"
-    @Published var coin1 : String = "Bitcoin"
-    @Published var coin2 : String = "Tether"
+    @Published var coin1 : String = "ethereum"
+    @Published var coin2 : String = "tether"
     @Published var coinstobuy : Double = 0
     @Published var coinstosell : Double = 0
     private let router = SwapRouter()
     private let interactor: SwapInteractor
     @Published var coins: [CoinModel] = []
+    @Published var ownedcoins: [CoinDataFirebase] = []
     private var cancellables = Set<AnyCancellable>()
     @State private var showingAlert = false
     
@@ -26,6 +27,10 @@ class SwapPresenter:ObservableObject{
         
         interactor.model.$coins
             .assign(to: \.coins, on: self)
+            .store(in: &cancellables)
+        
+        interactor.model.$ownedcoins
+            .assign(to: \.ownedcoins, on: self)
             .store(in: &cancellables)
     }
     
@@ -40,6 +45,8 @@ class SwapPresenter:ObservableObject{
             let coin2 = self.selected(coin: coin2)
             let amount = coin2.currentPrice*coinstobuy
             self.coinstosell = amount / coin1.currentPrice
+        } else {
+            self.buyorsell = "none"
         }
     }
     
@@ -50,10 +57,15 @@ class SwapPresenter:ObservableObject{
             let coin2 = self.selected(coin: coin2)
             let amount = coin1.currentPrice*coinstosell
             self.coinstobuy = amount / coin2.currentPrice
+        } else {
+            self.buyorsell = "none"
         }
     }
     
     func selected(coin:String)->CoinModel{
         return interactor.selected(coin: coin)
+    }
+    func swap(){
+        interactor.swap(cointosell: coin1, sellamount: coinstosell, cointobuy: coin2, buyamount: coinstobuy)
     }
 }

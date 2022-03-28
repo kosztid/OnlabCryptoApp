@@ -160,8 +160,7 @@ class PortfolioPresenter: ObservableObject{
                     }
                     .listRowSeparatorTint(Color.theme.backgroundsecondary)
                     .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-                })
-            }
+                })}
     }
     
     func makeButtonforPortfolioList() -> some View{
@@ -188,6 +187,20 @@ class PortfolioPresenter: ObservableObject{
                 .font(.system(size: 20))
                 .background(self.isSelected(selected: "favfolio") ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
                 .foregroundColor(self.isSelected(selected: "favfolio") ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
+                .cornerRadius(10)
+        }
+    }
+    
+    func makeButtonforWalletList() -> some View{
+        Button{
+            self.changeViewTo(viewname: "wallet")
+        } label: {
+            Text("Wallet")
+                .frame(height:30)
+                .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
+                .font(.system(size: 20))
+                .background(self.isSelected(selected: "wallet") ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
+                .foregroundColor(self.isSelected(selected: "wallet") ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
                 .cornerRadius(10)
         }
     }
