@@ -21,28 +21,54 @@ struct SearchView: View {
                 SearchBar(searchText: $searchText, searching: $searching)
                     .frame(height:40)
                 List {
-                    ForEach(presenter.coins.filter({ (coin) -> Bool in
-                        return coin.name.hasPrefix(searchText) || coin.symbol.hasPrefix(searchText.lowercased()) || searchText == ""
-                    })) { coin in
-                        ZStack{
-                            Button(""){
-                                if coinname == "coin1" {
+                    if coinname == "coin1" {
+                        ForEach(presenter.coins.filter({ (coin) -> Bool in
+                            return  presenter.ownedcoins.filter({ $0.coinid == coin.id }).isEmpty == false && (coin.name.hasPrefix(searchText) || coin.symbol.hasPrefix(searchText.lowercased()) || (searchText == ""))
+                        })) { coin in
+                            ZStack{
+                                Button(""){
                                     presenter.setCoin1(coin1: coin.id)
                                     presenter.setBuyorSell(boolean: "sell")
                                     presenter.setBuyAmount()
-                                } else {
-                                    presenter.setCoin2(coin2: coin.id)
-                                    presenter.setBuyorSell(boolean: "buy")
-                                    presenter.setSellAmount()
+                                    self.presentationMode.wrappedValue.dismiss()
                                 }
+                                SearchListItem(coin: coin)
                                 
-                                self.presentationMode.wrappedValue.dismiss()
                             }
-                            SearchListItem(coin: coin)
-                        }
-                        
-                    }.listRowSeparatorTint(Color.theme.backgroundsecondary)
-                        .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                            
+                        }.listRowSeparatorTint(Color.theme.backgroundsecondary)
+                            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    } else {
+                        ForEach(presenter.coins.filter({ (coin) -> Bool in
+                            return coin.name.hasPrefix(searchText) || coin.symbol.hasPrefix(searchText.lowercased()) || (searchText == "")
+                        })) { coin in
+                            ZStack{
+                                Button(""){
+                                    if coinname == "coin1" {
+                                        presenter.setCoin1(coin1: coin.id)
+                                        presenter.setBuyorSell(boolean: "sell")
+                                        presenter.setBuyAmount()
+                                    } else {
+                                        presenter.setCoin2(coin2: coin.id)
+                                        presenter.setBuyorSell(boolean: "buy")
+                                        presenter.setSellAmount()
+                                    }
+                                    
+                                    self.presentationMode.wrappedValue.dismiss()
+                                }
+                                if coinname == "coin1" {
+                                    if presenter.isOwned(coin: coin) {
+                                        SearchListItem(coin: coin)
+                                    }
+                                } else {
+                                    SearchListItem(coin: coin)
+                                }
+                            }
+                            
+                        }.listRowSeparatorTint(Color.theme.backgroundsecondary)
+                            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    }
+                    
                 }
                 .listStyle(PlainListStyle())
             }

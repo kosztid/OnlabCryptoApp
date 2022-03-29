@@ -26,15 +26,20 @@ class SwapInteractor{
         print("\(buyamount)")
         var ownedamountfrombuy: Double
         let ownedamountfromsell: Double = model.ownedcoins[model.ownedcoins.firstIndex(where: { $0.coinid == cointosell })!].count
-        model.modifywallet(coinid: cointosell, coincount: (ownedamountfromsell-sellamount))
-        
-        let dx = model.ownedcoins.firstIndex(where: { $0.coinid == cointobuy })
-        if model.ownedcoins.filter({ $0.coinid == cointobuy }).isEmpty == false {
-            ownedamountfrombuy = model.ownedcoins[dx!].count
+        if ownedamountfromsell < sellamount {
+            
         } else {
-            ownedamountfrombuy = 0
+            model.modifywallet(coinid: cointosell, coincount: (ownedamountfromsell-sellamount))
+            
+            let dx = model.ownedcoins.firstIndex(where: { $0.coinid == cointobuy })
+            if model.ownedcoins.filter({ $0.coinid == cointobuy }).isEmpty == false {
+                ownedamountfrombuy = model.ownedcoins[dx!].count
+            } else {
+                ownedamountfrombuy = 0
+            }
+            model.modifywallet(coinid: cointobuy, coincount: buyamount+ownedamountfrombuy)
         }
-        model.modifywallet(coinid: cointobuy, coincount: buyamount+ownedamountfrombuy)
+        
     }
     
     
@@ -44,6 +49,15 @@ class SwapInteractor{
             return model.ownedcoins[dx!].count
         } else {
             return 0.0
+        }
+    }
+    
+    func isOwned(coin: CoinModel) -> Bool{
+        if model.ownedcoins.filter({ $0.coinid == coin.id }).isEmpty == false {
+            return true
+        }
+        else {
+            return false
         }
     }
     

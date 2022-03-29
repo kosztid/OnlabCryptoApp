@@ -113,4 +113,8 @@ class SwapPresenter:ObservableObject{
     func ownedamount(coin: String)-> Double{
         return interactor.ownedamount(coin: selected(coin: coin))
     }
+    
+    func isOwned(coin: CoinModel)->Bool{
+        return interactor.isOwned(coin: coin)
+    }
 }
