@@ -13,10 +13,10 @@ class SwapPresenter:ObservableObject{
     @Published var buyorsell : String = "none"
     @Published var coin1 : String = "ethereum"
     @Published var coin2 : String = "tether"
-    @Published var coinstobuy : Double = 0
     @Published var coinstosell : Double = 0
+    @Published var coinstobuy : Double = 0
     private let router = SwapRouter()
-    var interactor: SwapInteractor
+    let interactor: SwapInteractor
     @Published var coins: [CoinModel] = []
     @Published var ownedcoins: [CoinDataFirebase] = []
     private var cancellables = Set<AnyCancellable>()
@@ -89,6 +89,13 @@ class SwapPresenter:ObservableObject{
         interactor.swap(cointosell: coin1, sellamount: coinstosell, cointobuy: coin2, buyamount: coinstobuy)
     }
     
+    func setCoinstobuy(amount: Double){
+        interactor.setCoinstoBuy(amount: amount)
+    }
+    func setCoinstosell(amount: Double){
+        interactor.setCoinstoSell(amount: amount)
+    }
+    
     func setCoin1(coin1: String){
         interactor.setCoin1(coin1: coin1)
     }
@@ -97,5 +104,13 @@ class SwapPresenter:ObservableObject{
     }
     func setBuyorSell(boolean: String){
         interactor.setBuyorSell(boolean: boolean)
+    }
+    
+    func returnmodel()->DataModel{
+        return interactor.model
+    }
+    
+    func ownedamount(coin: String)-> Double{
+        return interactor.ownedamount(coin: selected(coin: coin))
     }
 }

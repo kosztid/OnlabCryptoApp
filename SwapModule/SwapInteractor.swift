@@ -6,9 +6,10 @@
 //
 
 import Foundation
+import SwiftUI
 
 class SwapInteractor{
-    var model: DataModel
+    let model: DataModel
     
     init(model: DataModel){
         self.model = model
@@ -34,6 +35,16 @@ class SwapInteractor{
             ownedamountfrombuy = 0
         }
         model.modifywallet(coinid: cointobuy, coincount: buyamount+ownedamountfrombuy)
+    }
+    
+    
+    func ownedamount(coin: CoinModel)->Double{
+        let dx = model.ownedcoins.firstIndex(where: { $0.coinid == coin.id })
+        if model.ownedcoins.filter({ $0.coinid == coin.id }).isEmpty == false {
+            return model.ownedcoins[dx!].count
+        } else {
+            return 0.0
+        }
     }
     
     func setCoin1(coin1: String){

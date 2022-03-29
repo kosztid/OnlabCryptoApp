@@ -45,7 +45,16 @@ struct SwapView: View {
                             Text(presenter.selected(coin: presenter.coin1).name)
                                 .font(.system(size: 20))
                         }
-                        TextField("Amount to sell", value: $presenter.interactor.model.coinstosell, formatter: formatter, onEditingChanged: { (changed) in
+                        
+                        VStack{
+                            Text("Owned:")
+                            Text("\(presenter.ownedamount(coin: presenter.coin1)) \(presenter.selected(coin: presenter.coin1).symbol) ")
+                        }.font(.system(size: 12))
+                        
+                        TextField("Amount to sell", value: .init(
+                            get: { self.presenter.coinstosell },
+                            set: { self.presenter.setCoinstosell(amount:Double($0)) }
+                        ), formatter: formatter, onEditingChanged: { (changed) in
                             //presenter.self.coinstosell = self.coinstosell
                             if changed {
                                 presenter.setBuyorSell(boolean: "sell")
@@ -87,9 +96,16 @@ struct SwapView: View {
                             Text(presenter.selected(coin: presenter.coin2).name)
                                 .font(.system(size: 20))
                         }
-                        TextField("Amount to buy", value: $presenter.interactor.model.coinstobuy, formatter:formatter, onEditingChanged: { (changed) in
-                            //presenter.self.coinstobuy = self.coinstobuy
-                           // presenter.setSellAmount()
+                        VStack{
+                            Text("Owned:")
+                            Text("\(presenter.ownedamount(coin: presenter.coin2)) \(presenter.selected(coin: presenter.coin2).symbol) ")
+                        }.font(.system(size: 12))
+                        
+                        TextField("Amount to buy", value:.init(
+                            get: { self.presenter.coinstobuy },
+                            set: { self.presenter.setCoinstobuy(amount:Double($0)) }
+                        )
+                                    /*$presenter.returnmodel().coinstobuy*/, formatter:formatter, onEditingChanged: { (changed) in
                             if changed {
                                 presenter.setBuyorSell(boolean: "buy")
                                 //presenter.buyorsell = "buy"
