@@ -21,6 +21,7 @@ class AccountInteractor{
             self.model.isSignedIn = false
             self.model.heldcoins = []
             self.model.favcoins = []
+            self.model.ownedcoins = []
         }
     }
     

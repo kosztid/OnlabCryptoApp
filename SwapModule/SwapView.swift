@@ -31,6 +31,7 @@ struct SwapView: View {
                             .font(.system(size: 26))
                             .bold()
                         presenter.makeButtonForSelector(coin: "coin1")
+                            .accessibility(identifier: "SwapSellSelectorButton")
                         HStack{
                             CachedAsyncImage(url: URL(string: presenter.selected(coin: presenter.coin1).image)){ image in
                                 image
@@ -70,6 +71,8 @@ struct SwapView: View {
                             .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.theme.accentcolorsecondary, lineWidth: 2))
                             .cornerRadius(10)
                             .disableAutocorrection(true)
+                            .accessibility(identifier: "SwapSellTextField")
+                        
                     }
                     .font(.system(size: 24))
                     .foregroundColor(Color.theme.accentcolor)
@@ -82,6 +85,7 @@ struct SwapView: View {
                             .font(.system(size: 26))
                             .bold()
                         presenter.makeButtonForSelector(coin: "coin2")
+                            .accessibility(identifier: "SwapBuySelectorButton")
                         HStack{
                             CachedAsyncImage(url: URL(string: presenter.selected(coin: presenter.coin2).image)){ image in
                                 image
@@ -121,6 +125,7 @@ struct SwapView: View {
                             .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.theme.accentcolorsecondary, lineWidth: 2))
                             .cornerRadius(10)
                             .disableAutocorrection(true)
+                            .accessibility(identifier: "SwapBuyTextField")
                            // .onChange(of: presenter.coinstobuy){presenter.setSellAmount()}
                     }
                     .font(.system(size: 24))
@@ -129,19 +134,8 @@ struct SwapView: View {
                 }
                 .padding(10)
                 HStack(alignment:.center){
-                    Button{
-                        //self.showingAlert = true
-                        presenter.swap()
-                        //swap interactor
-                    } label: {
-                        Text("Swap")
-                            .frame(height:60)
-                            .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
-                            .font(.system(size: 20))
-                            .foregroundColor(Color.theme.accentcolor)
-                            .background(Color.theme.backgroundsecondary)
-                            .cornerRadius(10)
-                    }
+                    presenter.makeButtonForSwap()
+                        .accessibility(identifier: "SwapButton")
                     /*
                     .alert(isPresented:$showingAlert) {
                                 Alert(

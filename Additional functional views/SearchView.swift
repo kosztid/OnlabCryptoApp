@@ -11,6 +11,8 @@ struct SearchView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State var searchText = ""
     @State var searching = false
+    //@Binding var searchText: String
+    //@Binding var searching: Bool
     var coinname: String = "coin1"
     @ObservedObject var presenter: SwapPresenter
     
@@ -18,8 +20,35 @@ struct SearchView: View {
         ZStack{
             Color.theme.backgroundcolor
             VStack(alignment: .leading) {
-                SearchBar(searchText: $searchText, searching: $searching)
+                /*SearchBar(searchText: $searchText, searching: $searching)
                     .frame(height:40)
+                    .accessibility(identifier: "SeachBar")
+                */
+                ZStack {
+                    Rectangle()
+                        .foregroundColor(Color("LightGray"))
+                    HStack {
+                        Image(systemName: "magnifyingglass")
+                        TextField("Search ..", text: $searchText) { startedEditing in
+                            if startedEditing {
+                                withAnimation {
+                                    searching = true
+                                }
+                            }
+                        } onCommit: {
+                            withAnimation {
+                                searching = false
+                            }
+                        }
+                        .accessibility(identifier: "SeachBarTextField")
+                        .disableAutocorrection(true)
+                    }
+                    .foregroundColor(.gray)
+                    .padding(.leading, 13)
+                }
+                    .frame(height: 40)
+                    .cornerRadius(13)
+                    .padding()
                 List {
                     if coinname == "coin1" {
                         ForEach(presenter.coins.filter({ (coin) -> Bool in
@@ -97,6 +126,7 @@ struct SearchBar: View {
                         searching = false
                     }
                 }
+                .accessibility(identifier: "SeachBarTextField")
                 .disableAutocorrection(true)
             }
             .foregroundColor(.gray)

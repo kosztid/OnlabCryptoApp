@@ -21,6 +21,7 @@ struct AccountView: View {
                 .foregroundColor(Color.theme.accentcolor)
                 
                 presenter.makeLogoutButton()
+                    .accessibility(identifier: "AccountSignOutButton")
             }
             .padding(10)
         }.background(Color.theme.backgroundcolor)

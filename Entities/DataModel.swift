@@ -417,6 +417,7 @@ final class DataModel: ObservableObject{
                 let _ = print(self.auth.currentUser!.email ?? "")
                 self.portfolioPullFromDB()
                 self.favcoinPullFromDB()
+                self.walletPullFromDB()
             }
             
         }

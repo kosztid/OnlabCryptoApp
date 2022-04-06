@@ -117,4 +117,20 @@ class SwapPresenter:ObservableObject{
     func isOwned(coin: CoinModel)->Bool{
         return interactor.isOwned(coin: coin)
     }
+    
+    func makeButtonForSwap() -> some View{
+        Button{
+            //self.showingAlert = true
+            self.swap()
+            //swap interactor
+        } label: {
+            Text("Swap")
+                .frame(height:60)
+                .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
+                .font(.system(size: 20))
+                .foregroundColor(Color.theme.accentcolor)
+                .background(Color.theme.backgroundsecondary)
+                .cornerRadius(10)
+        }
+    }
 }
