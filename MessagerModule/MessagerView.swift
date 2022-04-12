@@ -72,6 +72,11 @@ struct MessagerView: View {
                     .padding(10)
                     
             }
+            .toolbar{
+                ToolbarItem(placement: .navigationBarTrailing) {
+                        presenter.makeButtonForUsers()
+                }
+            }
         }
     }
 }

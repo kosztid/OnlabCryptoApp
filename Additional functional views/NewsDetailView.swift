@@ -54,6 +54,7 @@ struct NewsDetailView: View {
                         .font(.body)
                         .foregroundColor(Color.theme.accentcolor)
                         .multilineTextAlignment(.leading)
+                    
                     Link("Continue reading", destination: URL(string: article.url!)!)
                         .foregroundColor(Color.theme.accentcolorsecondary)
                 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class MessagerPresenter: ObservableObject{
     private let interactor: MessagerInteractor
@@ -30,5 +31,7 @@ class MessagerPresenter: ObservableObject{
     func issignedin() -> Bool {
         return interactor.issignedin()
     }
-
+    func makeButtonForUsers() -> some View{
+        NavigationLink("Members", destination: Text("Members"))
+    }
 }

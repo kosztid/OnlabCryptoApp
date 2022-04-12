@@ -14,7 +14,9 @@ class MessagerInteractor{
         self.model = model
     }
     func sendMessage(id: String, message: Message){
-        model.sendMessage(id:id,message: message)
+        if id != "CbP9VCE4TWEHftzZuL4Q" {
+            model.sendMessage(id:id,message: message)
+        }
     }
     func getAccountInfo() -> String{
         return model.auth.currentUser?.uid ?? "nouser"

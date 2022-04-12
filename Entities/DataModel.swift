@@ -257,7 +257,6 @@ final class DataModel: ObservableObject{
                 }
             }
         }
-        
     }
     
     func walletPullFromDB(){
