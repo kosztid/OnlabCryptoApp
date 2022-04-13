@@ -83,6 +83,6 @@ struct MessagerView: View {
 
 struct MessagerView_Previews: PreviewProvider {
     static var previews: some View {
-        MessagerView(presenter: MessagerPresenter(interactor: MessagerInteractor(model: DataModel()),community: MessageGroup(id: "1", name: "Bitcoin Community", messages:[Message(id: "123", sender: "Dominik", message: "Első üzenet", time: "2022-02-02 10:00:00"),Message(id: "124", sender: "Dominik", message: "Második üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenet", time: "2022-02-02 10:00:00"),Message(id: "125", sender: "Dominik", message: "Harmadik üzenet", time: "2022-02-02")], lastid: "jasd")),newmessage: "Újüzenet")
+        MessagerView(presenter: MessagerPresenter(interactor: MessagerInteractor(model: DataModel()),community: MessageGroup(id: "1", name: "Bitcoin Community", messages:[Message(id: "123", sender: "Dominik", senderemail: "email", message: "Első üzenet", time: "2022-02-02 10:00:00"),Message(id: "124", sender: "Dominik", senderemail: "email", message: "Második üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenet", time: "2022-02-02 10:00:00"),Message(id: "125", sender: "Dominik", senderemail: "email", message: "Harmadik üzenet", time: "2022-02-02")], members: ["Szia"], lastid: "jasd")),newmessage: "Újüzenet")
     }
 }

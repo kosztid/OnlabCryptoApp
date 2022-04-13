@@ -88,6 +88,19 @@ class PortfolioInteractor{
         return total
     }
     
+    func favfoliochange()->Double{
+        if model.heldcoins.count == 0 {
+            return 0
+        }
+        var total: Double = 0
+        for a in 0...(model.favcoins.count-1) {
+            let dx = model.coins.firstIndex(where: { $0.id == model.favcoins[a].coinid })
+            total += model.coins[dx!].priceChangePercentage24H ?? 0
+        }
+        total = total / Double(model.favcoins.count)
+        return total
+    }
+    
     func changeViewTo(viewname: String){
         model.selection = viewname
     }

@@ -258,7 +258,6 @@ final class DataModel: ObservableObject{
             }
         }
     }
-    
     func walletPullFromDB(){
         let db = Firestore.firestore()
         let userid = self.auth.currentUser?.uid
@@ -301,21 +300,34 @@ final class DataModel: ObservableObject{
         }
     }
     
+    func addCommunityMember(id:String, member: String){
+        let db = Firestore.firestore()
+        let dx = communities.firstIndex(where: { $0.id == id })!
+        if self.communities[dx].members.filter({ $0 == member }).isEmpty{
+            DispatchQueue.main.async {
+            db.collection("communities").document(id).collection("members").addDocument(data: ["member":member]){
+                error in
+                if error == nil {
+                }
+                else {
+                    //error handling
+                }
+            }}
+        }
+    }
+    
     func communitiesPullFromDB(){
         let db = Firestore.firestore()
         db.collection("communities").addSnapshotListener { snapshot, error in
             if error == nil {
                 if let snapshot = snapshot{
-                    DispatchQueue.main.async {
                         self.communities = snapshot.documents.map { d in
-                            return MessageGroup(id: d.documentID, name: d["name"] as? String ?? "", messages: [], lastid: "")
+                            return MessageGroup(id: d.documentID, name: d["name"] as? String ?? "", messages: [], members: [], lastid: "")
                         }
                         for c in self.communities{
-                            
+                            self.messagemembersPullFromDB(idtoget: c.id)
                             self.messagesPullFromDB(idtoget: c.id)
                         }
-                    }
-                    
                 }
             }
             else {
@@ -325,7 +337,27 @@ final class DataModel: ObservableObject{
         
     }
     
-    
+    func messagemembersPullFromDB(idtoget: String){
+        var members: [String] = []
+        let db = Firestore.firestore()
+        db.collection("communities").document(idtoget).collection("members").addSnapshotListener { snapshot, error in
+            if error == nil {
+                if let snapshot = snapshot{
+                        members = snapshot.documents.map { d in
+                            return String(d["member"] as? String ?? "Unknown")
+                        }
+                    if let i = self.communities.firstIndex(where: {$0.id == idtoget}) {
+                        self.communities[i].members = members
+                        print("loaded")
+                    }
+                }
+            }
+            else {
+                //error handling
+            }
+        }
+        
+    }
     
     func messagesPullFromDB(idtoget: String){
         var messages: [Message] = []
@@ -335,7 +367,7 @@ final class DataModel: ObservableObject{
                 if let snapshot = snapshot{
                     DispatchQueue.main.async {
                         messages = snapshot.documents.map { d in
-                            return Message(id: d.documentID,sender: d["sender"] as? String ?? "Unknown", message: d["message"] as? String ?? "", time: d["time"] as? String ?? "2000-02-02 10:00:00")
+                            return Message(id: d.documentID,sender: d["sender"] as? String ?? "Unknown",senderemail: d["senderemail"] as? String ?? "nomail", message: d["message"] as? String ?? "", time: d["time"] as? String ?? "2000-02-02 10:00:00")
                         }
                         
                         if let i = self.communities.firstIndex(where: {$0.id == idtoget}) {
@@ -377,7 +409,7 @@ final class DataModel: ObservableObject{
     func sendMessage(id: String, message: Message){
         let db = Firestore.firestore()
         let sender = self.auth.currentUser?.uid ?? message.sender
-        db.collection("communities").document(id).collection("messages").addDocument(data: ["sender":sender,"message":message.message,"time":message.time]){
+        db.collection("communities").document(id).collection("messages").addDocument(data: ["sender":sender,"message":message.message,"senderemail":message.senderemail,"time":message.time]){
             error in
             if error == nil {
             }
@@ -386,6 +418,7 @@ final class DataModel: ObservableObject{
             }
         }
     }
+    
     
     func userreload(){
         auth.currentUser?.reload(completion: { (error) in

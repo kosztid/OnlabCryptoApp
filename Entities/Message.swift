@@ -10,6 +10,7 @@ import Foundation
 struct Message: Identifiable, Codable{
     var id: String
     var sender: String
+    var senderemail: String
     var message: String
     var time: String
 }

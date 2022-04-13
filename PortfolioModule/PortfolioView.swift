@@ -16,37 +16,10 @@ struct PortfolioView: View {
                 .ignoresSafeArea()
             
             VStack{
+                presenter.makeFolioData(selected: presenter.selection)
+                    .padding(5)
                 VStack{
-                    VStack{
-                        VStack{
-                            HStack{
-                                VStack(alignment: .leading){
-                                    HStack{
-                                        Text("Portfolio Total:")
-                                            .font(.system(size: 20))
-                                        Spacer()
-                                        Text("\(presenter.portfoliototal().formatcurrency4digits())")
-                                            .font(.system(size: 20))
-                                            .frame(alignment:.leading)
-                                    }
-                                    HStack{
-                                        Text("Portfolio invested:")
-                                            .font(.system(size: 18))
-                                        Spacer()
-                                        Text("\(presenter.portfoliobuytotal().formatcurrency4digits())")
-                                            .foregroundColor(Color.theme.accentcolorsecondary)
-                                            .font(.system(size: 18))
-                                            .frame(alignment:.leading)
-                                    }
-                                }.frame(width:UIScreen.main.bounds.width*0.75)
-                                Spacer()
-                                Text("\(presenter.winlosepercent().formatpercent())")
-                                    .foregroundColor((presenter.winlosepercent() >= 0) ? Color.theme.green : Color.theme.red )
-                                    .frame(alignment:.leading)
-                                Spacer()
-                            }
-                        }
-                    }
+                    
                     HStack{
                         Spacer()
                         presenter.makeButtonforPortfolioList()

@@ -80,6 +80,9 @@ class SwapInteractor{
     func getAccountInfo() -> String{
         return model.auth.currentUser?.uid ?? "nouser"
     }
+    func getAccountEmail() -> String{
+        return model.auth.currentUser?.email ?? "nomail"
+    }
     
     func sendTradeHistory(id: String, cointosell: String,sellamount: Double, cointobuy: String, buyamount: Double){
         let dateFormatter = DateFormatter()
@@ -88,7 +91,7 @@ class SwapInteractor{
         let cointosellprice = self.selected(coin: cointosell).currentPrice
         let cointobuyprice = self.selected(coin: cointobuy).currentPrice
         let messagestring = "\(model.auth.currentUser?.email ?? "nouser") Bought \(buyamount) \(cointobuy) (current price \(cointobuyprice)) for \(sellamount) \(cointosell) (current price \(cointosellprice)) "
-        model.sendMessage(id:"CbP9VCE4TWEHftzZuL4Q",message: Message(id:"1", sender: self.getAccountInfo(), message: messagestring, time: stringdate))
+        model.sendMessage(id:"CbP9VCE4TWEHftzZuL4Q",message: Message(id:"1", sender: self.getAccountInfo(), senderemail: self.getAccountEmail(), message: messagestring, time: stringdate))
     }
 
 }

@@ -18,10 +18,18 @@ class MessagerInteractor{
             model.sendMessage(id:id,message: message)
         }
     }
+    func getmodel() -> DataModel {
+        return model
+    }
     func getAccountInfo() -> String{
         return model.auth.currentUser?.uid ?? "nouser"
     }
-    
+    func getAccountEmail() -> String{
+        return model.auth.currentUser?.email ?? "nouser"
+    }
+    func addUser(id: String, user: String){
+        model.addCommunityMember(id: id, member: user)
+    }
     func issignedin() -> Bool {
         return model.isSignedIn
     }

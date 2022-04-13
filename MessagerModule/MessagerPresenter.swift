@@ -11,16 +11,20 @@ import SwiftUI
 class MessagerPresenter: ObservableObject{
     private let interactor: MessagerInteractor
     @Published var community: MessageGroup
+    private let router = MessagerRouter()
+    
     
     init(interactor: MessagerInteractor,community: MessageGroup ){
         self.interactor = interactor
         self.community = community
     }
     func sendmessage(message: String){
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            let stringdate = dateFormatter.string(from: Date())
-        self.interactor.sendMessage(id: community.id,message: Message(id:"1", sender: interactor.getAccountInfo(), message: message, time: stringdate))
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        let stringdate = dateFormatter.string(from: Date())
+        let email = interactor.getAccountEmail()
+        self.interactor.sendMessage(id: community.id,message: Message(id:"1", sender: interactor.getAccountInfo(), senderemail: email, message: message, time: stringdate))
+        self.interactor.addUser(id: self.community.id, user: email)
     }
     func messagesGet() -> [Message] {
         return community.messages
@@ -31,7 +35,11 @@ class MessagerPresenter: ObservableObject{
     func issignedin() -> Bool {
         return interactor.issignedin()
     }
-    func makeButtonForUsers() -> some View{
-        NavigationLink("Members", destination: Text("Members"))
+    func usersGet() -> [String]{
+        return community.members
     }
+    func makeButtonForUsers() -> some View{
+        NavigationLink("Members", destination: router.makeMembersView(model: interactor.getmodel(), community: self.community))
+    }
+    
 }

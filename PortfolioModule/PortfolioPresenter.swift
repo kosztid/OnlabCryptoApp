@@ -93,7 +93,9 @@ class PortfolioPresenter: ObservableObject{
     func portfoliobuytotal()->Double{
         return interactor.portfoliobuytotal()
     }
-    
+    func favfoliochange()->Double{
+        return interactor.favfoliochange()
+    }
     func makeList(selected: String) -> AnyView{
         if selected == "portfolio" {
         return AnyView(
@@ -164,6 +166,19 @@ class PortfolioPresenter: ObservableObject{
                 })}
     }
     
+    func makeFolioData(selected: String) -> AnyView{
+        if selected == "portfolio" {
+        return AnyView(
+            self.makeportfolioData()
+        )}
+        else if selected == "favfolio" { return AnyView(
+            self.makefavfolioData()
+        )} else {
+                return AnyView(
+                    self.makefavfolioData()
+                )}
+    }
+    
     func makeButtonforPortfolioList() -> some View{
         Button{
             self.changeViewTo(viewname: "portfolio")
@@ -190,6 +205,63 @@ class PortfolioPresenter: ObservableObject{
                 .foregroundColor(self.isSelected(selected: "favfolio") ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
                 .cornerRadius(10)
         }
+    }
+    func makeportfolioData()-> some View{
+            VStack{
+                HStack{
+                    VStack(alignment: .leading){
+                        HStack{
+                            Text("Portfolio Total:")
+                                .font(.system(size: 20))
+                            Spacer()
+                            Text("\(self.portfoliototal().formatcurrency4digits())")
+                                .font(.system(size: 20))
+                                .frame(alignment:.leading)
+                        }
+                        HStack{
+                            Text("Portfolio invested:")
+                                .font(.system(size: 18))
+                            Spacer()
+                            Text("\(self.portfoliobuytotal().formatcurrency4digits())")
+                                .foregroundColor(Color.theme.accentcolorsecondary)
+                                .font(.system(size: 18))
+                                .frame(alignment:.leading)
+                        }
+                    }.frame(width:UIScreen.main.bounds.width*0.75)
+                    Spacer()
+                    Text("\(self.winlosepercent().formatpercent())")
+                        .foregroundColor((self.winlosepercent() >= 0) ? Color.theme.green : Color.theme.red )
+                        .frame(alignment:.leading)
+                    Spacer()
+                }
+            }
+    }
+    
+    func makefavfolioData()-> some View{
+            VStack{
+                HStack{
+                    VStack(alignment: .leading){
+                        HStack{
+                            Text("Your favorites price change:")
+                                .font(.system(size: 20))
+                            Text("\(self.favfoliochange().formatpercent())")
+                                .foregroundColor((self.favfoliochange() >= 0) ? Color.theme.green : Color.theme.red )
+                                .font(.system(size: 18))
+                                .frame(alignment:.leading)
+                            Spacer()
+                        }
+                        HStack{
+                            Text("in the last 24 hours")
+                                .font(.system(size: 18))
+                            Spacer()
+                            
+                        }
+                    }
+                    .padding(5)
+                    .frame(width:UIScreen.main.bounds.width*0.75)
+                    Spacer()
+                }
+            }
     }
     
     func makeButtonforWalletList() -> some View{
