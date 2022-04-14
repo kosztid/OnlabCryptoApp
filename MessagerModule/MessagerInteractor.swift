@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class MessagerInteractor{
     let model: DataModel
@@ -33,4 +34,8 @@ class MessagerInteractor{
     func issignedin() -> Bool {
         return model.isSignedIn
     }
+    func sendPhoto(image:UIImage, message: Message,id: String){
+        model.sendPhoto(image: image, message: message, communityid: id)
+    }
+        
 }

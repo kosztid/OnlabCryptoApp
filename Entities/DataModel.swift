@@ -11,6 +11,7 @@ import Combine
 import Firebase
 import FirebaseFirestore
 import FirebaseAuth
+import FirebaseStorage
 
 /*
  URL for coins https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=200&page=1&sparkline=true&price_change_percentage=24h
@@ -55,6 +56,7 @@ import FirebaseAuth
 final class DataModel: ObservableObject{
     @Published var lastmessageId = ""
     let auth : Auth
+    let storage: Storage
     @Published var isSignedIn = false
     @Published var coins: [CoinModel] = []
     @Published var news = News(status: nil, totalResults: nil, articles: nil)
@@ -81,6 +83,7 @@ final class DataModel: ObservableObject{
     init(){
         self.selection = "portfolio"
         self.auth = Auth.auth()
+        self.storage = Storage.storage()
         addSub()
         communitiesPullFromDB()
         userreload()
@@ -367,7 +370,7 @@ final class DataModel: ObservableObject{
                 if let snapshot = snapshot{
                     DispatchQueue.main.async {
                         messages = snapshot.documents.map { d in
-                            return Message(id: d.documentID,sender: d["sender"] as? String ?? "Unknown",senderemail: d["senderemail"] as? String ?? "nomail", message: d["message"] as? String ?? "", time: d["time"] as? String ?? "2000-02-02 10:00:00")
+                            return Message(id: d.documentID,sender: d["sender"] as? String ?? "Unknown",senderemail: d["senderemail"] as? String ?? "nomail", message: d["message"] as? String ?? "", time: d["time"] as? String ?? "2000-02-02 10:00:00", image: d["image"] as? Bool ?? false)
                         }
                         
                         if let i = self.communities.firstIndex(where: {$0.id == idtoget}) {
@@ -409,12 +412,35 @@ final class DataModel: ObservableObject{
     func sendMessage(id: String, message: Message){
         let db = Firestore.firestore()
         let sender = self.auth.currentUser?.uid ?? message.sender
-        db.collection("communities").document(id).collection("messages").addDocument(data: ["sender":sender,"message":message.message,"senderemail":message.senderemail,"time":message.time]){
+        db.collection("communities").document(id).collection("messages").addDocument(data: ["sender":sender,"message":message.message,"senderemail":message.senderemail,"time":message.time,"image":message.image]){
             error in
             if error == nil {
             }
             else {
                 //error handling
+            }
+        }
+    }
+    
+    func sendPhoto(image: UIImage, message: Message, communityid: String){
+        let id = UUID().uuidString
+        let ref = storage.reference(withPath: id)
+        guard let imagedata = image.jpegData(compressionQuality: 0.1) else {return}
+        ref.putData(imagedata, metadata: nil){metadata, error in
+            if error == nil{
+                
+            }
+            else {
+                print(error!.localizedDescription)
+            }
+            ref.downloadURL {url, error in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+                var messagewithurl = message
+                messagewithurl.message = url?.absoluteString ?? "nolink"
+                self.sendMessage(id: communityid, message: messagewithurl)
+                
             }
         }
     }

@@ -11,6 +11,8 @@ import simd
 struct MessagerView: View {
     @ObservedObject var presenter: MessagerPresenter
     @State var newmessage: String = ""
+    @State var showImagePicker = false
+    @State var image: UIImage?
     
     var body: some View {
         ZStack{
@@ -47,6 +49,7 @@ struct MessagerView: View {
                 
                 ZStack(alignment: .trailing){
                     Color.theme.textbox
+                    
                     TextField("Type in a new message", text: $newmessage)
                         .background(Color.theme.textbox)
                         .foregroundColor(Color.black)
@@ -55,7 +58,20 @@ struct MessagerView: View {
                         .frame(height: 40,alignment: .center)
                         .padding(10)
                         .disabled(presenter.issignedin() == false)
+                    Button{showImagePicker.toggle()
                         
+                    }label:{
+                        Image(systemName: "photo")
+                            .accentColor(Color.theme.accentcolorsecondary)
+                            .font(.system(size: 18))
+                    }.offset(x: -(UIScreen.main.bounds.width*0.15))
+                    
+                    Button{presenter.sendPhoto(image: self.image!)
+                    }label:{
+                        Image(systemName: "photo.fill")
+                            .accentColor(Color.theme.accentcolorsecondary)
+                            .font(.system(size: 18))
+                    }.offset(x: -(UIScreen.main.bounds.width*0.25))
                     
                     Button(action: {
                         if presenter.issignedin() == true {
@@ -66,7 +82,7 @@ struct MessagerView: View {
                         Image(systemName: "paperplane")
                             .accentColor(Color.theme.accentcolorsecondary)
                             .font(.system(size: 18))
-                    }.offset(x: -20)
+                    }.offset(x:-(UIScreen.main.bounds.width*0.05))
                 }.frame(height: 40)
                     .cornerRadius(20)
                     .padding(10)
@@ -77,12 +93,14 @@ struct MessagerView: View {
                         presenter.makeButtonForUsers()
                 }
             }
+        }.fullScreenCover(isPresented: $showImagePicker, onDismiss: nil){
+            ImagePicker(image: $image)
         }
     }
 }
 
 struct MessagerView_Previews: PreviewProvider {
     static var previews: some View {
-        MessagerView(presenter: MessagerPresenter(interactor: MessagerInteractor(model: DataModel()),community: MessageGroup(id: "1", name: "Bitcoin Community", messages:[Message(id: "123", sender: "Dominik", senderemail: "email", message: "Első üzenet", time: "2022-02-02 10:00:00"),Message(id: "124", sender: "Dominik", senderemail: "email", message: "Második üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenet", time: "2022-02-02 10:00:00"),Message(id: "125", sender: "Dominik", senderemail: "email", message: "Harmadik üzenet", time: "2022-02-02")], members: ["Szia"], lastid: "jasd")),newmessage: "Újüzenet")
+        MessagerView(presenter: MessagerPresenter(interactor: MessagerInteractor(model: DataModel()),community: MessageGroup(id: "1", name: "Bitcoin Community", messages:[Message(id: "123", sender: "Dominik", senderemail: "email", message: "Első üzenet", time: "2022-02-02 10:00:00", image: false),Message(id: "124", sender: "Dominik", senderemail: "email", message: "Második üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenetMásodik üzenet", time: "2022-02-02 10:00:00", image: false),Message(id: "125", sender: "Dominik", senderemail: "email", message: "Harmadik üzenet", time: "2022-02-02", image: false)], members: ["Szia"], lastid: "jasd")),newmessage: "Újüzenet")
     }
 }

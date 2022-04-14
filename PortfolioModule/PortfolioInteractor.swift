@@ -88,6 +88,34 @@ class PortfolioInteractor{
         return total
     }
     
+    func wallettotal() -> Double{
+        if model.ownedcoins.count == 0 {
+            return 0
+        }
+        var total: Double = 0
+        for a in 0...(model.ownedcoins.count-1) {
+            let dx = model.coins.firstIndex(where: { $0.id == model.ownedcoins[a].coinid })
+            total += model.ownedcoins[a].count * model.coins[dx!].currentPrice
+        }
+        return total
+    }
+    func walletyesterday() -> Double{
+        return (self.wallettotal()-self.walletchange())
+    }
+    func walletchange()->Double{
+        if model.heldcoins.count == 0 {
+            return 0
+        }
+        var total: Double = 0
+        for a in 0...(model.ownedcoins.count-1) {
+            let dx = model.coins.firstIndex(where: { $0.id == model.ownedcoins[a].coinid })
+            let change = model.coins[dx!].priceChange24H ?? 0
+            let changecounted = model.ownedcoins[a].count * change
+            total += changecounted
+        }
+        return total
+    }
+    
     func favfoliochange()->Double{
         if model.heldcoins.count == 0 {
             return 0
