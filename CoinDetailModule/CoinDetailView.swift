@@ -10,6 +10,7 @@ import SwiftUI
 struct CoinDetailView: View {
     @State var showalert : Bool = false
     @ObservedObject var presenter: CoinDetailPresenter
+    
     var body: some View {
         ZStack{
             Color.theme.backgroundcolor
@@ -129,7 +130,8 @@ struct CoinDetailView: View {
                 }
                 .padding(10)
             }
-            .navigationBarItems(trailing: presenter.makeButtonForPortfolioAdderView())
+            
+            .navigationBarItems(trailing:presenter.makeButtonForPortfolioAdderView().accessibility(identifier: "AddButton"))
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("\(presenter.getcoin().name)  (\(presenter.getcoin().symbol.uppercased()))")
         }
