@@ -119,7 +119,7 @@ class PortfolioPresenter: ObservableObject{
             .onDelete(perform: self.removeCoin)
             .listRowSeparatorTint(Color.theme.backgroundsecondary)
             .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-        }.accessibility(identifier: "PortfolioList")
+        }.accessibilityIdentifier("PortfolioList")
         )}
         else if selected == "favfolio" { return AnyView(
             List{

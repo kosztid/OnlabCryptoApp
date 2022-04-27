@@ -49,7 +49,7 @@ struct ContentView: View {
                     }
                 }
                     .tabItem { Label("Portfolio", systemImage: "list.bullet") }
-                    .accessibility(identifier: "PortfolioViewButton")
+                    .accessibilityIdentifier("PortfolioViewButton")
                     .tag(Tab.portfolio)
                 
                 //swap tab
@@ -59,7 +59,7 @@ struct ContentView: View {
                     }
                 }
                     .tabItem { Label("Swap", systemImage: "list.bullet") }
-                    .accessibility(identifier: "SwapViewButton")
+                    .accessibilityIdentifier("SwapViewButton")
                     .tag(Tab.swap)
                 
                 //News tab

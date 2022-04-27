@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 class MessagerInteractor{
-    let model: DataModel
+    private let model: DataModel
     
     init(model: DataModel){
         self.model = model

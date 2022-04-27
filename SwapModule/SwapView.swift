@@ -31,7 +31,7 @@ struct SwapView: View {
                             .font(.system(size: 26))
                             .bold()
                         presenter.makeButtonForSelector(coin: "coin1")
-                            .accessibility(identifier: "SwapSellSelectorButton")
+                            .accessibilityIdentifier("SwapSellSelectorButton")
                         HStack{
                             CachedAsyncImage(url: URL(string: presenter.selected(coin: presenter.coin1).image)){ image in
                                 image
@@ -71,7 +71,7 @@ struct SwapView: View {
                             .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.theme.accentcolorsecondary, lineWidth: 2))
                             .cornerRadius(10)
                             .disableAutocorrection(true)
-                            .accessibility(identifier: "SwapSellTextField")
+                            .accessibilityIdentifier("SwapSellTextField")
                         
                     }
                     .font(.system(size: 24))
@@ -85,7 +85,7 @@ struct SwapView: View {
                             .font(.system(size: 26))
                             .bold()
                         presenter.makeButtonForSelector(coin: "coin2")
-                            .accessibility(identifier: "SwapBuySelectorButton")
+                            .accessibilityIdentifier("SwapBuySelectorButton")
                         HStack{
                             CachedAsyncImage(url: URL(string: presenter.selected(coin: presenter.coin2).image)){ image in
                                 image
@@ -125,7 +125,7 @@ struct SwapView: View {
                             .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.theme.accentcolorsecondary, lineWidth: 2))
                             .cornerRadius(10)
                             .disableAutocorrection(true)
-                            .accessibility(identifier: "SwapBuyTextField")
+                            .accessibilityIdentifier("SwapBuyTextField")
                            // .onChange(of: presenter.coinstobuy){presenter.setSellAmount()}
                     }
                     .font(.system(size: 24))
@@ -135,7 +135,7 @@ struct SwapView: View {
                 .padding(10)
                 HStack(alignment:.center){
                     presenter.makeButtonForSwap()
-                        .accessibility(identifier: "SwapButton")
+                        .accessibilityIdentifier("SwapButton")
                     /*
                     .alert(isPresented:$showingAlert) {
                                 Alert(

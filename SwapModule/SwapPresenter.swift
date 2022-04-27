@@ -59,27 +59,19 @@ class SwapPresenter:ObservableObject{
     }
     
     func setSellAmount(){
-        if self.buyorsell == "buy" {
-            interactor.setBuyorSell(boolean: "none")
             let coin1 = self.selected(coin: coin1)
             let coin2 = self.selected(coin: coin2)
             let amount = coin2.currentPrice*coinstobuy
             interactor.setCoinstoSell(amount: amount / coin1.currentPrice)
-        } else {
-            interactor.setBuyorSell(boolean: "none")
-        }
+        
     }
     
     func setBuyAmount(){
-        if self.buyorsell == "sell" {
-            interactor.setBuyorSell(boolean: "none")
             let coin1 = self.selected(coin: coin1)
             let coin2 = self.selected(coin: coin2)
             let amount = coin1.currentPrice*coinstosell
             interactor.setCoinstoBuy(amount: amount / coin2.currentPrice )
-        } else {
-            interactor.setBuyorSell(boolean: "none")
-        }
+        
     }
     
     func selected(coin:String)->CoinModel{
@@ -87,6 +79,8 @@ class SwapPresenter:ObservableObject{
     }
     func swap(){
         interactor.swap(cointosell: coin1, sellamount: coinstosell, cointobuy: coin2, buyamount: coinstobuy)
+        coinstosell = 0;
+        coinstobuy = 0;
     }
     
     func setCoinstobuy(amount: Double){

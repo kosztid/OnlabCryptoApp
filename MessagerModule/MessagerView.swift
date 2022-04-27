@@ -58,24 +58,34 @@ struct MessagerView: View {
                         .frame(height: 40,alignment: .center)
                         .padding(10)
                         .disabled(presenter.issignedin() == false)
-                    Button{showImagePicker.toggle()
+                        .accessibilityIdentifier("MessageTextfield")
+                    
+                    if self.image == nil {
+                        Button{showImagePicker.toggle()
+                            
+                        }label:{
+                            Image(systemName: "photo")
+                                .accentColor(Color.theme.accentcolorsecondary)
+                                .font(.system(size: 18))
+                        }.offset(x: -(UIScreen.main.bounds.width*0.15))
                         
-                    }label:{
-                        Image(systemName: "photo")
-                            .accentColor(Color.theme.accentcolorsecondary)
-                            .font(.system(size: 18))
-                    }.offset(x: -(UIScreen.main.bounds.width*0.15))
-                    
-                    Button{presenter.sendPhoto(image: self.image!)
-                    }label:{
-                        Image(systemName: "photo.fill")
-                            .accentColor(Color.theme.accentcolorsecondary)
-                            .font(.system(size: 18))
-                    }.offset(x: -(UIScreen.main.bounds.width*0.25))
-                    
+                    } else {
+                        Button{showImagePicker.toggle()
+                        }label:{
+                            Image(systemName: "photo.fill")
+                                .accentColor(Color.theme.accentcolorsecondary)
+                                .font(.system(size: 18))
+                        }.offset(x: -(UIScreen.main.bounds.width*0.15))
+                    }
                     Button(action: {
                         if presenter.issignedin() == true {
-                            presenter.sendmessage(message: newmessage)
+                            
+                            if self.image != nil {
+                                presenter.sendPhoto(image: self.image!)
+                            }
+                            if newmessage != "" {
+                                presenter.sendmessage(message: newmessage)
+                            }
                             newmessage = ""
                         }
                     }) {
@@ -83,6 +93,7 @@ struct MessagerView: View {
                             .accentColor(Color.theme.accentcolorsecondary)
                             .font(.system(size: 18))
                     }.offset(x:-(UIScreen.main.bounds.width*0.05))
+                        .accessibilityIdentifier("MessageSendButton")
                 }.frame(height: 40)
                     .cornerRadius(20)
                     .padding(10)
@@ -91,6 +102,7 @@ struct MessagerView: View {
             .toolbar{
                 ToolbarItem(placement: .navigationBarTrailing) {
                         presenter.makeButtonForUsers()
+                        .accessibilityIdentifier("MessageMembersButton")
                 }
             }
         }.fullScreenCover(isPresented: $showImagePicker, onDismiss: nil){

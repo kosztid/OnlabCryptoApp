@@ -31,7 +31,7 @@ struct PortfolioAdderView: View {
                         .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.theme.accentcolorsecondary, lineWidth: 2))
                         .cornerRadius(10)
                         .disableAutocorrection(true)
-                        .accessibility(identifier: "PortfolioadderTextField")
+                        .accessibilityIdentifier("PortfolioadderTextField")
                 }
                 
                 Button{
@@ -49,7 +49,7 @@ struct PortfolioAdderView: View {
                         .background(Color.theme.backgroundsecondary)
                         .cornerRadius(10)
                 }
-                .accessibility(identifier: "PortfolioadderButton")
+                .accessibilityIdentifier("PortfolioadderButton")
             }
         }.padding(10)
             .background(Color.theme.backgroundcolor)

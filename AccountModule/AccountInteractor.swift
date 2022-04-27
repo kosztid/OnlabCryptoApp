@@ -9,13 +9,12 @@ import Foundation
 
 class AccountInteractor{
     
-    let model: DataModel
+    private let model: DataModel
     
     init(model: DataModel){
         self.model = model
     }
     func signOut(){
-       // model.signOut()
         try?model.auth.signOut()
         DispatchQueue.main.async {
             self.model.isSignedIn = false

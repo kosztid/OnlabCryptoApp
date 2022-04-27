@@ -34,7 +34,7 @@ struct LoginScreenView: View {
                         .cornerRadius(10)
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
-                        .accessibility(identifier: "LoginEmailTextField")
+                        .accessibilityIdentifier("LoginEmailTextField")
                 
                     
                     ZStack(alignment: .trailing) {
@@ -46,7 +46,7 @@ struct LoginScreenView: View {
                                         .background(Color.theme.backgroundsecondary)
                                         .cornerRadius(10)
                                         .disableAutocorrection(true)
-                                        .accessibility(identifier: "LoginPasswordTextField")
+                                        .accessibilityIdentifier("LoginPasswordTextField")
                                 } else {
                                     TextField("Password", text: $password)
                                         .padding(.horizontal)
@@ -81,7 +81,7 @@ struct LoginScreenView: View {
                             .foregroundColor(Color.theme.accentcolor)
                             .cornerRadius(10)
                     }
-                    .accessibility(identifier: "LoginButton")
+                    .accessibilityIdentifier("LoginButton")
                     HStack{
                         Spacer()
                         presenter.toRegisterView()

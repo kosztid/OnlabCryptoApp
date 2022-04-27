@@ -110,16 +110,18 @@ final class DataModel: ObservableObject{
         let user = self.auth.currentUser?.uid ?? ""
         if self.favcoins.filter({ $0.coinid == coinid }).isEmpty == false {
             let firebaseid = self.favcoins[favcoins.firstIndex(where: { $0.coinid == coinid })!].firebaseid
-            db.collection("users").document(user).collection("favfolio").document(firebaseid).delete { error in
-                if error == nil {
-                  //  self.heldcoinid.remove(at: index!)
-                   // self.heldcoins.remove(at: index!)
-                   // self.heldcoinscount.remove(at: index!)
+            DispatchQueue.main.async{
+                db.collection("users").document(user).collection("favfolio").document(firebaseid).delete { error in
+                    if error == nil {
+                      //  self.heldcoinid.remove(at: index!)
+                       // self.heldcoins.remove(at: index!)
+                       // self.heldcoinscount.remove(at: index!)
+                    }
+                    else {
+                        //error handling
+                    }
+                    
                 }
-                else {
-                    //error handling
-                }
-                
             }
         }
         else {
@@ -351,7 +353,7 @@ final class DataModel: ObservableObject{
                         }
                     if let i = self.communities.firstIndex(where: {$0.id == idtoget}) {
                         self.communities[i].members = members
-                        print("loaded")
+                        //print("loaded")
                     }
                 }
             }

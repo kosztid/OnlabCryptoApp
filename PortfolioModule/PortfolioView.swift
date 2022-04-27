@@ -24,9 +24,9 @@ struct PortfolioView: View {
                         Spacer()
                         presenter.makeButtonforPortfolioList()
                         presenter.makeButtonforFavfolioList()
-                            .accessibility(identifier: "FavfolioButton")
-                        presenter.makeButtonforWalletList()
-                            .accessibility(identifier: "WalletButton")
+                            .accessibilityIdentifier("FavfolioButton")
+                        presenter.makeButtonforWalletList()                            
+                            .accessibilityIdentifier("WalletButton")
                         Spacer()
                     }
                 }
@@ -37,10 +37,10 @@ struct PortfolioView: View {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         if presenter.signedin {
                             presenter.makeButtonForAccount()
-                                .accessibility(identifier: "PortfolioAccountButton")
+                                .accessibilityIdentifier("PortfolioAccountButton")
                         } else {
                             presenter.makeButtonForLogin()
-                                .accessibility(identifier: "PortfolioLoginButton")
+                                .accessibilityIdentifier("PortfolioLoginButton")
                         }
                     }
                 }

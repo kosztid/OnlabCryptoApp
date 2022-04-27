@@ -40,7 +40,7 @@ struct SearchView: View {
                                 searching = false
                             }
                         }
-                        .accessibility(identifier: "SeachBarTextField")
+                        .accessibilityIdentifier("SeachBarTextField")
                         .disableAutocorrection(true)
                     }
                     .foregroundColor(.gray)
@@ -57,7 +57,6 @@ struct SearchView: View {
                             ZStack{
                                 Button(""){
                                     presenter.setCoin1(coin1: coin.id)
-                                    presenter.setBuyorSell(boolean: "sell")
                                     presenter.setBuyAmount()
                                     self.presentationMode.wrappedValue.dismiss()
                                 }
@@ -75,11 +74,9 @@ struct SearchView: View {
                                 Button(""){
                                     if coinname == "coin1" {
                                         presenter.setCoin1(coin1: coin.id)
-                                        presenter.setBuyorSell(boolean: "sell")
                                         presenter.setBuyAmount()
                                     } else {
                                         presenter.setCoin2(coin2: coin.id)
-                                        presenter.setBuyorSell(boolean: "buy")
                                         presenter.setSellAmount()
                                     }
                                     
@@ -126,7 +123,7 @@ struct SearchBar: View {
                         searching = false
                     }
                 }
-                .accessibility(identifier: "SeachBarTextField")
+                .accessibilityIdentifier("SeachBarTextField")
                 .disableAutocorrection(true)
             }
             .foregroundColor(.gray)

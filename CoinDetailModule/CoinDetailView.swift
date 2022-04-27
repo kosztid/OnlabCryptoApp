@@ -131,7 +131,7 @@ struct CoinDetailView: View {
                 .padding(10)
             }
             
-            .navigationBarItems(trailing:presenter.makeButtonForPortfolioAdderView().accessibility(identifier: "AddButton"))
+            .navigationBarItems(trailing:presenter.makeButtonForPortfolioAdderView().accessibilityIdentifier("AddButton"))
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("\(presenter.getcoin().name)  (\(presenter.getcoin().symbol.uppercased()))")
         }
