@@ -55,9 +55,9 @@ class DataDownloader{
     
     func loadnews(){
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
+        dateFormatter.dateFormat = "yyyyMMdd"
         let stringdate = dateFormatter.string(from: Date())
-        
+        print(stringdate)
         guard let url = URL(string:"https://newsapi.org/v2/everything?q=crypto&from="+stringdate+"&sortBy=publishedAt&apiKey=2755ba3f91f94ff890427a7629def7f6")
         else {
             return
@@ -84,6 +84,7 @@ class DataDownloader{
             } receiveValue: { [weak self] (returnednews) in
                 self?.news = returnednews
                 self?.newssub?.cancel()
+                print("news loaded")
             }
         
     }

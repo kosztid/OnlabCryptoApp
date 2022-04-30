@@ -179,34 +179,7 @@ final class DataModel: ObservableObject{
             }
         }
     }
-    
-    
-    
-    
-   /* func portfoliototal() -> Double {
-        if heldcoins.count == 0 {
-            return 0
-        }
-        var total: Double = 0
-        for a in 0...(heldcoins.count-1) {
-            let currentprice = coins.first(where: {$0.id == heldcoins[a].coinid})?.currentPrice ?? 0.0
-            total += (heldcoins[a].count * currentprice)
-        }
-        return total
-    }
-    */
-    /*
-    func portfoliobuytotal() -> Double{
-        if heldcoins.count == 0 {
-            return 0
-        }
-        var total: Double = 0
-        for a in 0...(heldcoins.count-1) {
-            total += (heldcoins[a].buytotal)
-        }
-        return total
-    }
-    */
+
     func addHolding(coinid: String,coincount: Double,currprice: Double){
         let db = Firestore.firestore()
         let user = self.auth.currentUser?.uid ?? ""
@@ -504,13 +477,14 @@ final class DataModel: ObservableObject{
         }
         
     }
-    /*
+    
     func signOut(){
         try?auth.signOut()
-        /*DispatchQueue.main.async {
+        DispatchQueue.main.async {
             self.isSignedIn = false
-            //self.heldcoins = []
-           // self.favcoins = []
-        }*/
-    }*/
+            self.heldcoins = []
+            self.favcoins = []
+            self.ownedcoins = []
+        }
+    }
 }

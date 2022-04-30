@@ -20,7 +20,6 @@ struct NewsView: View {
                     ZStack{
                         Color.theme.backgroundcolor
                                 .ignoresSafeArea()
-                            
                         NewsListItem(presenter: presenter, article: article)
                             .frame(height: 60)
                         self.presenter.linkBuilder(for: article){

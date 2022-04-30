@@ -103,7 +103,7 @@ class PortfolioInteractor{
         return (self.wallettotal()-self.walletchange())
     }
     func walletchange()->Double{
-        if model.heldcoins.count == 0 {
+        if model.ownedcoins.count == 0 {
             return 0
         }
         var total: Double = 0
@@ -117,7 +117,7 @@ class PortfolioInteractor{
     }
     
     func favfoliochange()->Double{
-        if model.heldcoins.count == 0 {
+        if model.favcoins.count == 0 {
             return 0
         }
         var total: Double = 0
