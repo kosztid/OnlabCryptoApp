@@ -35,6 +35,9 @@ class CommunitiesPresenter: ObservableObject{
             }.buttonStyle(PlainButtonStyle())
             .opacity(0)
     }
+    func makeButtonForAdd() -> some View {
+        NavigationLink("Add Community", destination: router.makeCommunityAdderView(model: interactor.model))
+    }
     func makeButtonForLogin() -> some View {
         NavigationLink("Account", destination: router.makeLoginView(model: interactor.model))
     }
@@ -42,8 +45,9 @@ class CommunitiesPresenter: ObservableObject{
     func makeButtonForAccount() -> some View {
         NavigationLink("Account", destination: router.makeAccountView(model: interactor.model))
     }
-    
+    /*
     func addCommunity(){
         interactor.addCommunity()
-    }
+        
+    }*/
 }

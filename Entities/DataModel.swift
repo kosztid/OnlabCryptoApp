@@ -373,9 +373,9 @@ final class DataModel: ObservableObject{
     func getAccountInfo() -> String{
         return self.auth.currentUser?.uid ?? "nouser"
     }*/
-    func addCommunity(){
+    func addCommunity(name: String){
         let db = Firestore.firestore()
-        db.collection("communities").addDocument(data: ["name":"Tesztcommunity"]){
+        db.collection("communities").addDocument(data: ["name":name]){
             error in
             if error == nil{
                 //good

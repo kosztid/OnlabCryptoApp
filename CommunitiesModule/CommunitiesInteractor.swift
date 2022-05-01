@@ -13,8 +13,4 @@ class CommunitiesInteractor{
     init(model: DataModel){
         self.model = model
     }
-    
-    func addCommunity(){
-        model.addCommunity()
-    }
 }

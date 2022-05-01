@@ -34,9 +34,7 @@ struct CommunitiesView: View {
             }
             .toolbar{
                 ToolbarItem(placement: .navigationBarLeading){
-                    Button("Add Community"){
-                        presenter.addCommunity()
-                    }
+                        presenter.makeButtonForAdd()
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if presenter.signedin {

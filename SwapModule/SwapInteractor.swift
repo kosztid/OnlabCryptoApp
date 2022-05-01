@@ -20,10 +20,6 @@ class SwapInteractor{
     }
     
     func swap(cointosell: String,sellamount: Double, cointobuy: String, buyamount: Double){
-        print(cointosell)
-        print("\(sellamount)")
-        print(cointobuy)
-        print("\(buyamount)")
         var ownedamountfrombuy: Double
         let ownedamountfromsell: Double = model.ownedcoins[model.ownedcoins.firstIndex(where: { $0.coinid == cointosell })!].count
         if ownedamountfromsell < sellamount {
