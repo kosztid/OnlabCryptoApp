@@ -58,6 +58,7 @@ final class DataModel: ObservableObject{
     let auth : Auth
     let storage: Storage
     @Published var isSignedIn = false
+    @Published var IsnotificationViewed = false
     @Published var coins: [CoinModel] = []
     @Published var news = News(status: nil, totalResults: nil, articles: nil)
     @Published var coindetail: [CoinDetailModel] = []
@@ -88,6 +89,7 @@ final class DataModel: ObservableObject{
         addSub()
         communitiesPullFromDB()
         userreload()
+        
     }
     
     
@@ -420,20 +422,24 @@ final class DataModel: ObservableObject{
         }
     }
     
-    func saveNotification(data: ChangeDataModel){
+    func saveNotification(){
         if isSignedIn {
             let db = Firestore.firestore()
             let userid = self.auth.currentUser?.uid
-            if events.count > 0 {
-                db.collection("events").document(userid!).collection("events").document(events.first?.id ?? "").delete()
-            }
-            db.collection("events").document(userid!).collection("events").document(data.id).setData(["id":data.id, "coinid":data.coinid, "price":data.price]){ error in
-                if error == nil {
+            let notificationcoins = [ChangeDataModel(id: UUID().uuidString, coinid: "bitcoin", price: self.coins.first(where: {$0.id == "bitcoin"})?.currentPrice ?? 0),ChangeDataModel(id: UUID().uuidString, coinid: "ethereum", price: self.coins.first(where: {$0.id == "ethereum"})?.currentPrice ?? 0),ChangeDataModel(id: UUID().uuidString, coinid: "terra-luna", price: self.coins.first(where: {$0.id == "terra-luna"})?.currentPrice ?? 0)]
+            for a in 0...notificationcoins.count-1{
+                if events.count > 0 {
+                    db.collection("events").document(userid!).collection("events").document(events.first?.id ?? "").delete()
                 }
-                else {
-                    //error handling
+                db.collection("events").document(userid!).collection("events").document(notificationcoins[a].id).setData(["id":notificationcoins[a].id, "coinid":notificationcoins[a].coinid, "price":notificationcoins[a].price]){ error in
+                    if error == nil {
+                    }
+                    else {
+                        //error handling
+                    }
                 }
             }
+            
         }
         
     }
@@ -474,6 +480,7 @@ final class DataModel: ObservableObject{
                     self.portfolioPullFromDB()
                     self.favcoinPullFromDB()
                     self.walletPullFromDB()
+                    self.loadNotification()
                 }
                 
             }

@@ -13,4 +13,8 @@ class ListOfCoinsInteractor{
     init(model: DataModel){
         self.model = model
     }
+    
+    func setIsnotificationViewed(){
+        model.IsnotificationViewed = true
+    }
 }

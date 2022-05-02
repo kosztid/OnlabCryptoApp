@@ -13,6 +13,7 @@ class ListOfCoinsPresenter: ObservableObject{
     @Published var coins: [CoinModel] = []
     private let interactor: ListOfCoinsInteractor
     @Published var signedin : Bool = false
+    @Published var IsnotificationViewed : Bool = false
     private var cancellables = Set<AnyCancellable>()
     private let router = ListOfCoinsRouter()
     
@@ -25,6 +26,11 @@ class ListOfCoinsPresenter: ObservableObject{
         interactor.model.$isSignedIn
             .assign(to: \.signedin, on: self)
             .store(in: &cancellables)
+        
+        interactor.model.$IsnotificationViewed
+            .assign(to: \.IsnotificationViewed, on: self)
+            .store(in: &cancellables)
+        
     }
     
     func linkBuilder<Content: View>(
@@ -41,6 +47,13 @@ class ListOfCoinsPresenter: ObservableObject{
     
     func makeButtonForAccount() -> some View {
         NavigationLink("Account", destination: router.makeAccountView(model: interactor.model))
+    }
+    func makeButtonForPriceNotification() -> some View {
+        NavigationLink("Notifications", destination: router.makePriceNotificationView(model: interactor.model).onAppear{self.interactor.setIsnotificationViewed()})
+            .foregroundColor(IsnotificationViewed ? Color.theme.accentcolor : Color.theme.red)
+    }
+    func setIsnotificationViewed(){
+        interactor.setIsnotificationViewed()
     }
     
 }

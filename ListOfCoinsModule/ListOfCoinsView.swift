@@ -32,6 +32,10 @@ struct ListOfCoinsView: View {
                 .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
             }
             .toolbar{
+                ToolbarItem(placement: .navigationBarLeading){
+                    presenter.makeButtonForPriceNotification()
+                        .accessibilityIdentifier("PriceNotificationButton")
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if presenter.signedin {
                         presenter.makeButtonForAccount()

@@ -93,7 +93,8 @@ struct ContentView: View {
             }
             else if newPhase == .background {
                 print("background")
-                model.saveNotification(data: ChangeDataModel(id: UUID().uuidString, coinid: "bitcoin", price: model.coins.first(where: {$0.id == "bitcoin"})?.currentPrice ?? 0))
+                model.saveNotification()
+                model.IsnotificationViewed = false
             }
         }
         
