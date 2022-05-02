@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var selection: Tab = .listofcoins
+    @Environment(\.scenePhase) var scenePhase
     @EnvironmentObject var model: DataModel
     init() {
         UITabBar.appearance().barTintColor = UIColor(Color.theme.backgroundcolor)
@@ -81,6 +82,19 @@ struct ContentView: View {
                     .tag(Tab.communities)
             }
             
+        }
+        .onChange(of: scenePhase){ newPhase in
+            if newPhase == .active {
+                print("Active")
+                model.loadNotification()
+            }
+            else if newPhase == .inactive {
+                print("inactive")
+            }
+            else if newPhase == .background {
+                print("background")
+                model.saveNotification(data: ChangeDataModel(id: UUID().uuidString, coinid: "bitcoin", price: model.coins.first(where: {$0.id == "bitcoin"})?.currentPrice ?? 0))
+            }
         }
         
     }

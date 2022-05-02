@@ -21,6 +21,10 @@ class ListOfCoinsPresenter: ObservableObject{
         interactor.model.$coins
             .assign(to: \.coins, on: self)
             .store(in: &cancellables)
+        
+        interactor.model.$isSignedIn
+            .assign(to: \.signedin, on: self)
+            .store(in: &cancellables)
     }
     
     func linkBuilder<Content: View>(

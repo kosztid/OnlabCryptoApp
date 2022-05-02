@@ -75,6 +75,7 @@ final class DataModel: ObservableObject{
     @Published var coin2 : String = "tether"
     @Published var coinstobuy : Double = 0
     @Published var coinstosell : Double = 0
+    @Published var events: [ChangeDataModel] = []
     //private var datadownloaderfordetail = SingleDataDownloader(coinid: "ethereum")
    // var singlecoinsub: AnyCancellable?
     private var cancellables = Set<AnyCancellable>()
@@ -395,6 +396,46 @@ final class DataModel: ObservableObject{
                 //error handling
             }
         }
+    }
+    
+    func loadNotification(){
+        if isSignedIn{
+            let db = Firestore.firestore()
+            let userid = self.auth.currentUser?.uid
+            db.collection("events").document(userid!).collection("events").addSnapshotListener { snapshot, error in
+                if error == nil {
+                    if let snapshot = snapshot{
+                        DispatchQueue.main.async {
+                            self.events = snapshot.documents.map {
+                                d in
+                                return ChangeDataModel(id: d["id"] as? String ?? "", coinid: d["coinid"] as? String ?? "", price: Double(d["price"] as? Double ?? 0))
+                            }
+                        }
+                    }
+                }
+                else {
+                    //error handling
+                }
+            }
+        }
+    }
+    
+    func saveNotification(data: ChangeDataModel){
+        if isSignedIn {
+            let db = Firestore.firestore()
+            let userid = self.auth.currentUser?.uid
+            if events.count > 0 {
+                db.collection("events").document(userid!).collection("events").document(events.first?.id ?? "").delete()
+            }
+            db.collection("events").document(userid!).collection("events").document(data.id).setData(["id":data.id, "coinid":data.coinid, "price":data.price]){ error in
+                if error == nil {
+                }
+                else {
+                    //error handling
+                }
+            }
+        }
+        
     }
     
     func sendPhoto(image: UIImage, message: Message, communityid: String){
