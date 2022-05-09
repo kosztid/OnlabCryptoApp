@@ -34,6 +34,7 @@ struct ListOfCoinsView: View {
             .toolbar{
                 ToolbarItem(placement: .navigationBarLeading){
                     presenter.makeButtonForPriceNotification()
+                        .disabled(!presenter.signedin)
                         .accessibilityIdentifier("PriceNotificationButton")
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {

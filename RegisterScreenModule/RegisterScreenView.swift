@@ -13,6 +13,8 @@ struct RegisterScreenView: View {
     @State var email : String = ""
     @State var password : String = ""
     @State var isSecured: Bool = true
+    @State private var showingAlert = false
+    
     var body: some View {
         ScrollView {
             VStack{
@@ -62,7 +64,6 @@ struct RegisterScreenView: View {
                         return
                     }
                     presenter.register(email: self.email, password: self.password)
-                    presentationMode.wrappedValue.dismiss()
                 } label : {
                     Text("Fiók létrehozása")
                         .frame(height:50)
@@ -72,8 +73,20 @@ struct RegisterScreenView: View {
                         .foregroundColor(Color.theme.accentcolor)
                         .cornerRadius(10)
                 }
+                .alert("Email already registered/password shorter than 6 characters", isPresented: $showingAlert) {
+                    Button("OK", role: .cancel) {presenter.setregistererrorfalse() }
+                        }
             }
             .padding(10)
+        }
+        .onChange(of: presenter.registererror){ regerror in
+            if presenter.registererror == true {
+                self.showingAlert = true
+            }
+        }
+        .onChange(of: presenter.registered){ register in
+            self.presentationMode.wrappedValue.dismiss()
+            presenter.setregisteredfalse()
         }
         .navigationTitle("Regisztráció")
         .background(Color.theme.backgroundcolor)

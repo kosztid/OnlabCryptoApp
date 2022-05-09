@@ -58,16 +58,15 @@ final class DataModel: ObservableObject{
     let auth : Auth
     let storage: Storage
     @Published var isSignedIn = false
+    @Published var loginerror = false
+    @Published var registererror = false
     @Published var IsnotificationViewed = false
+    @Published var registered = false
     @Published var coins: [CoinModel] = []
     @Published var news = News(status: nil, totalResults: nil, articles: nil)
     @Published var coindetail: [CoinDetailModel] = []
     @Published var communities: [MessageGroup] = []
-    //@Published var coinimages: [UIImage] = []
     private let datadownloader = DataDownloader()
-    //@Published var heldcoinid: [String] = []
-   // @Published var heldcoins: [String] = []
-    //@Published var heldcoinscount: [Double] = []
     @Published var heldcoins: [CoinDataFirebase] = []
     @Published var favcoins: [CoinDataFirebase] = []
     @Published var ownedcoins: [CoinDataFirebase] = []
@@ -218,24 +217,32 @@ final class DataModel: ObservableObject{
             let dx = ownedcoins.firstIndex(where: { $0.coinid == coinid })!
             let firebaseid = self.ownedcoins[dx].firebaseid
             if coincount == 0 {
-                db.collection("users").document(user).collection("wallet").document(firebaseid).delete { error in
-                    if error == nil {
+                DispatchQueue.main.async {
+                    db.collection("users").document(user).collection("wallet").document(firebaseid).delete { error in
+                        if error == nil {
+                        }
+                        else {
+                        }
+                        
                     }
-                    else {
-                    }
-                    
                 }
+                
             } else {
-                db.collection("users").document(user).collection("wallet").document(firebaseid).setData(["count": coincount], merge: true)
+                DispatchQueue.main.async {
+                    db.collection("users").document(user).collection("wallet").document(firebaseid).setData(["count": coincount], merge: true)
+                }
+                
             }
         }
         else{
-            db.collection("users").document(user).collection("wallet").addDocument(data: ["coinid":coinid,"count":coincount]){
-                error in
-                if error == nil {
-                }
-                else {
-                    //error handling
+            DispatchQueue.main.async {
+                db.collection("users").document(user).collection("wallet").addDocument(data: ["coinid":coinid,"count":coincount]){
+                    error in
+                    if error == nil {
+                    }
+                    else {
+                        //error handling
+                    }
                 }
             }
         }
@@ -427,19 +434,36 @@ final class DataModel: ObservableObject{
         if isSignedIn {
             let db = Firestore.firestore()
             let userid = self.auth.currentUser?.uid
-            let notificationcoins = [ChangeDataModel(id: UUID().uuidString, coinid: "bitcoin", price: self.coins.first(where: {$0.id == "bitcoin"})?.currentPrice ?? 0),ChangeDataModel(id: UUID().uuidString, coinid: "ethereum", price: self.coins.first(where: {$0.id == "ethereum"})?.currentPrice ?? 0),ChangeDataModel(id: UUID().uuidString, coinid: "terra-luna", price: self.coins.first(where: {$0.id == "terra-luna"})?.currentPrice ?? 0)]
-            for a in 0...notificationcoins.count-1{
-                if events.count > 0 {
-                    db.collection("events").document(userid!).collection("events").document(events.first?.id ?? "").delete()
+            if events.count == 0 {
+                let notificationcoins = [ChangeDataModel(id: UUID().uuidString, coinid: "bitcoin", price: self.coins.first(where: {$0.id == "bitcoin"})?.currentPrice ?? 0),ChangeDataModel(id: UUID().uuidString, coinid: "ethereum", price: self.coins.first(where: {$0.id == "ethereum"})?.currentPrice ?? 0),ChangeDataModel(id: UUID().uuidString, coinid: "terra-luna", price: self.coins.first(where: {$0.id == "terra-luna"})?.currentPrice ?? 0)]
+                
+                for a in 0...notificationcoins.count-1{
+                    DispatchQueue.main.async {
+                        db.collection("events").document(userid!).collection("events").document(notificationcoins[a].id).setData(["id":notificationcoins[a].id, "coinid":notificationcoins[a].coinid, "price":notificationcoins[a].price], merge: true){ error in
+                            if error == nil {
+                            }
+                            else {
+                                //error handling
+                            }
+                        }
+                    }
                 }
-                db.collection("events").document(userid!).collection("events").document(notificationcoins[a].id).setData(["id":notificationcoins[a].id, "coinid":notificationcoins[a].coinid, "price":notificationcoins[a].price]){ error in
-                    if error == nil {
+            } else {
+                for a in 0...events.count-1{
+                    DispatchQueue.main.async {
+                        db.collection("events").document(userid!).collection("events").document(self.events[a].id).setData(["id":self.events[a].id, "coinid":self.events[a].coinid, "price":self.events[a].price], merge: true){ error in
+                            if error == nil {
+                            }
+                            else {
+                                //error handling
+                            }
+                        }
                     }
-                    else {
-                        //error handling
-                    }
+                    
                 }
             }
+            
+            
             
         }
         
@@ -491,6 +515,7 @@ final class DataModel: ObservableObject{
     func signIn(email: String, password: String){
         auth.signIn(withEmail: email, password: password) { result, error in
             guard result != nil, error == nil else {
+                self.loginerror = true
                 return
             }
             DispatchQueue.main.async {
@@ -500,6 +525,7 @@ final class DataModel: ObservableObject{
                 self.portfolioPullFromDB()
                 self.favcoinPullFromDB()
                 self.walletPullFromDB()
+                self.loadNotification()
             }
         }
     }
@@ -507,9 +533,11 @@ final class DataModel: ObservableObject{
     func register(email: String, password: String){
         auth.createUser(withEmail: email, password: password) { result, error in
             guard result != nil, error == nil else {
+                self.registererror = true
                 print("error creating user")
                 return
             }
+            self.registered = true
             DispatchQueue.main.async {
                 let db = Firestore.firestore()
                 let id = self.auth.currentUser?.uid
@@ -542,6 +570,7 @@ final class DataModel: ObservableObject{
             self.heldcoins = []
             self.favcoins = []
             self.ownedcoins = []
+            self.events = []
         }
     }
 }

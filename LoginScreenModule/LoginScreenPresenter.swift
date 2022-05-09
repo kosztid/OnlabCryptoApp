@@ -13,6 +13,7 @@ class LoginScreenPresenter: ObservableObject{
     private let interactor: LoginScreenInteractor
     private let router = LoginScreenRouter()
     @Published var signedin : Bool = false
+    @Published var loginerror : Bool = false
     private var cancellables = Set<AnyCancellable>()
     
     init(interactor: LoginScreenInteractor){
@@ -21,6 +22,10 @@ class LoginScreenPresenter: ObservableObject{
         interactor.model.$isSignedIn
             .assign(to: \.signedin, on: self)
             .store(in: &cancellables)
+        
+        interactor.model.$loginerror
+            .assign(to: \.loginerror, on: self)
+            .store(in: &cancellables)
     }
     
     func signIn(email: String, password: String){
@@ -28,6 +33,9 @@ class LoginScreenPresenter: ObservableObject{
     }
     func twittersignIn(){
       //  interactor.twittersignIn()
+    }
+    func setlogerrorfalse(){
+        interactor.setlogerrorfalse()
     }
     
     func toRegisterView() -> some View{

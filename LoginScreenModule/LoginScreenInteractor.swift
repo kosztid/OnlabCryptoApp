@@ -16,4 +16,7 @@ class LoginScreenInteractor {
     func signIn(email: String, password: String){
         return model.signIn(email: email, password: password)
     }
+    func setlogerrorfalse(){
+        model.loginerror = false
+    }
 }

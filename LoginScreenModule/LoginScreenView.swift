@@ -72,9 +72,6 @@ struct LoginScreenView: View {
                             return
                         }
                         presenter.signIn(email: self.email, password: self.password)
-                        if presenter.signedin == false {
-                            showingAlert = true
-                        }
                         //self.presentationMode.wrappedValue.dismiss()
                     } label : {
                         Text("Bejelentkezés")
@@ -86,7 +83,7 @@ struct LoginScreenView: View {
                             .cornerRadius(10)
                     }
                     .alert("Wrong email-password", isPresented: $showingAlert) {
-                                Button("OK", role: .cancel) { }
+                        Button("OK", role: .cancel) {presenter.setlogerrorfalse() }
                             }
                     .accessibilityIdentifier("LoginButton")
                     HStack{
@@ -102,6 +99,11 @@ struct LoginScreenView: View {
                     .foregroundColor(Color.theme.accentcolor)
                 }
                 .padding(10)
+            }
+        }
+        .onChange(of: presenter.loginerror){ logerror in
+            if presenter.loginerror == true {
+                self.showingAlert = true
             }
         }
         .onChange(of: presenter.signedin){change in
