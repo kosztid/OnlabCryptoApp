@@ -103,11 +103,6 @@ final class DataModel: ObservableObject{
             .sink{ [weak self] (datareceived) in self?.news = datareceived}
             .store(in: &cancellables)
     }
-    /*
-    func changePortfolioViewTo(viewname: String){
-        self.selection = viewname
-    }
-    */
     func addFavCoin(coinid: String){
         let db = Firestore.firestore()
         let user = self.auth.currentUser?.uid ?? ""
@@ -128,12 +123,14 @@ final class DataModel: ObservableObject{
             }
         }
         else {
-            db.collection("users").document(user).collection("favfolio").addDocument(data: ["coinid":coinid,"count":0]){
-                error in
-                if error == nil {
-                }
-                else {
-                    //error handling
+            DispatchQueue.main.async {
+                db.collection("users").document(user).collection("favfolio").addDocument(data: ["coinid":coinid,"count":0]){
+                    error in
+                    if error == nil {
+                    }
+                    else {
+                        //error handling
+                    }
                 }
             }
         }
@@ -196,15 +193,19 @@ final class DataModel: ObservableObject{
             } else {
                 holdingtotal = holdingtotal * coincount / holdingcount
             }
-            db.collection("users").document(user).collection("portfolio").document(firebaseid).setData([ "count": coincount, "buytotal":holdingtotal ], merge: true)
+            DispatchQueue.main.async {
+                db.collection("users").document(user).collection("portfolio").document(firebaseid).setData([ "count": coincount, "buytotal":holdingtotal ], merge: true)
+            }
         }
         else {
-            db.collection("users").document(user).collection("portfolio").addDocument(data: ["coinid":coinid,"count":coincount,"buytotal":(coincount*currprice)]){
-                error in
-                if error == nil {
-                }
-                else {
-                    //error handling
+            DispatchQueue.main.async {
+                db.collection("users").document(user).collection("portfolio").addDocument(data: ["coinid":coinid,"count":coincount,"buytotal":(coincount*currprice)]){
+                    error in
+                    if error == nil {
+                    }
+                    else {
+                        //error handling
+                    }
                 }
             }
         }
@@ -500,7 +501,6 @@ final class DataModel: ObservableObject{
                 self.favcoinPullFromDB()
                 self.walletPullFromDB()
             }
-            
         }
     }
     
@@ -520,6 +520,15 @@ final class DataModel: ObservableObject{
                     else {
                         //error handling
                     }
+                    db.collection("events").document(id ?? "err").setData(["id": id ?? "err"]){
+                        error in
+                        if error == nil {
+                        }
+                        else {
+                            //error handling
+                        }
+                    }
+                    
                 }
             }
         }

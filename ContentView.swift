@@ -49,7 +49,7 @@ struct ContentView: View {
                         PortfolioView(presenter: PortfolioPresenter(interactor: PortfolioInteractor(model: model)))
                     }
                 }
-                    .tabItem { Label("Portfolio", systemImage: "list.bullet") }
+                    .tabItem { Label("Portfolio", systemImage: "star") }
                     .accessibilityIdentifier("PortfolioViewButton")
                     .tag(Tab.portfolio)
                 
@@ -59,7 +59,7 @@ struct ContentView: View {
                         SwapView(presenter: SwapPresenter(interactor: SwapInteractor(model: model)))
                     }
                 }
-                    .tabItem { Label("Swap", systemImage: "list.bullet") }
+                    .tabItem { Label("Swap", systemImage: "arrow.left.arrow.right") }
                     .accessibilityIdentifier("SwapViewButton")
                     .tag(Tab.swap)
                 
@@ -69,7 +69,7 @@ struct ContentView: View {
                         NewsView(presenter: NewsPresenter(interactor: NewsInteractor(model: model)))
                     }
                 }
-                    .tabItem { Label("News", systemImage: "list.bullet") }
+                    .tabItem { Label("News", systemImage: "newspaper") }
                     .tag(Tab.news)
                 
                 //Communities tab
@@ -78,7 +78,7 @@ struct ContentView: View {
                         CommunitiesView(presenter: CommunitiesPresenter(interactor: CommunitiesInteractor(model: model)))
                     }
                 }
-                    .tabItem { Label("Chat", systemImage: "list.bullet") }
+                    .tabItem { Label("Chat", systemImage: "message") }
                     .tag(Tab.communities)
             }
             

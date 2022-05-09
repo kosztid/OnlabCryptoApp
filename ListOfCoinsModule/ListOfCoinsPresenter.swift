@@ -49,8 +49,13 @@ class ListOfCoinsPresenter: ObservableObject{
         NavigationLink("Account", destination: router.makeAccountView(model: interactor.model))
     }
     func makeButtonForPriceNotification() -> some View {
-        NavigationLink("Notifications", destination: router.makePriceNotificationView(model: interactor.model).onAppear{self.interactor.setIsnotificationViewed()})
-            .foregroundColor(IsnotificationViewed ? Color.theme.accentcolor : Color.theme.red)
+        NavigationLink(destination: router.makePriceNotificationView(model: interactor.model)){
+            Image(systemName: IsnotificationViewed ? "bell.fill" : "bell.badge.fill")
+                .font(.system(size: 20))
+            
+            }
+        .onAppear{self.interactor.setIsnotificationViewed()}
+        .foregroundColor(IsnotificationViewed ? Color.theme.accentcolor : Color.theme.red)
     }
     func setIsnotificationViewed(){
         interactor.setIsnotificationViewed()

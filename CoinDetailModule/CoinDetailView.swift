@@ -32,6 +32,7 @@ struct CoinDetailView: View {
                         Spacer()
                      
                         presenter.makeFavButton()
+                            .disabled(!presenter.signedin)
                     }
                     .frame(alignment: .trailing)
                     ChartView(values: presenter.values())
@@ -131,7 +132,9 @@ struct CoinDetailView: View {
                 .padding(10)
             }
             
-            .navigationBarItems(trailing:presenter.makeButtonForPortfolioAdderView().accessibilityIdentifier("AddButton"))
+            .navigationBarItems(trailing:presenter.makeButtonForPortfolioAdderView()
+                                    .disabled(!presenter.signedin)
+                                    .accessibilityIdentifier("AddButton"))
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("\(presenter.getcoin().name)  (\(presenter.getcoin().symbol.uppercased()))")
         }

@@ -14,6 +14,6 @@ class LoginScreenInteractor {
         self.model = model
     }
     func signIn(email: String, password: String){
-        model.signIn(email: email, password: password)
+        return model.signIn(email: email, password: password)
     }
 }

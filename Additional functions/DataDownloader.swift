@@ -84,7 +84,6 @@ class DataDownloader{
             } receiveValue: { [weak self] (returnednews) in
                 self?.news = returnednews
                 self?.newssub?.cancel()
-                print("news loaded")
             }
         
     }

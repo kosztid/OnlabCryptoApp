@@ -13,6 +13,7 @@ struct LoginScreenView: View {
     @State var email : String = ""
     @State var password : String = ""
     @State private var isSecured: Bool = true
+    @State private var showingAlert = false
     
     var body: some View {
         NavigationView {
@@ -71,7 +72,10 @@ struct LoginScreenView: View {
                             return
                         }
                         presenter.signIn(email: self.email, password: self.password)
-                        self.presentationMode.wrappedValue.dismiss()
+                        if presenter.signedin == false {
+                            showingAlert = true
+                        }
+                        //self.presentationMode.wrappedValue.dismiss()
                     } label : {
                         Text("Bejelentkezés")
                             .frame(height:50)
@@ -81,12 +85,14 @@ struct LoginScreenView: View {
                             .foregroundColor(Color.theme.accentcolor)
                             .cornerRadius(10)
                     }
+                    .alert("Wrong email-password", isPresented: $showingAlert) {
+                                Button("OK", role: .cancel) { }
+                            }
                     .accessibilityIdentifier("LoginButton")
                     HStack{
                         Spacer()
                         presenter.toRegisterView()
                         Spacer()
-                        //presenter.toForgotPasswordView()
                         Button("Mégse"){
                             self.presentationMode.wrappedValue.dismiss()
                         }.foregroundColor(Color.theme.accentcolor)
@@ -98,9 +104,11 @@ struct LoginScreenView: View {
                 .padding(10)
             }
         }
+        .onChange(of: presenter.signedin){change in
+            self.presentationMode.wrappedValue.dismiss()
+        }
         .navigationBarHidden(true)
         .background(Color.theme.backgroundcolor)
-        //.navigationTitle("Bejelentkezés")
     }
 }
 

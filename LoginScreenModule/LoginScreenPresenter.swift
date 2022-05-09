@@ -7,17 +7,24 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 class LoginScreenPresenter: ObservableObject{
     private let interactor: LoginScreenInteractor
     private let router = LoginScreenRouter()
+    @Published var signedin : Bool = false
+    private var cancellables = Set<AnyCancellable>()
     
     init(interactor: LoginScreenInteractor){
         self.interactor = interactor
+        
+        interactor.model.$isSignedIn
+            .assign(to: \.signedin, on: self)
+            .store(in: &cancellables)
     }
     
     func signIn(email: String, password: String){
-        interactor.signIn(email: email, password: password)
+        return interactor.signIn(email: email, password: password)
     }
     func twittersignIn(){
       //  interactor.twittersignIn()
