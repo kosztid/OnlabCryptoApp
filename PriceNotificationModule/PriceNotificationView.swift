@@ -22,7 +22,7 @@ struct PriceNotificationView: View {
                         HStack {
                             Text(presenter.coinname(coinid: event.coinid))
                             Spacer()
-                            Text("\((100-(presenter.currentPrice(coinid: event.coinid)/event.price*100)).formatpercent())")
+                            Text("\((-1*(100-(presenter.currentPrice(coinid: event.coinid)/event.price*100))).formatpercent())")
                         }.frame(width: UIScreen.main.bounds.width*0.9)
                     }
                     

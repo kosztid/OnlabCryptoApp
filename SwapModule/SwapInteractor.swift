@@ -87,7 +87,7 @@ class SwapInteractor{
         let cointosellprice = self.selected(coin: cointosell).currentPrice
         let cointobuyprice = self.selected(coin: cointobuy).currentPrice
         let messagestring = "\(model.auth.currentUser?.email ?? "nouser") Bought \(buyamount) \(cointobuy) (current price \(cointobuyprice)) for \(sellamount) \(cointosell) (current price \(cointosellprice)) "
-        model.sendMessage(id:"CbP9VCE4TWEHftzZuL4Q",message: Message(id:"1", sender: self.getAccountInfo(), senderemail: self.getAccountEmail(), message: messagestring, time: stringdate, image: false))
+        model.sendMessage(id:"CbP9VCE4TWEHftzZuL4Q",message: MessageModel(id:"1", sender: self.getAccountInfo(), senderemail: self.getAccountEmail(), message: messagestring, time: stringdate, image: false))
     }
 
 }

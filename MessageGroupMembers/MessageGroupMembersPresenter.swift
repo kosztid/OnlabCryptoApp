@@ -9,9 +9,9 @@ import Foundation
 
 class MessageGroupMembersPresenter: ObservableObject{
     private let interactor: MessageGroupMembersInteractor
-    @Published var community: MessageGroup
+    @Published var community: MessageGroupModel
     
-    init(interactor: MessageGroupMembersInteractor,community: MessageGroup ){
+    init(interactor: MessageGroupMembersInteractor,community: MessageGroupModel ){
         self.interactor = interactor
         self.community = community
     }

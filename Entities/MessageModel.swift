@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Message: Identifiable, Codable{
+struct MessageModel: Identifiable, Codable{
     var id: String
     var sender: String
     var senderemail: String

@@ -18,7 +18,7 @@ class SwapPresenter:ObservableObject{
     private let router = SwapRouter()
     let interactor: SwapInteractor
     @Published var coins: [CoinModel] = []
-    @Published var ownedcoins: [CoinDataFirebase] = []
+    @Published var ownedcoins: [CoinDataFirebaseModel] = []
     private var cancellables = Set<AnyCancellable>()
     @State private var showingAlert = false
     

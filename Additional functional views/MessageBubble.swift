@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MessageBubble: View {
-    var message: Message
+    var message: MessageModel
     var sender: String
     var body: some View {
         VStack(alignment: (message.sender == sender) ? .trailing : .leading){
@@ -44,6 +44,6 @@ struct MessageBubble: View {
 
 struct MessageBubble_Previews: PreviewProvider {
     static var previews: some View {
-        MessageBubble(message: Message(id: "123", sender: "Dominik", senderemail: "mail", message: "Tesztüzem", time: "2022-02-02", image: false), sender: "")
+        MessageBubble(message: MessageModel(id: "123", sender: "Dominik", senderemail: "mail", message: "Tesztüzem", time: "2022-02-02", image: false), sender: "")
     }
 }

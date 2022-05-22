@@ -11,7 +11,7 @@ import SwiftUI
 class PortfolioPresenter: ObservableObject{
     @Published var selection: String = "wallet"
     @Published var coins: [CoinModel] = []
-    @Published var favcoins: [CoinDataFirebase] = []
+    @Published var favcoins: [CoinDataFirebaseModel] = []
     @Published var signedin : Bool = false
     private let interactor: PortfolioInteractor
     private var cancellables = Set<AnyCancellable>()

@@ -10,11 +10,11 @@ import SwiftUI
 
 class MessagerPresenter: ObservableObject{
     private let interactor: MessagerInteractor
-    @Published var community: MessageGroup
+    @Published var community: MessageGroupModel
     private let router = MessagerRouter()
     
     
-    init(interactor: MessagerInteractor,community: MessageGroup ){
+    init(interactor: MessagerInteractor,community: MessageGroupModel ){
         self.interactor = interactor
         self.community = community
     }
@@ -23,10 +23,10 @@ class MessagerPresenter: ObservableObject{
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let stringdate = dateFormatter.string(from: Date())
         let email = interactor.getAccountEmail()
-        self.interactor.sendMessage(id: community.id,message: Message(id:"1", sender: interactor.getAccountInfo(), senderemail: email, message: message, time: stringdate, image: false))
+        self.interactor.sendMessage(id: community.id,message: MessageModel(id:"1", sender: interactor.getAccountInfo(), senderemail: email, message: message, time: stringdate, image: false))
         self.interactor.addUser(id: self.community.id, user: email)
     }
-    func messagesGet() -> [Message] {
+    func messagesGet() -> [MessageModel] {
         return community.messages
     }
     func getAccountInfo() -> String{
@@ -46,6 +46,6 @@ class MessagerPresenter: ObservableObject{
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let stringdate = dateFormatter.string(from: Date())
         let email = interactor.getAccountEmail()
-        interactor.sendPhoto(image: image, message: Message(id:"1", sender: interactor.getAccountInfo(), senderemail: email, message: "lateinit mail", time: stringdate, image: true), id: community.id)
+        interactor.sendPhoto(image: image, message: MessageModel(id:"1", sender: interactor.getAccountInfo(), senderemail: email, message: "lateinit mail", time: stringdate, image: true), id: community.id)
     }
 }

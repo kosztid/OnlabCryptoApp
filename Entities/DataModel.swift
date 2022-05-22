@@ -64,12 +64,12 @@ final class DataModel: ObservableObject{
     @Published var registered = false
     @Published var coins: [CoinModel] = []
     @Published var news = News(status: nil, totalResults: nil, articles: nil)
-    @Published var coindetail: [CoinDetailModel] = []
-    @Published var communities: [MessageGroup] = []
+    //@Published var coindetail: [CoinDetailModel] = []
+    @Published var communities: [MessageGroupModel] = []
     private let datadownloader = DataDownloader()
-    @Published var heldcoins: [CoinDataFirebase] = []
-    @Published var favcoins: [CoinDataFirebase] = []
-    @Published var ownedcoins: [CoinDataFirebase] = []
+    @Published var heldcoins: [CoinDataFirebaseModel] = []
+    @Published var favcoins: [CoinDataFirebaseModel] = []
+    @Published var ownedcoins: [CoinDataFirebaseModel] = []
     @Published var buyorsell : String = "none"
     @Published var coin1 : String = "ethereum"
     @Published var coin2 : String = "tether"
@@ -145,7 +145,7 @@ final class DataModel: ObservableObject{
                 if let snapshot = snapshot{
                     DispatchQueue.main.async {
                         self.favcoins = snapshot.documents.map { d in
-                            return CoinDataFirebase(firebaseid: d.documentID, coinid: d["coinid"] as? String ?? "", count: Double(d["count"] as? Double ?? 0), buytotal: Double(d["count"] as? Double ?? 0))
+                            return CoinDataFirebaseModel(firebaseid: d.documentID, coinid: d["coinid"] as? String ?? "", count: Double(d["count"] as? Double ?? 0), buytotal: Double(d["count"] as? Double ?? 0))
                         }
                     }
                     
@@ -255,7 +255,7 @@ final class DataModel: ObservableObject{
                 if let snapshot = snapshot{
                     DispatchQueue.main.async {
                         self.ownedcoins = snapshot.documents.map { d in
-                            return CoinDataFirebase(firebaseid: d.documentID, coinid: d["coinid"] as? String ?? "", count: Double(d["count"] as? Double ?? 0),buytotal:0)
+                            return CoinDataFirebaseModel(firebaseid: d.documentID, coinid: d["coinid"] as? String ?? "", count: Double(d["count"] as? Double ?? 0),buytotal:0)
                            // MessageGroup(id: d.documentID, name: d["name"] as? String ?? "", messages: [], lastid: "")
                         }
                     }
@@ -276,7 +276,7 @@ final class DataModel: ObservableObject{
                 if let snapshot = snapshot{
                     DispatchQueue.main.async {
                         self.heldcoins = snapshot.documents.map { d in
-                            return CoinDataFirebase(firebaseid: d.documentID, coinid: d["coinid"] as? String ?? "", count: Double(d["count"] as? Double ?? 0),buytotal: Double(d["buytotal"] as? Double ?? 0))
+                            return CoinDataFirebaseModel(firebaseid: d.documentID, coinid: d["coinid"] as? String ?? "", count: Double(d["count"] as? Double ?? 0),buytotal: Double(d["buytotal"] as? Double ?? 0))
                            // MessageGroup(id: d.documentID, name: d["name"] as? String ?? "", messages: [], lastid: "")
                         }
                     }
@@ -311,7 +311,7 @@ final class DataModel: ObservableObject{
             if error == nil {
                 if let snapshot = snapshot{
                         self.communities = snapshot.documents.map { d in
-                            return MessageGroup(id: d.documentID, name: d["name"] as? String ?? "", messages: [], members: [], lastid: "")
+                            return MessageGroupModel(id: d.documentID, name: d["name"] as? String ?? "", messages: [], members: [], lastid: "")
                         }
                         for c in self.communities{
                             self.messagemembersPullFromDB(idtoget: c.id)
@@ -349,14 +349,14 @@ final class DataModel: ObservableObject{
     }
     
     func messagesPullFromDB(idtoget: String){
-        var messages: [Message] = []
+        var messages: [MessageModel] = []
         let db = Firestore.firestore()
         db.collection("communities").document(idtoget).collection("messages").addSnapshotListener { snapshot, error in
             if error == nil {
                 if let snapshot = snapshot{
                     DispatchQueue.main.async {
                         messages = snapshot.documents.map { d in
-                            return Message(id: d.documentID,sender: d["sender"] as? String ?? "Unknown",senderemail: d["senderemail"] as? String ?? "nomail", message: d["message"] as? String ?? "", time: d["time"] as? String ?? "2000-02-02 10:00:00", image: d["image"] as? Bool ?? false)
+                            return MessageModel(id: d.documentID,sender: d["sender"] as? String ?? "Unknown",senderemail: d["senderemail"] as? String ?? "nomail", message: d["message"] as? String ?? "", time: d["time"] as? String ?? "2000-02-02 10:00:00", image: d["image"] as? Bool ?? false)
                         }
                         
                         if let i = self.communities.firstIndex(where: {$0.id == idtoget}) {
@@ -395,7 +395,7 @@ final class DataModel: ObservableObject{
             }
         }
     }
-    func sendMessage(id: String, message: Message){
+    func sendMessage(id: String, message: MessageModel){
         let db = Firestore.firestore()
         let sender = self.auth.currentUser?.uid ?? message.sender
         db.collection("communities").document(id).collection("messages").addDocument(data: ["sender":sender,"message":message.message,"senderemail":message.senderemail,"time":message.time,"image":message.image]){
@@ -469,7 +469,7 @@ final class DataModel: ObservableObject{
         
     }
     
-    func sendPhoto(image: UIImage, message: Message, communityid: String){
+    func sendPhoto(image: UIImage, message: MessageModel, communityid: String){
         let id = UUID().uuidString
         let ref = storage.reference(withPath: id)
         guard let imagedata = image.jpegData(compressionQuality: 0.1) else {return}

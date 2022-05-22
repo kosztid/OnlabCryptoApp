@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 class CommunitiesPresenter: ObservableObject{
-    @Published var communities: [MessageGroup] = []
+    @Published var communities: [MessageGroupModel] = []
     private var cancellables = Set<AnyCancellable>()
     private let interactor: CommunitiesInteractor
     @Published var signedin : Bool = false
@@ -28,7 +28,7 @@ class CommunitiesPresenter: ObservableObject{
     }
     
     func linkBuilder<Content: View>(
-        for community: MessageGroup,
+        for community: MessageGroupModel,
         @ViewBuilder content: () -> Content
     ) -> some View{
         NavigationLink(destination:router.gotoChat(model: interactor.model,  community:community)){

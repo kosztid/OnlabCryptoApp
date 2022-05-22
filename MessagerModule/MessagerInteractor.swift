@@ -14,7 +14,7 @@ class MessagerInteractor{
     init(model: DataModel){
         self.model = model
     }
-    func sendMessage(id: String, message: Message){
+    func sendMessage(id: String, message: MessageModel){
         if id != "CbP9VCE4TWEHftzZuL4Q" {
             model.sendMessage(id:id,message: message)
         }
@@ -34,7 +34,7 @@ class MessagerInteractor{
     func issignedin() -> Bool {
         return model.isSignedIn
     }
-    func sendPhoto(image:UIImage, message: Message,id: String){
+    func sendPhoto(image:UIImage, message: MessageModel,id: String){
         model.sendPhoto(image: image, message: message, communityid: id)
     }
         

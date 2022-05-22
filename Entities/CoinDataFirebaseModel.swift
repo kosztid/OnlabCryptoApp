@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CoinDataFirebase{
+struct CoinDataFirebaseModel{
     var firebaseid: String
     var coinid: String
     var count: Double

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 class CommunitiesRouter{
-    func gotoChat(model: DataModel,community: MessageGroup) -> some View{
+    func gotoChat(model: DataModel,community: MessageGroupModel) -> some View{
         let presenter = MessagerPresenter(interactor: MessagerInteractor(model: model),community: community)
         return MessagerView(presenter: presenter)
     }

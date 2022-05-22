@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct MessageGroup: Identifiable, Codable{
+struct MessageGroupModel: Identifiable, Codable{
     var id: String
     var name: String
-    var messages: [Message]
+    var messages: [MessageModel]
     var members: [String]
     var lastid: String
 }
