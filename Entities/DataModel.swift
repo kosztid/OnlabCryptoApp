@@ -111,6 +111,8 @@ final class DataModel: ObservableObject{
             .store(in: &cancellables)
     }
     func addFavCoin(coinid: String){
+        apiService.updateFavs(self.auth.currentUser!.uid, coinid)
+        favcoinPullFromDB()
 //        let db = Firestore.firestore()
 //        let user = self.auth.currentUser?.uid ?? ""
 //        if self.favcoins.filter({ $0.coinid == coinid }).isEmpty == false {
@@ -171,6 +173,7 @@ final class DataModel: ObservableObject{
     
     
     func removeCoin(cointoremove: CoinModel){
+        apiService.updatePortfolio(self.auth.currentUser!.uid, cointoremove.id, 0.0, 0.0)
 //        //let index = heldcoins.firstIndex(where: { $0 == cointoremove.id })
 //        let firebaseid = self.heldcoins[heldcoins.firstIndex(where: { $0.coinid == cointoremove.id })!].firebaseid
 //        let db = Firestore.firestore()
@@ -191,6 +194,7 @@ final class DataModel: ObservableObject{
     }
 
     func addHolding(coinid: String,coincount: Double,currprice: Double){
+        apiService.updatePortfolio(self.auth.currentUser!.uid, coinid, coincount, currprice)
 //        let db = Firestore.firestore()
 //        let user = self.auth.currentUser?.uid ?? ""
 //        if self.heldcoins.filter({ $0.coinid == coinid }).isEmpty == false {
@@ -221,7 +225,8 @@ final class DataModel: ObservableObject{
 //        }
     }
     
-    func modifywallet(coinid: String,coincount: Double){
+    func modifywallet( _ coinToSell: String,_ coinToBuy: String, _ sellAmount: Double, _ buyAmount: Double){
+
 //        let db = Firestore.firestore()
 //        let user = self.auth.currentUser?.uid ?? ""
 //        if self.ownedcoins.filter({ $0.coinid == coinid }).isEmpty == false {
@@ -519,7 +524,7 @@ final class DataModel: ObservableObject{
                     let _ = print(self.auth.currentUser!.uid)
                     let _ = print(self.auth.currentUser!.email ?? "")
                     self.apiService.loadUser()
-                    self.favcoins = self.apiService.favs
+//                    self.favcoins = self.apiService.favs
 //                    self.portfolioPullFromDB()
                     //self.favcoinPullFromDB()
 //                    self.walletPullFromDB()
