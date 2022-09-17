@@ -83,7 +83,7 @@ class PortfolioInteractor{
         }
         var total: Double = 0
         for a in 0...(model.heldcoins.count-1) {
-            total += (model.heldcoins[a].buytotal)
+            total += (model.heldcoins[a].buytotal ?? 0)
         }
         return total
     }

@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct CoinDataFirebaseModel{
-    var firebaseid: String
+struct CoinDataFirebaseModel: Codable {
+    var id: Int
     var coinid: String
     var count: Double
-    var buytotal: Double
+    var buytotal: Double?
 }

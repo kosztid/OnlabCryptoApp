@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class DataDownloader{
+class DataDownloader {
     @Published var coins: [CoinModel] = []
     @Published var coindetail: [CoinDetailModel] = []
     @Published var news = News(status: nil, totalResults: nil, articles: nil)

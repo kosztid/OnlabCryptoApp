@@ -67,6 +67,7 @@ final class DataModel: ObservableObject{
     //@Published var coindetail: [CoinDetailModel] = []
     @Published var communities: [MessageGroupModel] = []
     private let datadownloader = DataDownloader()
+    private let apiService = ApiService()
     @Published var heldcoins: [CoinDataFirebaseModel] = []
     @Published var favcoins: [CoinDataFirebaseModel] = []
     @Published var ownedcoins: [CoinDataFirebaseModel] = []
@@ -90,9 +91,6 @@ final class DataModel: ObservableObject{
         userreload()
         
     }
-    
-    
-    
     func addSub(){
         datadownloader.$coins
             .sink{ [weak self] (datareceived) in self?.coins = datareceived}
@@ -101,194 +99,212 @@ final class DataModel: ObservableObject{
         datadownloader.$news
             .sink{ [weak self] (datareceived) in self?.news = datareceived}
             .store(in: &cancellables)
+
+        apiService.$favs
+            .sink{ [weak self] (datareceived) in self?.favcoins = datareceived}
+            .store(in: &cancellables)
+        apiService.$portfolio
+            .sink{ [weak self] (datareceived) in self?.heldcoins = datareceived}
+            .store(in: &cancellables)
+        apiService.$wallet
+            .sink{ [weak self] (datareceived) in self?.ownedcoins = datareceived}
+            .store(in: &cancellables)
     }
     func addFavCoin(coinid: String){
-        let db = Firestore.firestore()
-        let user = self.auth.currentUser?.uid ?? ""
-        if self.favcoins.filter({ $0.coinid == coinid }).isEmpty == false {
-            let firebaseid = self.favcoins[favcoins.firstIndex(where: { $0.coinid == coinid })!].firebaseid
-            DispatchQueue.main.async{
-                db.collection("users").document(user).collection("favfolio").document(firebaseid).delete { error in
-                    if error == nil {
-                      //  self.heldcoinid.remove(at: index!)
-                       // self.heldcoins.remove(at: index!)
-                       // self.heldcoinscount.remove(at: index!)
-                    }
-                    else {
-                        //error handling
-                    }
-                    
-                }
-            }
-        }
-        else {
-            DispatchQueue.main.async {
-                db.collection("users").document(user).collection("favfolio").addDocument(data: ["coinid":coinid,"count":0]){
-                    error in
-                    if error == nil {
-                    }
-                    else {
-                        //error handling
-                    }
-                }
-            }
-        }
+//        let db = Firestore.firestore()
+//        let user = self.auth.currentUser?.uid ?? ""
+//        if self.favcoins.filter({ $0.coinid == coinid }).isEmpty == false {
+//            let firebaseid = self.favcoins[favcoins.firstIndex(where: { $0.coinid == coinid })!].firebaseid
+//            DispatchQueue.main.async{
+//                db.collection("users").document(user).collection("favfolio").document(firebaseid).delete { error in
+//                    if error == nil {
+//                      //  self.heldcoinid.remove(at: index!)
+//                       // self.heldcoins.remove(at: index!)
+//                       // self.heldcoinscount.remove(at: index!)
+//                    }
+//                    else {
+//                        //error handling
+//                    }
+//
+//                }
+//            }
+//        }
+//        else {
+//            DispatchQueue.main.async {
+//                db.collection("users").document(user).collection("favfolio").addDocument(data: ["coinid":coinid,"count":0]){
+//                    error in
+//                    if error == nil {
+//                    }
+//                    else {
+//                        //error handling
+//                    }
+//                }
+//            }
+//        }
     }
     
     
     
     func favcoinPullFromDB(){
-        let db = Firestore.firestore()
-        let userid = self.auth.currentUser?.uid
-        db.collection("users").document(userid!).collection("favfolio").addSnapshotListener { snapshot, error in
-            if error == nil {
-                if let snapshot = snapshot{
-                    DispatchQueue.main.async {
-                        self.favcoins = snapshot.documents.map { d in
-                            return CoinDataFirebaseModel(firebaseid: d.documentID, coinid: d["coinid"] as? String ?? "", count: Double(d["count"] as? Double ?? 0), buytotal: Double(d["count"] as? Double ?? 0))
-                        }
-                    }
-                    
-                }
-            }
-            else {
-                //error handling
-            }
-        }
+        DispatchQueue.main.async {
+            self.favcoins = self.apiService.favs
+    }
+//        let db = Firestore.firestore()
+//        let userid = self.auth.currentUser?.uid
+//        db.collection("users").document(userid!).collection("favfolio").addSnapshotListener { snapshot, error in
+//            if error == nil {
+//                if let snapshot = snapshot{
+//                    DispatchQueue.main.async {
+//                        self.favcoins = snapshot.documents.map { d in
+//                            return CoinDataFirebaseModel(firebaseid: d.documentID, coinid: d["coinid"] as? String ?? "", count: Double(d["count"] as? Double ?? 0), buytotal: Double(d["count"] as? Double ?? 0))
+//                        }
+//                    }
+//
+//                }
+//            }
+//            else {
+//                //error handling
+//            }
+//        }
     }
     
     
     
     func removeCoin(cointoremove: CoinModel){
-        //let index = heldcoins.firstIndex(where: { $0 == cointoremove.id })
-        let firebaseid = self.heldcoins[heldcoins.firstIndex(where: { $0.coinid == cointoremove.id })!].firebaseid
-        let db = Firestore.firestore()
-        let userid = self.auth.currentUser?.uid
-        DispatchQueue.main.async {
-            db.collection("users").document(userid!).collection("portfolio").document(firebaseid).delete { error in
-                if error == nil {
-                  //  self.heldcoinid.remove(at: index!)
-                   // self.heldcoins.remove(at: index!)
-                   // self.heldcoinscount.remove(at: index!)
-                }
-                else {
-                    //error handling
-                }
-                
-            }
-        }
+//        //let index = heldcoins.firstIndex(where: { $0 == cointoremove.id })
+//        let firebaseid = self.heldcoins[heldcoins.firstIndex(where: { $0.coinid == cointoremove.id })!].firebaseid
+//        let db = Firestore.firestore()
+//        let userid = self.auth.currentUser?.uid
+//        DispatchQueue.main.async {
+//            db.collection("users").document(userid!).collection("portfolio").document(firebaseid).delete { error in
+//                if error == nil {
+//                  //  self.heldcoinid.remove(at: index!)
+//                   // self.heldcoins.remove(at: index!)
+//                   // self.heldcoinscount.remove(at: index!)
+//                }
+//                else {
+//                    //error handling
+//                }
+//
+//            }
+//        }
     }
 
     func addHolding(coinid: String,coincount: Double,currprice: Double){
-        let db = Firestore.firestore()
-        let user = self.auth.currentUser?.uid ?? ""
-        if self.heldcoins.filter({ $0.coinid == coinid }).isEmpty == false {
-            let dx = heldcoins.firstIndex(where: { $0.coinid == coinid })!
-            let firebaseid = self.heldcoins[dx].firebaseid
-            var holdingtotal = self.heldcoins[dx].buytotal
-            let holdingcount = self.heldcoins[dx].count
-            if holdingcount < coincount {
-                holdingtotal += (coincount - holdingcount) * currprice
-            } else {
-                holdingtotal = holdingtotal * coincount / holdingcount
-            }
-            DispatchQueue.main.async {
-                db.collection("users").document(user).collection("portfolio").document(firebaseid).setData([ "count": coincount, "buytotal":holdingtotal ], merge: true)
-            }
-        }
-        else {
-            DispatchQueue.main.async {
-                db.collection("users").document(user).collection("portfolio").addDocument(data: ["coinid":coinid,"count":coincount,"buytotal":(coincount*currprice)]){
-                    error in
-                    if error == nil {
-                    }
-                    else {
-                        //error handling
-                    }
-                }
-            }
-        }
+//        let db = Firestore.firestore()
+//        let user = self.auth.currentUser?.uid ?? ""
+//        if self.heldcoins.filter({ $0.coinid == coinid }).isEmpty == false {
+//            let dx = heldcoins.firstIndex(where: { $0.coinid == coinid })!
+//            let firebaseid = self.heldcoins[dx].firebaseid
+//            var holdingtotal = self.heldcoins[dx].buytotal
+//            let holdingcount = self.heldcoins[dx].count
+//            if holdingcount < coincount {
+//                holdingtotal! += (coincount - holdingcount) * currprice
+//            } else {
+//                holdingtotal = holdingtotal ?? 0 * coincount / holdingcount
+//            }
+//            DispatchQueue.main.async {
+//                db.collection("users").document(user).collection("portfolio").document(firebaseid).setData([ "count": coincount, "buytotal":holdingtotal ], merge: true)
+//            }
+//        }
+//        else {
+//            DispatchQueue.main.async {
+//                db.collection("users").document(user).collection("portfolio").addDocument(data: ["coinid":coinid,"count":coincount,"buytotal":(coincount*currprice)]){
+//                    error in
+//                    if error == nil {
+//                    }
+//                    else {
+//                        //error handling
+//                    }
+//                }
+//            }
+//        }
     }
     
     func modifywallet(coinid: String,coincount: Double){
-        let db = Firestore.firestore()
-        let user = self.auth.currentUser?.uid ?? ""
-        if self.ownedcoins.filter({ $0.coinid == coinid }).isEmpty == false {
-            let dx = ownedcoins.firstIndex(where: { $0.coinid == coinid })!
-            let firebaseid = self.ownedcoins[dx].firebaseid
-            if coincount == 0 {
-                DispatchQueue.main.async {
-                    db.collection("users").document(user).collection("wallet").document(firebaseid).delete { error in
-                        if error == nil {
-                        }
-                        else {
-                        }
-                        
-                    }
-                }
-                
-            } else {
-                DispatchQueue.main.async {
-                    db.collection("users").document(user).collection("wallet").document(firebaseid).setData(["count": coincount], merge: true)
-                }
-                
-            }
-        }
-        else{
-            DispatchQueue.main.async {
-                db.collection("users").document(user).collection("wallet").addDocument(data: ["coinid":coinid,"count":coincount]){
-                    error in
-                    if error == nil {
-                    }
-                    else {
-                        //error handling
-                    }
-                }
-            }
-        }
+//        let db = Firestore.firestore()
+//        let user = self.auth.currentUser?.uid ?? ""
+//        if self.ownedcoins.filter({ $0.coinid == coinid }).isEmpty == false {
+//            let dx = ownedcoins.firstIndex(where: { $0.coinid == coinid })!
+//            let firebaseid = self.ownedcoins[dx].firebaseid
+//            if coincount == 0 {
+//                DispatchQueue.main.async {
+//                    db.collection("users").document(user).collection("wallet").document(firebaseid).delete { error in
+//                        if error == nil {
+//                        }
+//                        else {
+//                        }
+//
+//                    }
+//                }
+//
+//            } else {
+//                DispatchQueue.main.async {
+//                    db.collection("users").document(user).collection("wallet").document(firebaseid).setData(["count": coincount], merge: true)
+//                }
+//
+//            }
+//        }
+//        else{
+//            DispatchQueue.main.async {
+//                db.collection("users").document(user).collection("wallet").addDocument(data: ["coinid":coinid,"count":coincount]){
+//                    error in
+//                    if error == nil {
+//                    }
+//                    else {
+//                        //error handling
+//                    }
+//                }
+//            }
+//        }
     }
     func walletPullFromDB(){
-        let db = Firestore.firestore()
-        let userid = self.auth.currentUser?.uid
-        db.collection("users").document(userid!).collection("wallet").addSnapshotListener { snapshot, error in
-            if error == nil {
-                if let snapshot = snapshot{
-                    DispatchQueue.main.async {
-                        self.ownedcoins = snapshot.documents.map { d in
-                            return CoinDataFirebaseModel(firebaseid: d.documentID, coinid: d["coinid"] as? String ?? "", count: Double(d["count"] as? Double ?? 0),buytotal:0)
-                           // MessageGroup(id: d.documentID, name: d["name"] as? String ?? "", messages: [], lastid: "")
-                        }
-                    }
-                    
-                }
-            }
-            else {
-                //error handling
-            }
-        }
+        DispatchQueue.main.async {
+            self.ownedcoins = self.apiService.wallet
+    }
+//        let db = Firestore.firestore()
+//        let userid = self.auth.currentUser?.uid
+//        db.collection("users").document(userid!).collection("wallet").addSnapshotListener { snapshot, error in
+//            if error == nil {
+//                if let snapshot = snapshot{
+//                    DispatchQueue.main.async {
+//                        self.ownedcoins = snapshot.documents.map { d in
+//                            return CoinDataFirebaseModel(firebaseid: d.documentID, coinid: d["coinid"] as? String ?? "", count: Double(d["count"] as? Double ?? 0),buytotal:0)
+//                           // MessageGroup(id: d.documentID, name: d["name"] as? String ?? "", messages: [], lastid: "")
+//                        }
+//                    }
+//
+//                }
+//            }
+//            else {
+//                //error handling
+//            }
+//        }
     }
     
     func portfolioPullFromDB(){
-        let db = Firestore.firestore()
-        let userid = self.auth.currentUser?.uid
-        db.collection("users").document(userid!).collection("portfolio").addSnapshotListener { snapshot, error in
-            if error == nil {
-                if let snapshot = snapshot{
-                    DispatchQueue.main.async {
-                        self.heldcoins = snapshot.documents.map { d in
-                            return CoinDataFirebaseModel(firebaseid: d.documentID, coinid: d["coinid"] as? String ?? "", count: Double(d["count"] as? Double ?? 0),buytotal: Double(d["buytotal"] as? Double ?? 0))
-                           // MessageGroup(id: d.documentID, name: d["name"] as? String ?? "", messages: [], lastid: "")
-                        }
-                    }
-                    
-                }
-            }
-            else {
-                //error handling
-            }
-        }
+        DispatchQueue.main.async {
+            self.heldcoins = self.apiService.portfolio
     }
-    
+//        let db = Firestore.firestore()
+//        let userid = self.auth.currentUser?.uid
+//        db.collection("users").document(userid!).collection("portfolio").addSnapshotListener { snapshot, error in
+//            if error == nil {
+//                if let snapshot = snapshot{
+//                    DispatchQueue.main.async {
+//                        self.heldcoins = snapshot.documents.map { d in
+//                            return CoinDataFirebaseModel(firebaseid: d.documentID, coinid: d["coinid"] as? String ?? "", count: Double(d["count"] as? Double ?? 0),buytotal: Double(d["buytotal"] as? Double ?? 0))
+//                           // MessageGroup(id: d.documentID, name: d["name"] as? String ?? "", messages: [], lastid: "")
+//                        }
+//                    }
+//                    
+//                }
+//            }
+//            else {
+//                //error handling
+//            }
+//        }
+    }
     func addCommunityMember(id:String, member: String){
         let db = Firestore.firestore()
         let dx = communities.firstIndex(where: { $0.id == id })!
@@ -439,7 +455,7 @@ final class DataModel: ObservableObject{
                 
                 for a in 0...notificationcoins.count-1{
                     DispatchQueue.main.async {
-                        db.collection("events").document(userid!).collection("events").document(notificationcoins[a].id).setData(["id":notificationcoins[a].id, "coinid":notificationcoins[a].coinid, "price":notificationcoins[a].price], merge: true){ error in
+                        db.collection("events").document(userid!).collection("events").document(notificationcoins[a].id).setData(["id":notificationcoins[a].id, "coinid":notificationcoins[a].coinid, "price": notificationcoins[a].price], merge: true){ error in
                             if error == nil {
                             }
                             else {
@@ -451,7 +467,7 @@ final class DataModel: ObservableObject{
             } else {
                 for a in 0...events.count-1{
                     DispatchQueue.main.async {
-                        db.collection("events").document(userid!).collection("events").document(self.events[a].id).setData(["id":self.events[a].id, "coinid":self.events[a].coinid, "price":self.events[a].price], merge: true){ error in
+                        db.collection("events").document(userid!).collection("events").document(self.events[a].id).setData(["id":self.events[a].id, "coinid":self.events[a].coinid, "price":self.coins.first(where: {$0.id == self.events[a].coinid})?.currentPrice ?? 0], merge: true){ error in
                             if error == nil {
                             }
                             else {
@@ -502,10 +518,12 @@ final class DataModel: ObservableObject{
                     self.isSignedIn = true
                     let _ = print(self.auth.currentUser!.uid)
                     let _ = print(self.auth.currentUser!.email ?? "")
-                    self.portfolioPullFromDB()
-                    self.favcoinPullFromDB()
-                    self.walletPullFromDB()
-                    self.loadNotification()
+                    self.apiService.loadUser()
+                    self.favcoins = self.apiService.favs
+//                    self.portfolioPullFromDB()
+                    //self.favcoinPullFromDB()
+//                    self.walletPullFromDB()
+//                    self.loadNotification()
                 }
                 
             }
@@ -522,10 +540,11 @@ final class DataModel: ObservableObject{
                 self.isSignedIn = true
                 let _ = print(self.auth.currentUser!.uid)
                 let _ = print(self.auth.currentUser!.email ?? "")
-                self.portfolioPullFromDB()
-                self.favcoinPullFromDB()
-                self.walletPullFromDB()
-                self.loadNotification()
+                self.apiService.loadUser()
+//                self.portfolioPullFromDB()
+               // self.favcoinPullFromDB()
+//                self.walletPullFromDB()
+//                self.loadNotification()
             }
         }
     }

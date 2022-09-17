@@ -33,11 +33,9 @@ struct ContentView: View {
             TabView(selection: $selection){
                 //CoinList view
                 NavigationView{
-                    VStack{
-                        ListOfCoinsView(presenter: ListOfCoinsPresenter(interactor: ListOfCoinsInteractor(model: model)))
-                    }
+                    ListOfCoinsView(presenter: ListOfCoinsPresenter(interactor: ListOfCoinsInteractor(model: model)))
                 }
-                .navigationBarHidden(true)
+                .navigationBarTitleDisplayMode(.inline)
                 .ignoresSafeArea()
                     .tabItem { Label("List", systemImage: "list.bullet")
                     }
@@ -65,12 +63,11 @@ struct ContentView: View {
                 
                 //News tab
                 NavigationView {
-                    VStack(spacing: 10) {
-                        NewsView(presenter: NewsPresenter(interactor: NewsInteractor(model: model)))
-                    }
+                    NewsView(presenter: NewsPresenter(interactor: NewsInteractor(model: model)))
                 }
-                    .tabItem { Label("News", systemImage: "newspaper") }
-                    .tag(Tab.news)
+                .navigationBarTitleDisplayMode(.inline)
+                .tabItem { Label("News", systemImage: "newspaper") }
+                .tag(Tab.news)
                 
                 //Communities tab
                 NavigationView {
