@@ -8,7 +8,7 @@
 import Foundation
 
 struct MessageModel: Identifiable, Codable{
-    var id: String
+    var id: Int
     var sender: String
     var senderemail: String
     var message: String

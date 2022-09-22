@@ -24,7 +24,6 @@ class SwapInteractor{
         let ownedamountfromsell: Double = model.ownedcoins[model.ownedcoins.firstIndex(where: { $0.coinid == cointosell })!].count
         if ownedamountfromsell < sellamount {
         } else {
-//            model.modifywallet(coinid: cointosell, coincount: (ownedamountfromsell-sellamount))
             
             let dx = model.ownedcoins.firstIndex(where: { $0.coinid == cointobuy })
             if model.ownedcoins.filter({ $0.coinid == cointobuy }).isEmpty == false {
@@ -32,8 +31,7 @@ class SwapInteractor{
             } else {
                 ownedamountfrombuy = 0
             }
-//            model.modifywallet(coinid: cointobuy, coincount: buyamount+ownedamountfrombuy)
-            model.modifywallet(cointosell, cointobuy, (ownedamountfromsell-sellamount), buyamount+ownedamountfrombuy)
+            model.modifywallet(cointosell, cointobuy, sellamount, buyamount)
             sendTradeHistory(id: "1", cointosell: cointosell, sellamount: sellamount, cointobuy: cointobuy, buyamount: buyamount)
         }
         
@@ -88,7 +86,7 @@ class SwapInteractor{
         let cointosellprice = self.selected(coin: cointosell).currentPrice
         let cointobuyprice = self.selected(coin: cointobuy).currentPrice
         let messagestring = "\(model.auth.currentUser?.email ?? "nouser") Bought \(buyamount) \(cointobuy) (current price \(cointobuyprice)) for \(sellamount) \(cointosell) (current price \(cointosellprice)) "
-        model.sendMessage(id:"CbP9VCE4TWEHftzZuL4Q",message: MessageModel(id:"1", sender: self.getAccountInfo(), senderemail: self.getAccountEmail(), message: messagestring, time: stringdate, image: false))
+        model.sendMessage(id:"CbP9VCE4TWEHftzZuL4Q",message: MessageModel(id:1, sender: self.getAccountInfo(), senderemail: self.getAccountEmail(), message: messagestring, time: stringdate, image: false))
     }
 
 }

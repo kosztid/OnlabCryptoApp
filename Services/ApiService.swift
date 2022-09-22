@@ -25,23 +25,30 @@ class ApiService {
     @Published var favs: [CoinDataFirebaseModel] = []
     @Published var portfolio: [CoinDataFirebaseModel] = []
     @Published var wallet: [CoinDataFirebaseModel] = []
+    @Published var communities: [MessageGroupModel] = []
     var userSub: AnyCancellable?
+    var communitySub: AnyCancellable?
 
-    func loadUser() {
-        let baseUrl = "http://localhost:8080/api/v1/users/"
-        guard let url = URL(string:"\(baseUrl)CvCslkZ5EnQvtgzMbXLtc90TJ6J2")
+
+    func loadUser(apikey: String, userID: String) {
+        print("lefutott")
+        guard let url = URL(string:"http://localhost:8080/api/v1/users/\(userID)")
         else {
             return
         }
 
-        userSub = URLSession.shared.dataTaskPublisher(for: url)
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        userSub = URLSession.shared.dataTaskPublisher(for: request)
             .subscribe(on: DispatchQueue.global(qos: .default))
             .tryMap { (output) -> Data in
                 guard let response = output.response as? HTTPURLResponse,
-                response.statusCode >= 200 && response.statusCode < 300 else {
+                      response.statusCode >= 200 && response.statusCode < 300 else {
 
-                    throw URLError(.badServerResponse)
-                }
+                          throw URLError(.badServerResponse)
+                      }
                 return output.data
             }
             .receive(on: DispatchQueue.main)
@@ -58,17 +65,20 @@ class ApiService {
                 self?.favs = returnedUser.favfolio
                 self?.portfolio = returnedUser.portfolio
                 self?.wallet = returnedUser.wallet
+                print(returnedUser.wallet)
                 self?.userSub?.cancel()
+                
             }
     }
 
-    func updateWallet(_ userId: String, _ coinToSell: String,_ coinToBuy: String, _ sellAmount: Double, _ buyAmount: Double) {
+    func updateWallet(_ apikey: String,_ userId: String, _ coinToSell: String,_ coinToBuy: String, _ sellAmount: Double, _ buyAmount: Double) {
         guard let url = URL(string: "http://localhost:8080/api/v1/users/\(userId)/wallet/") else {
             return
         }
 
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
+        request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let body: [String: AnyHashable] = [
             "cointoSell": "\(coinToSell)",
@@ -81,18 +91,19 @@ class ApiService {
             guard error == nil else {
                 return
             }
-            self.loadUser()
+            self.loadUser(apikey: apikey, userID: userId)
         }
         task.resume()
     }
 
-    func updatePortfolio(_ userId: String, _ coinId: String, _ count: Double, _ buytotal: Double) {
+    func updatePortfolio(_ apikey: String,_ userId: String, _ coinId: String, _ count: Double, _ buytotal: Double) {
         guard let url = URL(string: "http://localhost:8080/api/v1/users/\(userId)/portfolio/") else {
             return
         }
 
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
+        request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let body: [String: AnyHashable] = [
             "coinid": "\(coinId)",
@@ -104,12 +115,12 @@ class ApiService {
             guard error == nil else {
                 return
             }
-            self.loadUser()
+            self.loadUser(apikey: apikey, userID: userId)
         }
         task.resume()
     }
 
-    func updateFavs(_ userId: String, _ coinId: String) {
+    func updateFavs(_ apikey: String, _ userId: String, _ coinId: String) {
         guard let url = URL(string: "http://localhost:8080/api/v1/users/\(userId)/favfolio/") else {
             return
         }
@@ -117,6 +128,7 @@ class ApiService {
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
         let body: [String: AnyHashable] = [
             "coinid": "\(coinId)"
         ]
@@ -125,9 +137,120 @@ class ApiService {
             guard error == nil else {
                 return
             }
-            self.loadUser()
+            self.loadUser(apikey: apikey, userID: userId)
         }
         task.resume()
     }
 
+    func sendMessage(_ apikey: String, _ communityID: String, _ message: MessageModel) {
+        guard let url = URL(string: "http://localhost:8080/api/v1/communities/\(communityID)") else {
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let body: [String: AnyHashable] = [
+            "image": message.image,
+            "message": message.message,
+            "sender": message.sender,
+            "senderemail": message.senderemail,
+            "time": message.time
+        ]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
+        let task = URLSession.shared.dataTask(with: request) { data, _, error in
+            guard error == nil else {
+                return
+            }
+            self.loadCommunities(apikey: apikey)
+        }
+        task.resume()
+    }
+
+    func loadCommunities(apikey: String) {
+        let baseUrl = "http://localhost:8080/api/v1/communities"
+        guard let url = URL(string:"\(baseUrl)")
+        else {
+            return
+        }
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        communitySub = URLSession.shared.dataTaskPublisher(for: request)
+            .subscribe(on: DispatchQueue.global(qos: .default))
+            .tryMap { (output) -> Data in
+                guard let response = output.response as? HTTPURLResponse,
+                      response.statusCode >= 200 && response.statusCode < 300 else {
+
+                          throw URLError(.badServerResponse)
+                      }
+                return output.data
+            }
+            .receive(on: DispatchQueue.main)
+            .decode(type: [MessageGroupModel].self, decoder: JSONDecoder())
+            .sink{(completion) in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            } receiveValue: { [weak self] (community) in
+                print(community)
+                self?.communities = community
+                for index in 0...(community.count - 1) {
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                    self?.communities[index].messages.sort {
+                        dateFormatter.date(from: $0.time)! < dateFormatter.date(from: $1.time)!
+                    }
+                    if let id = self?.communities[index].messages.last?.id {
+                        self?.communities[index].lastid = id
+                        print(id)
+                    }
+                }
+                self?.communitySub?.cancel()
+            }
+    }
+
+    func addCommunity(_ apikey: String, _ communityName: String) {
+        guard let url = URL(string: "http://localhost:8080/api/v1/communities/") else {
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let body: [String: AnyHashable] = [
+            "id": UUID().uuidString,
+            "name": communityName
+        ]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
+        let task = URLSession.shared.dataTask(with: request) { data, _, error in
+            guard error == nil else {
+                return
+            }
+            self.loadCommunities(apikey: apikey)
+        }
+        task.resume()
+    }
+    
+    struct Community: Identifiable, Codable {
+        let id, name: String
+        let messages: [Message]
+        let members: [String]
+    }
+
+    // MARK: - Message
+    struct Message: Codable {
+        let id: Int
+        let image: Bool
+        let message: String
+        let sender, senderemail, time: String
+    }
 }

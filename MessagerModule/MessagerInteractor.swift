@@ -16,7 +16,7 @@ class MessagerInteractor{
     }
     func sendMessage(id: String, message: MessageModel){
         if id != "CbP9VCE4TWEHftzZuL4Q" {
-            model.sendMessage(id:id,message: message)
+            model.sendMessage(id:id, message: message)
         }
     }
     func getmodel() -> DataModel {

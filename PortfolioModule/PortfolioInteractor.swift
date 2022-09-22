@@ -70,7 +70,7 @@ class PortfolioInteractor{
             return 0
         }
         var total: Double = 0
-        for a in 0...(model.heldcoins.count-1) {
+        for a in 0...(model.heldcoins.count - 1) {
             let currentprice = model.coins.first(where: {$0.id == model.heldcoins[a].coinid})?.currentPrice ?? 0.0
             total += (model.heldcoins[a].count * currentprice)
         }
@@ -93,7 +93,7 @@ class PortfolioInteractor{
             return 0
         }
         var total: Double = 0
-        for a in 0...(model.ownedcoins.count-1) {
+        for a in 0...(model.ownedcoins.count - 1) {
             let dx = model.coins.firstIndex(where: { $0.id == model.ownedcoins[a].coinid })
             total += model.ownedcoins[a].count * model.coins[dx!].currentPrice
         }

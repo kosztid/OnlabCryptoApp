@@ -12,5 +12,5 @@ struct MessageGroupModel: Identifiable, Codable{
     var name: String
     var messages: [MessageModel]
     var members: [String]
-    var lastid: String
+    var lastid: Int?
 }
