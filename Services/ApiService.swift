@@ -160,7 +160,7 @@ class ApiService {
             "time": message.time
         ]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
-        let task = URLSession.shared.dataTask(with: request) { data, _, error in
+        let task = URLSession.shared.dataTask(with: request) { _, _, error in
             guard error == nil else {
                 return
             }
@@ -171,7 +171,7 @@ class ApiService {
 
     func loadCommunities(apikey: String) {
         let baseUrl = "http://localhost:8080/api/v1/communities"
-        guard let url = URL(string:"\(baseUrl)")
+        guard let url = URL(string: "\(baseUrl)")
         else {
             return
         }
@@ -191,7 +191,7 @@ class ApiService {
             }
             .receive(on: DispatchQueue.main)
             .decode(type: [MessageGroupModel].self, decoder: JSONDecoder())
-            .sink{(completion) in
+            .sink {(completion) in
                 switch completion {
                 case .finished:
                     break
@@ -231,7 +231,7 @@ class ApiService {
             "name": communityName
         ]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
-        let task = URLSession.shared.dataTask(with: request) { data, _, error in
+        let task = URLSession.shared.dataTask(with: request) { _, _, error in
             guard error == nil else {
                 return
             }
@@ -239,7 +239,7 @@ class ApiService {
         }
         task.resume()
     }
-    
+
     struct Community: Identifiable, Codable {
         let id, name: String
         let messages: [Message]

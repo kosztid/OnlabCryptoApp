@@ -172,6 +172,7 @@ public struct CachedAsyncImage<Content>: View where Content: View {
     ///     modify it as needed before returning it.
     ///   - placeholder: A closure that returns the view to show until the
     ///     load operation completes successfully.
+    // swiftlint:disable next line_length
     public init<I, P>(url: URL?, urlCache: URLCache = .shared,  scale: CGFloat = 1, @ViewBuilder content: @escaping (Image) -> I, @ViewBuilder placeholder: @escaping () -> P) where Content == _ConditionalContent<I, P>, I : View, P : View {
         let urlRequest = url == nil ? nil : URLRequest(url: url!)
         self.init(urlRequest: urlRequest, urlCache: urlCache, scale: scale, content: content, placeholder: placeholder)
@@ -208,6 +209,7 @@ public struct CachedAsyncImage<Content>: View where Content: View {
     ///     modify it as needed before returning it.
     ///   - placeholder: A closure that returns the view to show until the
     ///     load operation completes successfully.
+    // swiftlint:disable next line_length
     public init<I, P>(urlRequest: URLRequest?, urlCache: URLCache = .shared,  scale: CGFloat = 1, @ViewBuilder content: @escaping (Image) -> I, @ViewBuilder placeholder: @escaping () -> P) where Content == _ConditionalContent<I, P>, I : View, P : View {
         self.init(urlRequest: urlRequest, urlCache: urlCache, scale: scale) { phase in
             if let image = phase.image {

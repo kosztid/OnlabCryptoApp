@@ -11,7 +11,7 @@ import Firebase
 @main
 struct OnlabCryptoAppApp: App {
     @StateObject private var modelData = DataModel()
-    init(){
+    init() {
         FirebaseApp.configure()
     }
     var body: some Scene {

@@ -53,497 +53,248 @@ import FirebaseStorage
  }
  
  */
-final class DataModel: ObservableObject{
+final class DataModel: ObservableObject {
     @Published var lastmessageId = ""
     let auth : Auth
     let storage: Storage
+    @Published var currencyType = CurrencyTypes.crypto
     @Published var isSignedIn = false
     @Published var loginerror = false
     @Published var registererror = false
-    @Published var IsnotificationViewed = false
+    @Published var isNotificationViewed = false
     @Published var registered = false
     @Published var coins: [CoinModel] = []
     @Published var news = News(status: nil, totalResults: nil, articles: nil)
-    //@Published var coindetail: [CoinDetailModel] = []
     @Published var communities: [MessageGroupModel] = []
     private let datadownloader = DataDownloader()
     private let apiService = ApiService()
     @Published var heldcoins: [CoinDataFirebaseModel] = []
     @Published var favcoins: [CoinDataFirebaseModel] = []
     @Published var ownedcoins: [CoinDataFirebaseModel] = []
-    @Published var buyorsell : String = "none"
-    @Published var coin1 : String = "ethereum"
-    @Published var coin2 : String = "tether"
-    @Published var coinstobuy : Double = 0
-    @Published var coinstosell : Double = 0
+    @Published var buyorsell = "none"
+    @Published var coin1 = "ethereum"
+    @Published var coin2 = "tether"
+    @Published var coinstobuy = 0.0
+    @Published var coinstosell = 0.0
     @Published var events: [ChangeDataModel] = []
-    //private var datadownloaderfordetail = SingleDataDownloader(coinid: "ethereum")
-    // var singlecoinsub: AnyCancellable?
     private var cancellables = Set<AnyCancellable>()
     @Published var selection: String
     
-    init(){
+    init() {
         self.selection = "portfolio"
         self.auth = Auth.auth()
         self.storage = Storage.storage()
         addSub()
-//        self.auth.currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
-//            if let error = error {
-//                print(error.localizedDescription)
-//                return;
-//            }
-//            print(idToken)
-//            self.apiService.loadCommunities(apikey: idToken ?? "error")
-//        }
-
-        //communitiesPullFromDB()
         userreload()
-        
+
     }
-    func addSub(){
+    func addSub() {
         datadownloader.$coins
-            .sink{ [weak self] (datareceived) in self?.coins = datareceived}
+            .sink { [weak self] (datareceived) in self?.coins = datareceived}
             .store(in: &cancellables)
-        
+
         datadownloader.$news
-            .sink{ [weak self] (datareceived) in self?.news = datareceived}
+            .sink { [weak self] (datareceived) in self?.news = datareceived}
             .store(in: &cancellables)
 
         apiService.$favs
-            .sink{ [weak self] (datareceived) in self?.favcoins = datareceived}
+            .sink { [weak self] (datareceived) in self?.favcoins = datareceived}
             .store(in: &cancellables)
         apiService.$portfolio
-            .sink{ [weak self] (datareceived) in self?.heldcoins = datareceived}
+            .sink { [weak self] (datareceived) in self?.heldcoins = datareceived}
             .store(in: &cancellables)
         apiService.$wallet
-            .sink{ [weak self] (datareceived) in self?.ownedcoins = datareceived}
+            .sink { [weak self] (datareceived) in self?.ownedcoins = datareceived}
             .store(in: &cancellables)
         apiService.$communities
-            .sink{ [weak self] (datareceived) in self?.communities = datareceived}
+            .sink { [weak self] (datareceived) in self?.communities = datareceived}
             .store(in: &cancellables)
     }
-    func addFavCoin(coinid: String){
+    func addFavCoin(coinid: String) {
         let currentUser = self.auth.currentUser
         currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
             if let error = error {
                 print(error.localizedDescription)
-                return;
+                return
             }
-            print("token:\(idToken)")
             self.apiService.updateFavs(idToken ?? "error", self.auth.currentUser!.uid, coinid)
         }
         favcoinPullFromDB()
-        //        let db = Firestore.firestore()
-        //        let user = self.auth.currentUser?.uid ?? ""
-        //        if self.favcoins.filter({ $0.coinid == coinid }).isEmpty == false {
-        //            let firebaseid = self.favcoins[favcoins.firstIndex(where: { $0.coinid == coinid })!].firebaseid
-        //            DispatchQueue.main.async{
-        //                db.collection("users").document(user).collection("favfolio").document(firebaseid).delete { error in
-        //                    if error == nil {
-        //                      //  self.heldcoinid.remove(at: index!)
-        //                       // self.heldcoins.remove(at: index!)
-        //                       // self.heldcoinscount.remove(at: index!)
-        //                    }
-        //                    else {
-        //                        //error handling
-        //                    }
-        //
-        //                }
-        //            }
-        //        }
-        //        else {
-        //            DispatchQueue.main.async {
-        //                db.collection("users").document(user).collection("favfolio").addDocument(data: ["coinid":coinid,"count":0]){
-        //                    error in
-        //                    if error == nil {
-        //                    }
-        //                    else {
-        //                        //error handling
-        //                    }
-        //                }
-        //            }
-        //        }
     }
-    
-    
-    
-    func favcoinPullFromDB(){
+    func favcoinPullFromDB() {
         DispatchQueue.main.async {
             self.favcoins = self.apiService.favs
         }
-        //        let db = Firestore.firestore()
-        //        let userid = self.auth.currentUser?.uid
-        //        db.collection("users").document(userid!).collection("favfolio").addSnapshotListener { snapshot, error in
-        //            if error == nil {
-        //                if let snapshot = snapshot{
-        //                    DispatchQueue.main.async {
-        //                        self.favcoins = snapshot.documents.map { d in
-        //                            return CoinDataFirebaseModel(firebaseid: d.documentID, coinid: d["coinid"] as? String ?? "", count: Double(d["count"] as? Double ?? 0), buytotal: Double(d["count"] as? Double ?? 0))
-        //                        }
-        //                    }
-        //
-        //                }
-        //            }
-        //            else {
-        //                //error handling
-        //            }
-        //        }
     }
-    
-    
-    
-    func removeCoin(cointoremove: CoinModel){
+
+    func removeCoin(cointoremove: CoinModel) {
         let currentUser = self.auth.currentUser
         currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
             if let error = error {
                 print(error.localizedDescription)
-                return;
+                return
             }
-            print("token:\(idToken)")
+            print("token:\(idToken ?? "error")")
             self.apiService.updatePortfolio(idToken ?? "error", self.auth.currentUser!.uid, cointoremove.id, 0.0, 0.0)
         }
 
-        //        //let index = heldcoins.firstIndex(where: { $0 == cointoremove.id })
-        //        let firebaseid = self.heldcoins[heldcoins.firstIndex(where: { $0.coinid == cointoremove.id })!].firebaseid
-        //        let db = Firestore.firestore()
-        //        let userid = self.auth.currentUser?.uid
-        //        DispatchQueue.main.async {
-        //            db.collection("users").document(userid!).collection("portfolio").document(firebaseid).delete { error in
-        //                if error == nil {
-        //                  //  self.heldcoinid.remove(at: index!)
-        //                   // self.heldcoins.remove(at: index!)
-        //                   // self.heldcoinscount.remove(at: index!)
-        //                }
-        //                else {
-        //                    //error handling
-        //                }
-        //
-        //            }
-        //        }
     }
 
-    func addHolding(coinid: String,coincount: Double,currprice: Double){
+    func addHolding(coinid: String, coincount: Double, currprice: Double) {
         let currentUser = self.auth.currentUser
         currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
             if let error = error {
                 print(error.localizedDescription)
-                return;
+                return
             }
-            print("token:\(idToken)")
+            print("token:\(idToken ?? "error")")
             self.apiService.updatePortfolio(idToken ?? "error", self.auth.currentUser!.uid, coinid, coincount, currprice)
         }
-
-        //        let db = Firestore.firestore()
-        //        let user = self.auth.currentUser?.uid ?? ""
-        //        if self.heldcoins.filter({ $0.coinid == coinid }).isEmpty == false {
-        //            let dx = heldcoins.firstIndex(where: { $0.coinid == coinid })!
-        //            let firebaseid = self.heldcoins[dx].firebaseid
-        //            var holdingtotal = self.heldcoins[dx].buytotal
-        //            let holdingcount = self.heldcoins[dx].count
-        //            if holdingcount < coincount {
-        //                holdingtotal! += (coincount - holdingcount) * currprice
-        //            } else {
-        //                holdingtotal = holdingtotal ?? 0 * coincount / holdingcount
-        //            }
-        //            DispatchQueue.main.async {
-        //                db.collection("users").document(user).collection("portfolio").document(firebaseid).setData([ "count": coincount, "buytotal":holdingtotal ], merge: true)
-        //            }
-        //        }
-        //        else {
-        //            DispatchQueue.main.async {
-        //                db.collection("users").document(user).collection("portfolio").addDocument(data: ["coinid":coinid,"count":coincount,"buytotal":(coincount*currprice)]){
-        //                    error in
-        //                    if error == nil {
-        //                    }
-        //                    else {
-        //                        //error handling
-        //                    }
-        //                }
-        //            }
-        //        }
     }
-    
-    func modifywallet( _ coinToSell: String,_ coinToBuy: String, _ sellAmount: Double, _ buyAmount: Double){
+
+    func modifywallet( _ coinToSell: String,_ coinToBuy: String, _ sellAmount: Double, _ buyAmount: Double) {
         let currentUser = self.auth.currentUser
         currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
             if let error = error {
                 print(error.localizedDescription)
-                return;
+                return
             }
-            self.apiService.updateWallet(idToken ?? "error", self.auth.currentUser!.uid, coinToSell, coinToBuy, sellAmount, buyAmount)
+        self.apiService.updateWallet(idToken ?? "error", self.auth.currentUser!.uid, coinToSell, coinToBuy, sellAmount, buyAmount)
         }
-        //        let db = Firestore.firestore()
-        //        let user = self.auth.currentUser?.uid ?? ""
-        //        if self.ownedcoins.filter({ $0.coinid == coinid }).isEmpty == false {
-        //            let dx = ownedcoins.firstIndex(where: { $0.coinid == coinid })!
-        //            let firebaseid = self.ownedcoins[dx].firebaseid
-        //            if coincount == 0 {
-        //                DispatchQueue.main.async {
-        //                    db.collection("users").document(user).collection("wallet").document(firebaseid).delete { error in
-        //                        if error == nil {
-        //                        }
-        //                        else {
-        //                        }
-        //
-        //                    }
-        //                }
-        //
-        //            } else {
-        //                DispatchQueue.main.async {
-        //                    db.collection("users").document(user).collection("wallet").document(firebaseid).setData(["count": coincount], merge: true)
-        //                }
-        //
-        //            }
-        //        }
-        //        else{
-        //            DispatchQueue.main.async {
-        //                db.collection("users").document(user).collection("wallet").addDocument(data: ["coinid":coinid,"count":coincount]){
-        //                    error in
-        //                    if error == nil {
-        //                    }
-        //                    else {
-        //                        //error handling
-        //                    }
-        //                }
-        //            }
-        //        }
     }
-    func walletPullFromDB(){
+    func walletPullFromDB() {
         DispatchQueue.main.async {
             self.ownedcoins = self.apiService.wallet
         }
-        //        let db = Firestore.firestore()
-        //        let userid = self.auth.currentUser?.uid
-        //        db.collection("users").document(userid!).collection("wallet").addSnapshotListener { snapshot, error in
-        //            if error == nil {
-        //                if let snapshot = snapshot{
-        //                    DispatchQueue.main.async {
-        //                        self.ownedcoins = snapshot.documents.map { d in
-        //                            return CoinDataFirebaseModel(firebaseid: d.documentID, coinid: d["coinid"] as? String ?? "", count: Double(d["count"] as? Double ?? 0),buytotal:0)
-        //                           // MessageGroup(id: d.documentID, name: d["name"] as? String ?? "", messages: [], lastid: "")
-        //                        }
-        //                    }
-        //
-        //                }
-        //            }
-        //            else {
-        //                //error handling
-        //            }
-        //        }
     }
-    
-    func portfolioPullFromDB(){
+
+    func portfolioPullFromDB() {
         DispatchQueue.main.async {
             self.heldcoins = self.apiService.portfolio
         }
-        //        let db = Firestore.firestore()
-        //        let userid = self.auth.currentUser?.uid
-        //        db.collection("users").document(userid!).collection("portfolio").addSnapshotListener { snapshot, error in
-        //            if error == nil {
-        //                if let snapshot = snapshot{
-        //                    DispatchQueue.main.async {
-        //                        self.heldcoins = snapshot.documents.map { d in
-        //                            return CoinDataFirebaseModel(firebaseid: d.documentID, coinid: d["coinid"] as? String ?? "", count: Double(d["count"] as? Double ?? 0),buytotal: Double(d["buytotal"] as? Double ?? 0))
-        //                           // MessageGroup(id: d.documentID, name: d["name"] as? String ?? "", messages: [], lastid: "")
-        //                        }
-        //                    }
-        //
-        //                }
-        //            }
-        //            else {
-        //                //error handling
-        //            }
-        //        }
     }
-    func addCommunityMember(id:String, member: String){
-        let db = Firestore.firestore()
-        let dx = communities.firstIndex(where: { $0.id == id })!
-        if self.communities[dx].members.filter({ $0 == member }).isEmpty{
+    func addCommunityMember(id: String, member: String) {
+        let database = Firestore.firestore()
+        let index = communities.firstIndex(where: { $0.id == id })!
+        if self.communities[index].members.filter({ $0 == member }).isEmpty {
             DispatchQueue.main.async {
-                db.collection("communities").document(id).collection("members").addDocument(data: ["member":member]){
-                    error in
+                database.collection("communities").document(id).collection("members").addDocument(data: ["member": member]) { error in
                     if error == nil {
-                    }
-                    else {
-                        //error handling
+                    } else {
+                        // error handling
                     }
                 }}
         }
     }
-    
-    func communitiesPullFromDB(){
-        //        let db = Firestore.firestore()
-        //        db.collection("communities").addSnapshotListener { snapshot, error in
-        //            if error == nil {
-        //                if let snapshot = snapshot{
-        //                        self.communities = snapshot.documents.map { d in
-        //                            return MessageGroupModel(id: d.documentID, name: d["name"] as? String ?? "", messages: [], members: [], lastid: "")
-        //                        }
-        //                        for c in self.communities{
-        //                            self.messagemembersPullFromDB(idtoget: c.id)
-        //                            self.messagesPullFromDB(idtoget: c.id)
-        //                        }
-        //                }
-        //            }
-        //            else {
-        //                //error handling
-        //            }
-        //        }
-        //
+    func communitiesPullFromDB() {
     }
-    
-    func messagemembersPullFromDB(idtoget: String){
+
+    func messagemembersPullFromDB(idtoget: String) {
         var members: [String] = []
-        let db = Firestore.firestore()
-        db.collection("communities").document(idtoget).collection("members").addSnapshotListener { snapshot, error in
+        let database = Firestore.firestore()
+        database.collection("communities").document(idtoget).collection("members").addSnapshotListener { snapshot, error in
             if error == nil {
-                if let snapshot = snapshot{
-                    members = snapshot.documents.map { d in
-                        return String(d["member"] as? String ?? "Unknown")
+                if let snapshot = snapshot {
+                    members = snapshot.documents.map { data in
+                        return String(data["member"] as? String ?? "Unknown")
                     }
-                    if let i = self.communities.firstIndex(where: {$0.id == idtoget}) {
-                        self.communities[i].members = members
-                        //print("loaded")
+                    if let index = self.communities.firstIndex(where: {$0.id == idtoget}) {
+                        self.communities[index].members = members
                     }
                 }
-            }
-            else {
-                //error handling
+            } else {
+                // error handling
             }
         }
-        
     }
-    
-    func messagesPullFromDB(idtoget: String){
-        //        var messages: [MessageModel] = []
-        //        let db = Firestore.firestore()
-        //        db.collection("communities").document(idtoget).collection("messages").addSnapshotListener { snapshot, error in
-        //            if error == nil {
-        //                if let snapshot = snapshot{
-        //                    DispatchQueue.main.async {
-        //                        messages = snapshot.documents.map { d in
-        //                            return MessageModel(id: d.documentID,sender: d["sender"] as? Int ?? "Unknown",senderemail: d["senderemail"] as? String ?? "nomail", message: d["message"] as? String ?? "", time: d["time"] as? String ?? "2000-02-02 10:00:00", image: d["image"] as? Bool ?? false)
-        //                        }
-        //
-        //                        if let i = self.communities.firstIndex(where: {$0.id == idtoget}) {
-        //                            let dateFormatter = DateFormatter()
-        //                            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        //                            self.communities[i].messages = messages
-        //                            self.communities[i].messages.sort {
-        //                                dateFormatter.date(from: $0.time)! < dateFormatter.date(from: $1.time)!
-        //                            }
-        //                            if let id = self.communities[i].messages.last?.id {
-        //                                self.communities[i].lastid = id
-        //                            }
-        //                        }
-        //                    }
-        //
-        //                }
-        //            }
-        //            else {
-        //                //error handling
-        //            }
-        //        }
-        //
+
+    func messagesPullFromDB(idtoget: String) {
     }
-    /*
-     func getAccountInfo() -> String{
-     return self.auth.currentUser?.uid ?? "nouser"
-     }*/
-    func addCommunity(name: String){
+    func addCommunity(name: String) {
         self.auth.currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
             if let error = error {
                 print(error.localizedDescription)
-                return;
+                return
             }
-            print("message1")
             self.apiService.addCommunity(idToken ?? "error", name)
         }
     }
-    func sendMessage(id: String, message: MessageModel){
+    func sendMessage(id: String, message: MessageModel) {
         let sender = self.auth.currentUser?.uid ?? message.sender
         let variedMessage = MessageModel(id: message.id, sender: sender, senderemail: message.senderemail, message: message.message, time: message.time, image: message.image)
         self.auth.currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
             if let error = error {
                 print(error.localizedDescription)
-                return;
+                return
             }
             print("message1")
             self.apiService.sendMessage(idToken ?? "error", id, variedMessage)
         }
 
     }
-    
-    func loadNotification(){
-        if isSignedIn{
-            let db = Firestore.firestore()
+
+    func loadNotification() {
+        if isSignedIn {
+            let database = Firestore.firestore()
             let userid = self.auth.currentUser?.uid
-            db.collection("events").document(userid!).collection("events").addSnapshotListener { snapshot, error in
+            database.collection("events").document(userid!).collection("events").addSnapshotListener { snapshot, error in
                 if error == nil {
-                    if let snapshot = snapshot{
+                    if let snapshot = snapshot {
                         DispatchQueue.main.async {
-                            self.events = snapshot.documents.map {
-                                d in
-                                return ChangeDataModel(id: d["id"] as? String ?? "", coinid: d["coinid"] as? String ?? "", price: Double(d["price"] as? Double ?? 0))
+                            self.events = snapshot.documents.map { data in
+                                return ChangeDataModel(id: data["id"] as? String ?? "", coinid: data["coinid"] as? String ?? "", price: Double(data["price"] as? Double ?? 0))
                             }
                         }
                     }
-                }
-                else {
-                    //error handling
+                } else {
+                    // error handling
                 }
             }
         }
     }
-    
-    func saveNotification(){
+
+    func saveNotification() {
         if isSignedIn {
-            let db = Firestore.firestore()
+            let database = Firestore.firestore()
             let userid = self.auth.currentUser?.uid
             if events.count == 0 {
+                // swiftlint:disable:next line_length
                 let notificationcoins = [ChangeDataModel(id: UUID().uuidString, coinid: "bitcoin", price: self.coins.first(where: {$0.id == "bitcoin"})?.currentPrice ?? 0),ChangeDataModel(id: UUID().uuidString, coinid: "ethereum", price: self.coins.first(where: {$0.id == "ethereum"})?.currentPrice ?? 0),ChangeDataModel(id: UUID().uuidString, coinid: "terra-luna", price: self.coins.first(where: {$0.id == "terra-luna"})?.currentPrice ?? 0)]
-                
-                for a in 0...notificationcoins.count-1{
+                for coinid in 0...notificationcoins.count-1 {
                     DispatchQueue.main.async {
-                        db.collection("events").document(userid!).collection("events").document(notificationcoins[a].id).setData(["id":notificationcoins[a].id, "coinid":notificationcoins[a].coinid, "price": notificationcoins[a].price], merge: true){ error in
+                        // swiftlint:disable:next line_length
+                        database.collection("events").document(userid!).collection("events").document(notificationcoins[coinid].id).setData(["id":notificationcoins[coinid].id, "coinid":notificationcoins[coinid].coinid, "price": notificationcoins[coinid].price], merge: true){ error in
                             if error == nil {
-                            }
-                            else {
-                                //error handling
+                            } else {
+                                // error handling
                             }
                         }
                     }
                 }
             } else {
-                for a in 0...events.count-1{
+                for coinid in 0...events.count-1 {
                     DispatchQueue.main.async {
-                        db.collection("events").document(userid!).collection("events").document(self.events[a].id).setData(["id":self.events[a].id, "coinid":self.events[a].coinid, "price":self.coins.first(where: {$0.id == self.events[a].coinid})?.currentPrice ?? 0], merge: true){ error in
+                        // swiftlint:disable:next line_length
+                        database.collection("events").document(userid!).collection("events").document(self.events[coinid].id).setData(["id": self.events[coinid].id, "coinid": self.events[coinid].coinid, "price": self.coins.first(where: {$0.id == self.events[coinid].coinid})?.currentPrice ?? 0], merge: true) { error in
                             if error == nil {
-                            }
-                            else {
-                                //error handling
+                            } else {
+                                // error handling
                             }
                         }
                     }
                     
                 }
             }
-            
-            
-            
         }
-        
     }
     
-    func sendPhoto(image: UIImage, message: MessageModel, communityid: String){
+    func sendPhoto(image: UIImage, message: MessageModel, communityid: String) {
         let id = UUID().uuidString
         let ref = storage.reference(withPath: id)
         guard let imagedata = image.jpegData(compressionQuality: 0.1) else {return}
-        ref.putData(imagedata, metadata: nil){metadata, error in
-            if error == nil{
-                
-            }
-            else {
+        ref.putData(imagedata, metadata: nil) { _, error in
+            if error == nil {
+            } else {
                 print(error!.localizedDescription)
             }
             ref.downloadURL {url, error in
@@ -553,13 +304,12 @@ final class DataModel: ObservableObject{
                 var messagewithurl = message
                 messagewithurl.message = url?.absoluteString ?? "nolink"
                 self.sendMessage(id: communityid, message: messagewithurl)
-                
+
             }
         }
     }
-    
-    
-    func userreload(){
+
+    func userreload() {
         auth.currentUser?.reload(completion: { (error) in
             if let error = error {
                 print(String(describing: error))
@@ -568,23 +318,21 @@ final class DataModel: ObservableObject{
                 currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
                     if let error = error {
                         print(error.localizedDescription)
-                        return;
+                        return
                     }
                     DispatchQueue.main.async {
                         self.isSignedIn = true
-                        let _ = print(self.auth.currentUser!.uid)
-                        let _ = print(self.auth.currentUser!.email ?? "")
+                        print(self.auth.currentUser!.uid)
+                        print(self.auth.currentUser!.email ?? "")
                         self.apiService.loadUser(apikey: idToken ?? "error", userID: self.auth.currentUser!.uid)
                         self.apiService.loadCommunities(apikey: idToken ?? "error")
                     }
                 }
-
-                
             }
         })
     }
-    
-    func signIn(email: String, password: String){
+
+    func signIn(email: String, password: String) {
         auth.signIn(withEmail: email, password: password) { result, error in
             guard result != nil, error == nil else {
                 self.loginerror = true
@@ -594,12 +342,12 @@ final class DataModel: ObservableObject{
             currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
                 if let error = error {
                     print(error.localizedDescription)
-                    return;
+                    return
                 }
                 DispatchQueue.main.async {
                     self.isSignedIn = true
-                    let _ = print(self.auth.currentUser!.uid)
-                    let _ = print(self.auth.currentUser!.email ?? "")
+                    print(self.auth.currentUser!.uid)
+                    print(self.auth.currentUser!.email ?? "")
                     self.apiService.loadUser(apikey: idToken ?? "error", userID: self.auth.currentUser!.uid)
                     self.apiService.loadCommunities(apikey: idToken ?? "error")
                 }
@@ -607,8 +355,8 @@ final class DataModel: ObservableObject{
 
         }
     }
-    
-    func register(email: String, password: String){
+
+    func register(email: String, password: String) {
         auth.createUser(withEmail: email, password: password) { result, error in
             guard result != nil, error == nil else {
                 self.registererror = true
@@ -617,31 +365,26 @@ final class DataModel: ObservableObject{
             }
             self.registered = true
             DispatchQueue.main.async {
-                let db = Firestore.firestore()
+                let database = Firestore.firestore()
                 let id = self.auth.currentUser?.uid
-                db.collection("users").document(id ?? "err").setData(["email": email]){
-                    error in
+                database.collection("users").document(id ?? "err").setData(["email": email]) { error in
                     if error == nil {
+                    } else {
+                        // error handling
                     }
-                    else {
-                        //error handling
-                    }
-                    db.collection("events").document(id ?? "err").setData(["id": id ?? "err"]){
+                    database.collection("events").document(id ?? "err").setData(["id": id ?? "err"]) {
                         error in
                         if error == nil {
-                        }
-                        else {
-                            //error handling
+                        } else {
+                            // error handling
                         }
                     }
-                    
                 }
             }
         }
-        
     }
-    
-    func signOut(){
+
+    func signOut() {
         try?auth.signOut()
         DispatchQueue.main.async {
             self.isSignedIn = false

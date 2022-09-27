@@ -14,9 +14,8 @@ struct ContentView: View {
     init() {
         UITabBar.appearance().barTintColor = UIColor(Color.theme.backgroundcolor)
         UINavigationBar.appearance().barTintColor = UIColor(Color.theme.backgroundcolor)
-       }
-    
-    enum Tab{
+    }
+    enum Tab {
         case listofcoins
         case communities
         case swap
@@ -26,75 +25,143 @@ struct ContentView: View {
     }
     
     var body: some View {
-        ZStack{
+        if model.currencyType == .crypto {
+            cryptoView
+        } else {
+            stocksView
+        }
+
+    }
+
+    var stocksView: some View {
+        ZStack {
             Color.theme.backgroundcolor
                 .ignoresSafeArea()
-            //main view with tab selections
-            TabView(selection: $selection){
-                //CoinList view
-                NavigationView{
-                    ListOfCoinsView(presenter: ListOfCoinsPresenter(interactor: ListOfCoinsInteractor(model: model)))
+            // main view with tab selections
+            TabView(selection: $selection) {
+                // CoinList view
+                NavigationView {
+                    List {
+                        Text("APPLE")
+                        Text("TSLA")
+                    }
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button {
+                                model.currencyType = .crypto
+                            } label: {
+                                Image(systemName: "dollarsign.circle.fill")
+                                    .font(.system(size: 20))
+                            }
+                        }
+                    }
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .ignoresSafeArea()
-                    .tabItem { Label("List", systemImage: "list.bullet")
-                    }
-                    .tag(Tab.listofcoins)
-                
-                //Portfolio tab
-                NavigationView {
-                    VStack(spacing: 10) {
-                        PortfolioView(presenter: PortfolioPresenter(interactor: PortfolioInteractor(model: model)))
-                    }
+                .tabItem { Label("Stocks", systemImage: "list.bullet")
                 }
-                    .tabItem { Label("Portfolio", systemImage: "star") }
-                    .accessibilityIdentifier("PortfolioViewButton")
-                    .tag(Tab.portfolio)
-                
-                //swap tab
+                .tag(Tab.listofcoins)
+
+                // Portfolio tab
                 NavigationView {
-                    VStack(spacing: 10) {
-                        SwapView(presenter: SwapPresenter(interactor: SwapInteractor(model: model)))
-                    }
+                    Text("StockPortfolio")
                 }
-                    .tabItem { Label("Swap", systemImage: "arrow.left.arrow.right") }
-                    .accessibilityIdentifier("SwapViewButton")
-                    .tag(Tab.swap)
-                
-                //News tab
+                .tabItem { Label("Portfolio", systemImage: "star") }
+                .accessibilityIdentifier("PortfolioViewButton")
+                .tag(Tab.portfolio)
+
+                // swap tab
+                NavigationView {
+                    Text("StockSwap")
+                }
+                .tabItem { Label("Swap", systemImage: "arrow.left.arrow.right") }
+                .accessibilityIdentifier("SwapViewButton")
+                .tag(Tab.swap)
+                // News tab
                 NavigationView {
                     NewsView(presenter: NewsPresenter(interactor: NewsInteractor(model: model)))
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .tabItem { Label("News", systemImage: "newspaper") }
                 .tag(Tab.news)
-                
-                //Communities tab
+
+                // Communities tab
                 NavigationView {
                     VStack(spacing: 10) {
                         CommunitiesView(presenter: CommunitiesPresenter(interactor: CommunitiesInteractor(model: model)))
                     }
                 }
-                    .tabItem { Label("Chat", systemImage: "message") }
-                    .tag(Tab.communities)
+                .tabItem { Label("Chat", systemImage: "message") }
+                .tag(Tab.communities)
             }
-            
         }
-        .onChange(of: scenePhase){ newPhase in
+    }
+    
+    var cryptoView: some View {
+        ZStack {
+            Color.theme.backgroundcolor
+                .ignoresSafeArea()
+            // main view with tab selections
+            TabView(selection: $selection) {
+                // CoinList view
+                NavigationView {
+                    ListOfCoinsView(presenter: ListOfCoinsPresenter(interactor: ListOfCoinsInteractor(model: model)))
+                }
+                .navigationBarTitleDisplayMode(.inline)
+                .ignoresSafeArea()
+                .tabItem { Label("List", systemImage: "list.bullet")
+                }
+                .tag(Tab.listofcoins)
+
+                // Portfolio tab
+                NavigationView {
+                    VStack(spacing: 10) {
+                        PortfolioView(presenter: PortfolioPresenter(interactor: PortfolioInteractor(model: model)))
+                    }
+                }
+                .tabItem { Label("Portfolio", systemImage: "star") }
+                .accessibilityIdentifier("PortfolioViewButton")
+                .tag(Tab.portfolio)
+
+                // swap tab
+                NavigationView {
+                    VStack(spacing: 10) {
+                        SwapView(presenter: SwapPresenter(interactor: SwapInteractor(model: model)))
+                    }
+                }
+                .tabItem { Label("Swap", systemImage: "arrow.left.arrow.right") }
+                .accessibilityIdentifier("SwapViewButton")
+                .tag(Tab.swap)
+                // News tab
+                NavigationView {
+                    NewsView(presenter: NewsPresenter(interactor: NewsInteractor(model: model)))
+                }
+                .navigationBarTitleDisplayMode(.inline)
+                .tabItem { Label("News", systemImage: "newspaper") }
+                .tag(Tab.news)
+
+                // Communities tab
+                NavigationView {
+                    VStack(spacing: 10) {
+                        CommunitiesView(presenter: CommunitiesPresenter(interactor: CommunitiesInteractor(model: model)))
+                    }
+                }
+                .tabItem { Label("Chat", systemImage: "message") }
+                .tag(Tab.communities)
+            }
+        }
+        .onChange(of: scenePhase) { newPhase in
             if newPhase == .active {
                 print("Active")
                 model.loadNotification()
-            }
-            else if newPhase == .inactive {
+            } else if newPhase == .inactive {
                 print("inactive")
-            }
-            else if newPhase == .background {
+            } else if newPhase == .background {
                 print("background")
                 model.saveNotification()
-                model.IsnotificationViewed = false
+                model.isNotificationViewed = false
             }
         }
-        
     }
 }
 
