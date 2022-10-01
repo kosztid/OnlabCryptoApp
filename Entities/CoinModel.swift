@@ -65,11 +65,11 @@ struct CoinModel: Identifiable, Codable{
             case sparklineIn7D = "sparkline_in_7d"
             case priceChangePercentage24HInCurrency = "price_change_percentage_24h_in_currency"
     }
-    var rank: Int{
+    var rank: Int {
         return Int(marketCapRank ?? 0)
     }
 }
 
-struct SparklineIn7D: Codable{
+struct SparklineIn7D: Codable {
     let price: [Double]?
 }

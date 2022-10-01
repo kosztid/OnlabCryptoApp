@@ -1,9 +1,3 @@
-//
-//  PortfolioPresenter.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 02. 25..
-//
 import Combine
 import Foundation
 import SwiftUI
@@ -67,11 +61,6 @@ class PortfolioPresenter: ObservableObject {
     func removeCoin(_ index: IndexSet) {
         interactor.removeCoin(index)
     }
-    /*
-    func getholdingcount(coin: CoinModel) -> Double {
-        return interactor.getholdingcount(coin: coin)
-    }
-    */
     func winlosepercent() -> Double {
             return (1-(self.portfoliobuytotal()/self.portfoliototal()))*100
     }
@@ -123,7 +112,7 @@ class PortfolioPresenter: ObservableObject {
                         ZStack {
                             Color.theme.backgroundcolor
                                     .ignoresSafeArea()
-                            FavfolioListItemView(presenter: FavfolioListItemPresenter(interactor: FavfolioListItemInteractor(coin: coin,model: self.interactor.getmodel())))
+                            FavfolioListItemView(presenter: FavfolioListItemPresenter(interactor: FavfolioListItemInteractor(coin: coin, model: self.interactor.getmodel())))
                                 .frame(height: 80)
                             self.linkBuilder(for: coin) {
                                 EmptyView()

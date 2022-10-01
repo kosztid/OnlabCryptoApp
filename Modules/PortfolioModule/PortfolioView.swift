@@ -31,7 +31,7 @@ struct PortfolioView: View {
                 .padding(.horizontal, 5)
                 .frame(height: 100, alignment: .leading)
                 presenter.makeList(selected: presenter.selection)
-                .toolbar{
+                .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         if presenter.signedin {
                             presenter.makeButtonForAccount()

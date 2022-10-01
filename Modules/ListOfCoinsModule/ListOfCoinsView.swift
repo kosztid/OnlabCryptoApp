@@ -1,21 +1,14 @@
-//
-//  ListOfCoinsView.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 02. 25..
-//
-
 import SwiftUI
 
 struct ListOfCoinsView: View {
     @ObservedObject var presenter: ListOfCoinsPresenter
     var body: some View {
-        ZStack{
+        ZStack {
             Color.theme.backgroundcolor
                 .ignoresSafeArea()
             List {
                 ForEach(presenter.coins){ coin in
-                    ZStack{
+                    ZStack {
                         Color.theme.backgroundcolor
                                 .ignoresSafeArea()
                         ListOfCoinsListItem(presenter: presenter, coin: coin)

@@ -1,72 +1,58 @@
-//
-//  CoinDetailPresenter.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 02. 26..
-//
-
 import Foundation
 import SwiftUI
 import Combine
 
-class CoinDetailPresenter: ObservableObject{
+class CoinDetailPresenter: ObservableObject {
     @State var showalert : Bool = false
     private let interactor: CoinDetailInteractor
     private let router = CoinDetailRouter()
-    
-    @Published var signedin : Bool = false
+
+    @Published var signedin = false
     private var cancellables = Set<AnyCancellable>()
-    
-    init(interactor: CoinDetailInteractor){
+
+    init(interactor: CoinDetailInteractor) {
         self.interactor = interactor
-        
+
         self.getmodel().$isSignedIn
             .assign(to: \.signedin, on: self)
             .store(in: &cancellables)
     }
-    
-    func values() -> [CGFloat]{
+
+    func getGraphValues() -> [CGFloat] {
         return interactor.getvalues()
     }
-    func getcoin() -> CoinModel{
+    func getcoin() -> CoinModel {
         return interactor.getcoin()
     }
-    func getmodel() -> DataModel{
+    func getmodel() -> DataModel {
         return interactor.getmodel()
     }
-    /*
-    func detailed() -> CoinDetailModel{
-        return interactor.getcoindetail()
-    }
-    
-     */
     func makeButtonForPortfolioAdderView() -> some View {
         var buttontext: String
         if interactor.held() {
             buttontext = "Edit"
-        }
-        else {
+        } else {
             buttontext = "Add"
         }
-        return NavigationLink(buttontext, destination: router.makeAdderView(coincount: interactor.getCoinCount(), coin:interactor.getcoin(), model: interactor.getmodel()))
+        return NavigationLink(buttontext, destination: router.makeAdderView(coincount: interactor.getCoinCount(), coin: interactor.getcoin(), model: interactor.getmodel()))
     }
-    
+
     func makeFavButton() -> some View {
-        Button(){
+        Button() {
             self.interactor.addFavCoin()
         } label: {
-            Label("",systemImage: interactor.isFav() ? "star.fill" : "star")
+            Label("", systemImage: interactor.isFav() ? "star.fill" : "star")
                 .foregroundColor(Color.theme.accentcolor)
                 .font(.system(size: 25))
         }
         .buttonStyle(BorderlessButtonStyle())
     }
     func makeAddButton() -> some View {
-        Button("ADD"){
+        Button("ADD") {
             self.showalert = true
         }
-        .alert(isPresented:$showalert){
-            Alert(title: Text("Add"), message: Text("type in the amount"), primaryButton: .destructive(Text("Add")){}, secondaryButton: .cancel())
+        .alert(isPresented: $showalert) {
+            Alert(title: Text("Add"), message: Text("type in the amount"), primaryButton: .destructive(Text("Add")) {}, secondaryButton: .cancel())
         }
     }
 }
