@@ -71,6 +71,7 @@ final class DataModel: ObservableObject {
     @Published var heldcoins: [CoinDataFirebaseModel] = []
     @Published var favcoins: [CoinDataFirebaseModel] = []
     @Published var ownedcoins: [CoinDataFirebaseModel] = []
+    @Published var stocks: [StockListItem] = []
     @Published var buyorsell = "none"
     @Published var coin1 = "ethereum"
     @Published var coin2 = "tether"
@@ -79,7 +80,7 @@ final class DataModel: ObservableObject {
     @Published var events: [ChangeDataModel] = []
     private var cancellables = Set<AnyCancellable>()
     @Published var selection: String
-    
+
     init() {
         self.selection = "portfolio"
         self.auth = Auth.auth()
@@ -92,7 +93,11 @@ final class DataModel: ObservableObject {
         datadownloader.$coins
             .sink { [weak self] (datareceived) in self?.coins = datareceived}
             .store(in: &cancellables)
-
+        
+        datadownloader.$stocks
+            .sink { [weak self] (datareceived) in self?.stocks = datareceived}
+            .store(in: &cancellables)
+        
         datadownloader.$news
             .sink { [weak self] (datareceived) in self?.news = datareceived}
             .store(in: &cancellables)
