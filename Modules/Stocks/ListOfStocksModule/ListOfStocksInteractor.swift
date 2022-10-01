@@ -1,8 +1,15 @@
-//
-//  ListOfStocksInteractor.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 09. 28..
-//
+class ListOfStocksInteractor {
+    let model: DataModel
 
-import Foundation
+    init(model: DataModel) {
+        self.model = model
+    }
+
+    func setIsnotificationViewed() {
+        model.isNotificationViewed = true
+    }
+
+    func changeView() {
+        model.currencyType = .crypto
+    }
+}

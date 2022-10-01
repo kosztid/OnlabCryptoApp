@@ -41,20 +41,7 @@ struct ContentView: View {
             TabView(selection: $selection) {
                 // CoinList view
                 NavigationView {
-                    List {
-                        Text("APPLE")
-                        Text("TSLA")
-                    }
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarLeading) {
-                            Button {
-                                model.currencyType = .crypto
-                            } label: {
-                                Image(systemName: "dollarsign.circle.fill")
-                                    .font(.system(size: 20))
-                            }
-                        }
-                    }
+                    ListOfStocksView(presenter: ListOfStocksPresenter(interactor: ListOfStocksInteractor(model: model)))
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .ignoresSafeArea()
@@ -96,7 +83,7 @@ struct ContentView: View {
             }
         }
     }
-    
+
     var cryptoView: some View {
         ZStack {
             Color.theme.backgroundcolor

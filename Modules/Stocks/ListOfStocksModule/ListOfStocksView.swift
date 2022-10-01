@@ -8,13 +8,43 @@
 import SwiftUI
 
 struct ListOfStocksView: View {
+    @ObservedObject var presenter: ListOfStocksPresenter
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
+        ZStack {
+            Color.theme.backgroundcolor
+                .ignoresSafeArea()
+            List {
+                ForEach(presenter.stocks) { stock in
+                    ZStack {
+                        Color.theme.backgroundcolor
+                                .ignoresSafeArea()
+                        ListOfStocksListItem(stock: stock)
+                            .frame(height: 40)
+                        self.presenter.linkBuilder(for: stock) {
+                            EmptyView()
+                        }.buttonStyle(PlainButtonStyle())
+                    }
+                }
+                .listRowSeparatorTint(Color.theme.backgroundsecondary)
+                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    presenter.makeButtonForViewchange()
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    if presenter.signedin {
+                        presenter.makeButtonForAccount()
+                            .accessibilityIdentifier("PortfolioAccountButton")
+                    } else {
+                        presenter.makeButtonForLogin()
+                            .accessibilityIdentifier("PortfolioLoginButton")
+                    }
+                }
+            }
+            .listStyle(PlainListStyle())
+        }
 
-struct ListOfStocksView_Previews: PreviewProvider {
-    static var previews: some View {
-        ListOfStocksView()
     }
 }
