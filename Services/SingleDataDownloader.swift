@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class SingleDataDownloader{
+class SingleDataDownloader {
     var coinid: String
     // swiftlint:disable:next line_length
     @Published var coindetail: CoinDetailModel = CoinDetailModel(id: "bitcoin", symbol: "bitcoin", name: "bitcoin", blockTimeInMinutes: 10, hashingAlgorithm: "bitcoin", categories: ["bitcoin"], welcomeDescription: CoinDetailModel.Description(en: "leiras"), countryOrigin: "bitcoin", genesisDate: "bitcoin", sentimentVotesUpPercentage: 10, sentimentVotesDownPercentage: 10, marketCapRank: 10, coingeckoRank: 10, coingeckoScore: 10, developerScore: 10, communityScore: 10, liquidityScore: 10, publicInterestScore: 10, lastUpdated: "bitcoin")

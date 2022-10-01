@@ -20,7 +20,6 @@ struct Favfolio: Codable {
     let buytotal: Double?
 }
 
-
 class ApiService {
     @Published var favs: [CoinDataFirebaseModel] = []
     @Published var portfolio: [CoinDataFirebaseModel] = []
@@ -29,10 +28,9 @@ class ApiService {
     var userSub: AnyCancellable?
     var communitySub: AnyCancellable?
 
-
     func loadUser(apikey: String, userID: String) {
         print("lefutott")
-        guard let url = URL(string:"http://localhost:8080/api/v1/users/\(userID)")
+        guard let url = URL(string: "http://localhost:8080/api/v1/users/\(userID)")
         else {
             return
         }
@@ -53,7 +51,7 @@ class ApiService {
             }
             .receive(on: DispatchQueue.main)
             .decode(type: UserModel.self, decoder: JSONDecoder())
-            .sink{(completion) in
+            .sink {(completion) in
                 switch completion {
                 case .finished:
                     break
@@ -67,7 +65,6 @@ class ApiService {
                 self?.wallet = returnedUser.wallet
                 print(returnedUser.wallet)
                 self?.userSub?.cancel()
-                
             }
     }
 
