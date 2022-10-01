@@ -17,12 +17,13 @@ struct DataClass: Codable {
 
 // MARK: - Table
 struct Table: Codable {
-    let headers: Stock
-    let rows: [Stock]
+    let headers: StockListItem
+    let rows: [StockListItem]
 }
 
 // MARK: - Stock
-struct Stock: Codable {
+struct StockListItem: Codable, Identifiable {
+    let id = UUID().uuidString
     let symbol, name, lastsale, netchange: String
     let pctchange, marketCap: String
     let url: String?
