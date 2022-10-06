@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CoinDataFirebaseModel: Codable {
+struct CryptoServerModel: Identifiable, Codable {
     var id: Int
     var coinid: String
     var count: Double
