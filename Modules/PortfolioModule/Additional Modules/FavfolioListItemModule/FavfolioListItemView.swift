@@ -14,8 +14,8 @@ struct FavfolioListItemView: View {
             Color.theme.backgroundcolor
                 .ignoresSafeArea()
             
-            HStack{
-                //Kép
+            HStack {
+
                 HStack(alignment: .center){
                     CachedAsyncImage(url: URL(string: presenter.getcoin().image)){ image in
                         image
@@ -27,31 +27,30 @@ struct FavfolioListItemView: View {
                     }
                     .frame(width: 20, height: 20)
                     .cornerRadius(20)
-                    //rövid név
+
                     Text(presenter.getcoin().symbol.uppercased())
                         .foregroundColor(Color.theme.accentcolor)
                         .font(.system(size: 18))
                     Spacer()
-                    //ár+változásszázalék
-                    VStack(alignment:.trailing){
+
+                    VStack(alignment: .trailing) {
                         Text(presenter.getcoin().currentPrice.formatcurrency6digits())
                             .foregroundColor(Color.theme.accentcolor)
                             .font(.system(size: 16))
-                            .frame(alignment:.leading)
+                            .frame(alignment: .leading)
                         Text(presenter.getcoin().priceChangePercentage24H?.formatpercent() ?? "0%")
                             .foregroundColor((presenter.getcoin().priceChangePercentage24H ?? 0) >= 0 ? Color.theme.green : Color.theme.red)
                             .font(.system(size: 12))
                     }
-                    .frame(alignment:.trailing)
+                    .frame(alignment: .trailing)
                 }
-                .padding(.trailing,10)
-                .frame(alignment:.leading)
+                .padding(.trailing, 10)
+                .frame(alignment: .leading)
                 Spacer()
                 presenter.makeFavButton()
             }
             .padding(.horizontal, 10.0)
         }
-        
     }
 }
 /*

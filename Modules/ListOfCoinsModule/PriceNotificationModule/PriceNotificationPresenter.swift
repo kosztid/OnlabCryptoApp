@@ -12,7 +12,7 @@ class PriceNotificationPresenter: ObservableObject {
     private let interactor: PriceNotificationInteractor
     @Published var events: [ChangeDataModel] = []
     private var cancellables = Set<AnyCancellable>()
-   
+    
     init(interactor: PriceNotificationInteractor) {
         self.interactor = interactor
 

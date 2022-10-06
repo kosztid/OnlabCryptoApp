@@ -16,17 +16,16 @@ struct NewsView: View {
             
             List{
                 //Array(Set(presenter.news.articles!))
-                ForEach(presenter.news.articles!, id:\.self){ article in
+                ForEach(presenter.news.articles!, id: \.self) { article in
                     ZStack{
                         Color.theme.backgroundcolor
                                 .ignoresSafeArea()
                         NewsListItem(presenter: presenter, article: article)
                             .frame(height: 60)
-                        self.presenter.linkBuilder(for: article){
+                        self.presenter.linkBuilder(for: article) {
                             EmptyView()
                         }.buttonStyle(PlainButtonStyle())
                     }
-                    
                 }
                 .listRowSeparatorTint(Color.theme.backgroundsecondary)
                 .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))

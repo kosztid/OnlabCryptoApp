@@ -5,7 +5,7 @@ import SwiftUI
 class PortfolioPresenter: ObservableObject {
     @Published var selection: String = "wallet"
     @Published var coins: [CoinModel] = []
-    @Published var favcoins: [CoinDataFirebaseModel] = []
+    @Published var favcoins: [CryptoServerModel] = []
     @Published var signedin = false
     private let interactor: PortfolioInteractor
     private var cancellables = Set<AnyCancellable>()
@@ -34,7 +34,7 @@ class PortfolioPresenter: ObservableObject {
     func changeViewTo(viewname: String) {
         interactor.changeViewTo(viewname: viewname)
     }
-    
+
     func linkBuilder<Content: View>(
         for coin: CoinModel,
         @ViewBuilder content: () -> Content
@@ -76,7 +76,7 @@ class PortfolioPresenter: ObservableObject {
     func portfoliototal() -> Double {
         return interactor.portfoliototal()
     }
-    
+
     func portfoliobuytotal() -> Double {
         return interactor.portfoliobuytotal()
     }

@@ -12,11 +12,11 @@ struct PortfolioAdderView: View {
     @ObservedObject var presenter: PortfolioAdderPresenter
     @State var coincount : Double
     var body: some View {
-        ZStack{
+        ZStack {
             Color.theme.backgroundcolor
                 .ignoresSafeArea()
-            VStack{
-                HStack{
+            VStack {
+                HStack {
                     Text("The selected coin is:")
                         .foregroundColor(Color.theme.accentcolor)
                     Text(presenter.coindata().name)
@@ -33,13 +33,13 @@ struct PortfolioAdderView: View {
                         .disableAutocorrection(true)
                         .accessibilityIdentifier("PortfolioadderTextField")
                 }
-                
+
                 Button {
                     if coincount > 0 {
-                        presenter.addCoin(count:self.coincount)
+                        presenter.addCoin(count: self.coincount)
                         self.presentationMode.wrappedValue.dismiss()
                     }
-                
+
                 } label: {
                     Text("Add")
                         .frame(height: 50)

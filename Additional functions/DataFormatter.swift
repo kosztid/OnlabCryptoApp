@@ -8,8 +8,8 @@
 import Foundation
 
 extension Double {
-    
-    private var formattercurrency6digits: NumberFormatter{
+
+    private var formattercurrency6digits: NumberFormatter {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.locale = Locale(identifier: "en_US")
@@ -22,8 +22,8 @@ extension Double {
         return formattercurrency6digits.string(from: number) ?? "$0.00"
 
     }
-    
-    private var formattercurrency4digits: NumberFormatter{
+
+    private var formattercurrency4digits: NumberFormatter {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.locale = Locale(identifier: "en_US")
@@ -35,8 +35,8 @@ extension Double {
         let number = NSNumber(value: self)
         return formattercurrency4digits.string(from: number) ?? "$0.00"
     }
-    
-    private var formattercurrency0digits: NumberFormatter{
+
+    private var formattercurrency0digits: NumberFormatter {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.locale = Locale(identifier: "en_US")
@@ -48,16 +48,16 @@ extension Double {
         let number = NSNumber(value: self)
         return formattercurrency0digits.string(from: number) ?? "$0"
     }
-    
-    func formatintstring() -> String{
+
+    func formatintstring() -> String {
         return (String(Int(self)))
     }
-    
+
     func formatpercent() -> String {
         return (String(format: "%.2f", self) + "%")
     }
-    
-    private var formatter2digits: NumberFormatter{
+
+    private var formatter2digits: NumberFormatter {
         let formatter = NumberFormatter()
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 2

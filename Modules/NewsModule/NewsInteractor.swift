@@ -7,10 +7,10 @@
 
 import Foundation
 
-class NewsInteractor{
+class NewsInteractor {
     let model: DataModel
     
-    init(model: DataModel){
+    init(model: DataModel) {
         self.model = model
     }
 }
