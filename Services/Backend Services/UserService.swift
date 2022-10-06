@@ -9,9 +9,12 @@ struct Favfolio: Codable {
 }
 
 class UserService {
-    @Published var favs: [CoinDataFirebaseModel] = []
-    @Published var portfolio: [CoinDataFirebaseModel] = []
-    @Published var wallet: [CoinDataFirebaseModel] = []
+    @Published var cryptoFavs: [CryptoServerModel] = []
+    @Published var cryptoPortfolio: [CryptoServerModel] = []
+    @Published var cryptoWallet: [CryptoServerModel] = []
+    @Published var stockFavs: [StockServerModel] = []
+    @Published var stockPortfolio: [StockServerModel] = []
+    @Published var stockWallet: [StockServerModel] = []
     
     var userSub: AnyCancellable?
     
@@ -48,10 +51,13 @@ class UserService {
                 }
             } receiveValue: { [weak self] (returnedUser) in
                 print(returnedUser.favfolio)
-                self?.favs = returnedUser.favfolio
-                self?.portfolio = returnedUser.portfolio
-                self?.wallet = returnedUser.wallet
-                print(returnedUser.wallet)
+                self?.cryptoFavs = returnedUser.favfolio
+                self?.cryptoPortfolio = returnedUser.portfolio
+                self?.cryptoWallet = returnedUser.wallet
+                self?.stockFavs = returnedUser.stockfavfolio
+                self?.stockPortfolio = returnedUser.stockportfolio
+                self?.stockWallet = returnedUser.stockwallet
+                print(returnedUser.stockportfolio)
                 self?.userSub?.cancel()
             }
     }

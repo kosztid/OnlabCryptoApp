@@ -1,15 +1,15 @@
-//
-//  CoinDataFirebase.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 03. 14..
-//
-
 import Foundation
 
-struct CryptoServerModel: Identifiable, Codable {
+struct CryptoServerModel: Codable {
     var id: Int
     var coinid: String
+    var count: Double
+    var buytotal: Double?
+}
+
+struct StockServerModel: Identifiable, Codable {
+    var id: Int
+    var stockSymbol: String
     var count: Double
     var buytotal: Double?
 }

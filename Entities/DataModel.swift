@@ -64,13 +64,18 @@ final class DataModel: ObservableObject {
     @Published var isNotificationViewed = false
     @Published var registered = false
     @Published var coins: [CoinModel] = []
-    @Published var news = News(status: nil, totalResults: nil, articles: nil)
+    @Published var stockNews = News(status: nil, totalResults: nil, articles: nil)
+    @Published var cryptoNews = News(status: nil, totalResults: nil, articles: nil)
     @Published var communities: [MessageGroupModel] = []
     private let datadownloader = DataDownloader()
-    private let apiService = ApiService()
-    @Published var heldcoins: [CoinDataFirebaseModel] = []
-    @Published var favcoins: [CoinDataFirebaseModel] = []
-    @Published var ownedcoins: [CoinDataFirebaseModel] = []
+    private let communityService = CommunityService()
+    private let apiService = UserService()
+    @Published var heldcoins: [CryptoServerModel] = []
+    @Published var favcoins: [CryptoServerModel] = []
+    @Published var ownedcoins: [CryptoServerModel] = []
+    @Published var heldStocks: [StockServerModel] = []
+    @Published var favStocks: [StockServerModel] = []
+    @Published var ownedStocks: [StockServerModel] = []
     @Published var stocks: [StockListItem] = []
     @Published var buyorsell = "none"
     @Published var coin1 = "ethereum"
@@ -93,25 +98,40 @@ final class DataModel: ObservableObject {
         datadownloader.$coins
             .sink { [weak self] (datareceived) in self?.coins = datareceived}
             .store(in: &cancellables)
-        
+
         datadownloader.$stocks
             .sink { [weak self] (datareceived) in self?.stocks = datareceived}
             .store(in: &cancellables)
-        
+
         datadownloader.$news
-            .sink { [weak self] (datareceived) in self?.news = datareceived}
+            .sink { [weak self] (datareceived) in self?.cryptoNews = datareceived}
             .store(in: &cancellables)
 
-        apiService.$favs
+        datadownloader.$stockNews
+            .sink { [weak self] (datareceived) in self?.stockNews = datareceived}
+            .store(in: &cancellables)
+
+        apiService.$cryptoFavs
             .sink { [weak self] (datareceived) in self?.favcoins = datareceived}
             .store(in: &cancellables)
-        apiService.$portfolio
+        apiService.$cryptoPortfolio
             .sink { [weak self] (datareceived) in self?.heldcoins = datareceived}
             .store(in: &cancellables)
-        apiService.$wallet
+        apiService.$cryptoWallet
             .sink { [weak self] (datareceived) in self?.ownedcoins = datareceived}
             .store(in: &cancellables)
-        apiService.$communities
+
+        apiService.$stockFavs
+            .sink { [weak self] (datareceived) in self?.favStocks = datareceived}
+            .store(in: &cancellables)
+        apiService.$stockPortfolio
+            .sink { [weak self] (datareceived) in self?.heldStocks = datareceived}
+            .store(in: &cancellables)
+        apiService.$stockWallet
+            .sink { [weak self] (datareceived) in self?.ownedStocks = datareceived}
+            .store(in: &cancellables)
+        
+        communityService.$communities
             .sink { [weak self] (datareceived) in self?.communities = datareceived}
             .store(in: &cancellables)
     }
@@ -126,9 +146,20 @@ final class DataModel: ObservableObject {
         }
         favcoinPullFromDB()
     }
+    func addFavStock(symbol: String) {
+        let currentUser = self.auth.currentUser
+        currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            // TODO: fav api stock
+        }
+        favcoinPullFromDB()
+    }
     func favcoinPullFromDB() {
         DispatchQueue.main.async {
-            self.favcoins = self.apiService.favs
+            self.favcoins = self.apiService.cryptoFavs
         }
     }
 
@@ -169,13 +200,13 @@ final class DataModel: ObservableObject {
     }
     func walletPullFromDB() {
         DispatchQueue.main.async {
-            self.ownedcoins = self.apiService.wallet
+            self.ownedcoins = self.apiService.cryptoWallet
         }
     }
 
     func portfolioPullFromDB() {
         DispatchQueue.main.async {
-            self.heldcoins = self.apiService.portfolio
+            self.heldcoins = self.apiService.cryptoPortfolio
         }
     }
     func addCommunityMember(id: String, member: String) {
@@ -221,7 +252,7 @@ final class DataModel: ObservableObject {
                 print(error.localizedDescription)
                 return
             }
-            self.apiService.addCommunity(idToken ?? "error", name)
+            self.communityService.addCommunity(idToken ?? "error", name)
         }
     }
     func sendMessage(id: String, message: MessageModel) {
@@ -233,7 +264,7 @@ final class DataModel: ObservableObject {
                 return
             }
             print("message1")
-            self.apiService.sendMessage(idToken ?? "error", id, variedMessage)
+            self.communityService.sendMessage(idToken ?? "error", id, variedMessage)
         }
 
     }
@@ -329,8 +360,9 @@ final class DataModel: ObservableObject {
                         self.isSignedIn = true
                         print(self.auth.currentUser!.uid)
                         print(self.auth.currentUser!.email ?? "")
+                        print(idToken)
                         self.apiService.loadUser(apikey: idToken ?? "error", userID: self.auth.currentUser!.uid)
-                        self.apiService.loadCommunities(apikey: idToken ?? "error")
+                        self.communityService.loadCommunities(apikey: idToken ?? "error")
                     }
                 }
             }
@@ -354,7 +386,7 @@ final class DataModel: ObservableObject {
                     print(self.auth.currentUser!.uid)
                     print(self.auth.currentUser!.email ?? "")
                     self.apiService.loadUser(apikey: idToken ?? "error", userID: self.auth.currentUser!.uid)
-                    self.apiService.loadCommunities(apikey: idToken ?? "error")
+                    self.communityService.loadCommunities(apikey: idToken ?? "error")
                 }
             }
 
@@ -371,7 +403,15 @@ final class DataModel: ObservableObject {
             self.registered = true
             DispatchQueue.main.async {
                 let database = Firestore.firestore()
-                let id = self.auth.currentUser?.uid
+                let currentUser = self.auth.currentUser
+                let id = currentUser?.uid
+                currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
+                    if let error = error {
+                        print(error.localizedDescription)
+                        return
+                    }
+                    self.apiService.registerUser(idToken ?? "error", id ?? "error", email)
+                }
                 database.collection("users").document(id ?? "err").setData(["email": email]) { error in
                     if error == nil {
                     } else {
