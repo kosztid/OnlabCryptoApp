@@ -1,20 +1,35 @@
-//
-//  StockFavListItem.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 10. 04..
-//
-
 import SwiftUI
 
 struct StockFavListItem: View {
+    var stock: StockServerModel
+    var stockData: StockListItem
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
+        ZStack {
+            Color.theme.backgroundcolor
+                .ignoresSafeArea()
+            HStack {
+                Text(stock.stockSymbol)
+                    .foregroundColor(Color.theme.accentcolor)
+                    .font(.system(size: 18))
+                Spacer()
 
-struct StockFavListItem_Previews: PreviewProvider {
-    static var previews: some View {
-        StockFavListItem()
+                VStack(alignment: .trailing) {
+                    Text(stockData.lastsale)
+                        .foregroundColor(Color.theme.accentcolor)
+                        .font(.system(size: 16))
+                    Text(stockData.pctchange)
+                        .foregroundColor( Int.random(in: 0...1) % 2 == 0 ? Color.theme.green : Color.theme.red)
+                        .font(.system(size: 12))
+                }
+                Button() {
+                } label: {
+                    Label("", systemImage: true ? "star.fill" : "star")
+                        .foregroundColor(Color.theme.accentcolor)
+                        .font(.system(size: 22))
+                }
+                .buttonStyle(BorderlessButtonStyle())
+            }
+            .padding(.horizontal, 10.0)
+        }
     }
 }
