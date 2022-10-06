@@ -51,7 +51,9 @@ struct ContentView: View {
 
                 // Portfolio tab
                 NavigationView {
-                    Text("StockPortfolio")
+                    VStack {
+                        StockPortfolioView(presenter: StockPortfolioPresenter(interactor: StockPortfolioInteractor(model: model)))
+                    }
                 }
                 .tabItem { Label("Portfolio", systemImage: "star") }
                 .accessibilityIdentifier("PortfolioViewButton")
@@ -66,7 +68,7 @@ struct ContentView: View {
                 .tag(Tab.swap)
                 // News tab
                 NavigationView {
-                    NewsView(presenter: NewsPresenter(interactor: NewsInteractor(model: model)))
+                    NewsView(presenter: NewsPresenter(interactor: NewsInteractor(model: model), newsType: .stock))
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .tabItem { Label("News", systemImage: "newspaper") }
@@ -121,7 +123,7 @@ struct ContentView: View {
                 .tag(Tab.swap)
                 // News tab
                 NavigationView {
-                    NewsView(presenter: NewsPresenter(interactor: NewsInteractor(model: model)))
+                    NewsView(presenter: NewsPresenter(interactor: NewsInteractor(model: model), newsType: .crypto))
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .tabItem { Label("News", systemImage: "newspaper") }
