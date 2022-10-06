@@ -15,7 +15,7 @@ struct StockDetailView: View {
                         .padding([.trailing, .leading], 5)
                     Spacer()
                 }
-                .padding(10)
+                .padding(20)
             }
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle(presenter.stock.ticker)
@@ -29,10 +29,15 @@ struct StockDetailView: View {
 
     var header: some View {
         VStack {
-            Text("\(presenter.fullName)")
-                .font(.system(size: 32))
-                .foregroundColor(Color.theme.accentcolor)
-                .frame(width: UIScreen.main.bounds.width, alignment: .leading)
+            HStack {
+                Text("\(presenter.fullName)")
+                    .font(.system(size: 32))
+                    .foregroundColor(Color.theme.accentcolor)
+                Spacer()
+                presenter.makeFavButton()
+                    .disabled(!presenter.signedin)
+            }
+
             HStack {
                 Text("\(presenter.lastPrice.formatcurrency4digits())")
                     .font(.system(size: 28))

@@ -41,6 +41,7 @@ class StockDetailPresenter: ObservableObject {
             graphColor = Color.theme.red
         }
     }
+
     func refreshData() {
         marketCap = interactor.getStockData().marketCap
         changePct = interactor.getStockData().pctchange
@@ -50,12 +51,27 @@ class StockDetailPresenter: ObservableObject {
         currentMax = currentPrices.max() ?? 0
         currentMin = currentPrices.min() ?? 0
     }
+
+    func makeFavButton() -> some View {
+        Button() {
+//            self.interactor.addFavStock()
+        } label: {
+// TODO: interactor.isFav()
+            Label("", systemImage: false ? "star.fill" : "star")
+                .foregroundColor(Color.theme.accentcolor)
+                .font(.system(size: 25))
+        }
+        .buttonStyle(BorderlessButtonStyle())
+    }
+
     func getGraphData() -> [CGFloat] {
         return interactor.makeGraphData(values: currentPrices)
     }
+
     func onAppear() {
         interactor.getStock()
     }
+
     func getmodel() -> DataModel {
         return interactor.getmodel()
     }
