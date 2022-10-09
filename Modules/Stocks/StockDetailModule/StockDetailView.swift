@@ -17,6 +17,13 @@ struct StockDetailView: View {
                 }
                 .padding(20)
             }
+            .navigationBarItems(trailing: Button("Add") {
+                alertWithTfNumpad(title: presenter.stock.ticker, message: "Adja meg a mennyiséget", hintText: "Mennyiség", primaryTitle: "Változtatás", secTitle: "Vissza") { text in
+                    presenter.addPortfolio(amount: Double(text))
+                } secondaryAction: {
+                    print("cancelled")
+                }
+            })
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle(presenter.stock.ticker)
             .onAppear(perform: presenter.onAppear)

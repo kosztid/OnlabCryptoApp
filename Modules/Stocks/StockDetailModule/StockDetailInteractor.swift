@@ -29,13 +29,15 @@ class StockDetailInteractor {
         downloader.loadSingleStock(symbol: symbol)
     }
 
-    func addFavCoin() {
+    func addFavStock() {
         model.addFavStock(symbol: symbol)
     }
-//    func isFav() -> Bool {
-//        return !(model.favstocks.filter({ $0.symbol == self.symbol }).isEmpty)
-//    }
-
+    func isFav() -> Bool {
+        return !(model.favStocks.filter({ $0.stockSymbol == self.symbol }).isEmpty)
+    }
+    func addPortfolio(amount: Double, currentprice: Double) {
+        model.addStockHolding(symbol: self.symbol, count: amount, currprice: currentprice)
+    }
     func getDownloader() -> SingleStockDownloader {
         return downloader
     }

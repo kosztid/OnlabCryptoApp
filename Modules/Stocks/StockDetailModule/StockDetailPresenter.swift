@@ -54,16 +54,22 @@ class StockDetailPresenter: ObservableObject {
 
     func makeFavButton() -> some View {
         Button() {
-//            self.interactor.addFavStock()
+            self.interactor.addFavStock()
         } label: {
 // TODO: interactor.isFav()
-            Label("", systemImage: false ? "star.fill" : "star")
+            Label("", systemImage: interactor.isFav() ? "star.fill" : "star")
                 .foregroundColor(Color.theme.accentcolor)
                 .font(.system(size: 25))
         }
         .buttonStyle(BorderlessButtonStyle())
     }
 
+    func addPortfolio(amount: Double?) {
+        guard let amount = amount else {
+            return
+        }
+        interactor.addPortfolio(amount: amount, currentprice: self.lastPrice)
+    }
     func getGraphData() -> [CGFloat] {
         return interactor.makeGraphData(values: currentPrices)
     }
