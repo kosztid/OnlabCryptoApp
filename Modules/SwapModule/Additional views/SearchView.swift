@@ -1,23 +1,16 @@
-//
-//  SearchView.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 03. 26..
-//
-
 import SwiftUI
 
 struct SearchView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State var searchText = ""
     @State var searching = false
-    //@Binding var searchText: String
-    //@Binding var searching: Bool
+    // @Binding var searchText: String
+    // @Binding var searching: Bool
     var coinname: String = "coin1"
     @ObservedObject var presenter: SwapPresenter
-    
+
     var body: some View {
-        ZStack{
+        ZStack {
             Color.theme.backgroundcolor
             VStack(alignment: .leading) {
                 /*SearchBar(searchText: $searchText, searching: $searching)
@@ -78,7 +71,6 @@ struct SearchView: View {
                                         presenter.setCoin2(coin2: coin.id)
                                         presenter.setSellAmount()
                                     }
-                                    
                                     self.presentationMode.wrappedValue.dismiss()
                                 }
                                 if coinname == "coin1" {
@@ -89,11 +81,9 @@ struct SearchView: View {
                                     SearchListItem(coin: coin)
                                 }
                             }
-                            
                         }.listRowSeparatorTint(Color.theme.backgroundsecondary)
                             .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                     }
-                    
                 }
                 .listStyle(PlainListStyle())
             }
@@ -101,10 +91,10 @@ struct SearchView: View {
     }
 }
 struct SearchBar: View {
-    
+
     @Binding var searchText: String
     @Binding var searching: Bool
-    
+
     var body: some View {
         ZStack {
             Rectangle()
@@ -134,16 +124,8 @@ struct SearchBar: View {
     }
 }
 
-
 extension UIApplication {
      func dismissKeyboard() {
          sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
      }
  }
-/*
-struct SearchView_Previews: PreviewProvider {
-    static var previews: some View {
-        SearchView()
-    }
-}
-*/

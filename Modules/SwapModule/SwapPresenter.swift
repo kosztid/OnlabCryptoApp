@@ -32,7 +32,7 @@ class SwapPresenter: ObservableObject {
         interactor.model.$coin2
             .assign(to: \.coin2, on: self)
             .store(in: &cancellables)
-        
+
         interactor.model.$coinstobuy
             .assign(to: \.coinstobuy, on: self)
             .store(in: &cancellables)
@@ -40,7 +40,7 @@ class SwapPresenter: ObservableObject {
         interactor.model.$coinstosell
             .assign(to: \.coinstosell, on: self)
             .store(in: &cancellables)
-        
+
         interactor.model.$buyorsell
             .assign(to: \.buyorsell, on: self)
             .store(in: &cancellables)
@@ -83,7 +83,7 @@ class SwapPresenter: ObservableObject {
         coinstosell = 0.0
         coinstobuy = 0.0
     }
-    
+
     func setCoinstobuy(amount: Double) {
         interactor.setCoinstoBuy(amount: amount)
     }
@@ -91,7 +91,7 @@ class SwapPresenter: ObservableObject {
     func setCoinstosell(amount: Double) {
         interactor.setCoinstoSell(amount: amount)
     }
-    
+
     func setCoin1(coin1: String) {
         interactor.setCoin1(coin1: coin1)
     }

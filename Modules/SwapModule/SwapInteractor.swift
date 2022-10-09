@@ -11,7 +11,7 @@ import SwiftUI
 class SwapInteractor{
     let model: DataModel
 
-    init(model: DataModel){
+    init(model: DataModel) {
         self.model = model
     }
     func selected(coin: String) -> CoinModel {
@@ -36,14 +36,14 @@ class SwapInteractor{
     }
 
     func ownedamount(coin: CoinModel) -> Double {
-        let dx = model.ownedcoins.firstIndex(where: { $0.coinid == coin.id })
+        let idx = model.ownedcoins.firstIndex(where: { $0.coinid == coin.id })
         if model.ownedcoins.filter({ $0.coinid == coin.id }).isEmpty == false {
-            return model.ownedcoins[dx!].count
+            return model.ownedcoins[idx!].count
         } else {
             return 0.0
         }
     }
-    
+
     func isOwned(coin: CoinModel) -> Bool {
         if model.ownedcoins.filter({ $0.coinid == coin.id }).isEmpty == false {
             return true

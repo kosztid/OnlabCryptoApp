@@ -21,7 +21,7 @@ struct SearchListItem: View {
                 .frame(minWidth: 25)
                 .frame(alignment: .trailing)
 
-            CachedAsyncImage(url: URL(string: coin.image)){ image in
+            CachedAsyncImage(url: URL(string: coin.image)) { image in
                 image
                     .resizable()
                     .scaledToFit()
