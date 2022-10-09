@@ -1,8 +1,8 @@
-//
-//  StockSwapRouter.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 10. 08..
-//
-
 import Foundation
+import SwiftUI
+
+class StockSwapRouter {
+    func makeSelectorView(presenter: StockSwapPresenter, buyorsell: BuyOrSell) -> some View {
+        StockSearchView(buyOrSell: buyorsell, presenter: presenter)
+    }
+}
