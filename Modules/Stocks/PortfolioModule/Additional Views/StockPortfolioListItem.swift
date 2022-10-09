@@ -3,6 +3,8 @@ import SwiftUI
 struct StockPortfolioListItem: View {
     var stock: StockServerModel
     var stockData: StockListItem
+    var count: Double
+
     var body: some View {
         ZStack {
             Color.theme.backgroundcolor
@@ -31,7 +33,7 @@ struct StockPortfolioListItem: View {
                     }
                     .font(.system(size: 16))
                     Spacer()
-                    Text("(\((10 * (Double(stockData.lastsale.dropFirst()) ?? 1)).formatcurrency0digits()))")
+                    Text("(\((count * (Double(stockData.lastsale.dropFirst()) ?? 1)).formatcurrency0digits()))")
                         .font(.system(size: 14))
                 }
                 .foregroundColor(Color.theme.accentcolor)

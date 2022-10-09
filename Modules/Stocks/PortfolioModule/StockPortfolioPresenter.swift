@@ -45,15 +45,15 @@ class StockPortfolioPresenter: ObservableObject {
             return AnyView(
                 List {
                     ForEach(heldStocks) { stock in
-                        StockPortfolioListItem(stock: stock, stockData: self.interactor.getStock(symbol: stock.stockSymbol))
+                        StockPortfolioListItem(stock: stock, stockData: self.interactor.getStock(symbol: stock.stockSymbol), count: stock.count)
                     }
                     .listRowSeparatorTint(Color.theme.backgroundsecondary)
                     .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                 }
             )} else if selected == "favfolio" { return AnyView(
                 List {
-                    ForEach(heldStocks) { stock in
-                        StockFavListItem(stock: stock, stockData: self.interactor.getStock(symbol: stock.stockSymbol))
+                    ForEach(favStocks) { stock in
+                        StockFavListItem(stock: stock, stockData: self.interactor.getStock(symbol: stock.stockSymbol), setFav: self.interactor.setFav)
                     }
                     .listRowSeparatorTint(Color.theme.backgroundsecondary)
                     .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
@@ -62,7 +62,7 @@ class StockPortfolioPresenter: ObservableObject {
                 return AnyView(
                     List {
                         ForEach(ownedStocks) { stock in
-                            StockPortfolioListItem(stock: stock, stockData: self.interactor.getStock(symbol: stock.stockSymbol))
+                            StockPortfolioListItem(stock: stock, stockData: self.interactor.getStock(symbol: stock.stockSymbol), count: stock.count)
                         }
                         .listRowSeparatorTint(Color.theme.backgroundsecondary)
                         .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))

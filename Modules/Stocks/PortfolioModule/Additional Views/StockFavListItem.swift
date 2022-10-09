@@ -3,6 +3,8 @@ import SwiftUI
 struct StockFavListItem: View {
     var stock: StockServerModel
     var stockData: StockListItem
+    var setFav: (String) -> Void
+
     var body: some View {
         ZStack {
             Color.theme.backgroundcolor
@@ -22,6 +24,7 @@ struct StockFavListItem: View {
                         .font(.system(size: 12))
                 }
                 Button() {
+                    setFav(stock.stockSymbol)
                 } label: {
                     Label("", systemImage: true ? "star.fill" : "star")
                         .foregroundColor(Color.theme.accentcolor)
