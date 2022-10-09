@@ -61,7 +61,7 @@ struct ContentView: View {
 
                 // swap tab
                 NavigationView {
-                    Text("StockSwap")
+                    StockSwapView(presenter: StockSwapPresenter(interactor: StockSwapInteractor(model: model)))
                 }
                 .tabItem { Label("Swap", systemImage: "arrow.left.arrow.right") }
                 .accessibilityIdentifier("SwapViewButton")

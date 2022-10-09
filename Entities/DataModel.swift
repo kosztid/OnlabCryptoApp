@@ -82,6 +82,10 @@ final class DataModel: ObservableObject {
     @Published var coin2 = "tether"
     @Published var coinstobuy = 0.0
     @Published var coinstosell = 0.0
+    @Published var stock1 = "AAPL"
+    @Published var stock2 = "TSLA"
+    @Published var stocksToBuy = 0.0
+    @Published var stocksToSell = 0.0
     @Published var events: [ChangeDataModel] = []
     private var cancellables = Set<AnyCancellable>()
     @Published var selection: String
@@ -153,10 +157,11 @@ final class DataModel: ObservableObject {
                 print(error.localizedDescription)
                 return
             }
-            // TODO: fav api stock
+            self.apiService.updateStockFavs(idToken ?? "error", self.auth.currentUser!.uid, symbol)
         }
         favcoinPullFromDB()
     }
+
     func favcoinPullFromDB() {
         DispatchQueue.main.async {
             self.favcoins = self.apiService.cryptoFavs
@@ -175,6 +180,18 @@ final class DataModel: ObservableObject {
         }
 
     }
+    func removeStock(symbol: String) {
+        let currentUser = self.auth.currentUser
+        currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            print("token:\(idToken ?? "error")")
+            self.apiService.updateStockPortfolio(idToken ?? "error", self.auth.currentUser!.uid, symbol, 0.0, 0.0)
+        }
+
+    }
 
     func addHolding(coinid: String, coincount: Double, currprice: Double) {
         let currentUser = self.auth.currentUser
@@ -187,6 +204,17 @@ final class DataModel: ObservableObject {
             self.apiService.updatePortfolio(idToken ?? "error", self.auth.currentUser!.uid, coinid, coincount, currprice)
         }
     }
+    func addStockHolding(symbol: String, count: Double, currprice: Double) {
+        let currentUser = self.auth.currentUser
+        currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            print("token:\(idToken ?? "error")")
+            self.apiService.updateStockPortfolio(idToken ?? "error", self.auth.currentUser!.uid, symbol, count, currprice)
+        }
+    }
 
     func modifywallet( _ coinToSell: String,_ coinToBuy: String, _ sellAmount: Double, _ buyAmount: Double) {
         let currentUser = self.auth.currentUser
@@ -196,6 +224,16 @@ final class DataModel: ObservableObject {
                 return
             }
         self.apiService.updateWallet(idToken ?? "error", self.auth.currentUser!.uid, coinToSell, coinToBuy, sellAmount, buyAmount)
+        }
+    }
+    func modifyStockwallet( _ stockToSell: String,_ stockToBuy: String, _ sellAmount: Double, _ buyAmount: Double) {
+        let currentUser = self.auth.currentUser
+        currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+        self.apiService.updateStockWallet(idToken ?? "error", self.auth.currentUser!.uid, stockToSell, stockToBuy, sellAmount, buyAmount)
         }
     }
     func walletPullFromDB() {

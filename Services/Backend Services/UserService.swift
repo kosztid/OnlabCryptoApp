@@ -96,8 +96,8 @@ class UserService {
         request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let body: [String: AnyHashable] = [
-            "cointoSell": "\(coinToSell)",
-            "cointoBuy": "\(coinToBuy)",
+            "toSell": "\(coinToSell)",
+            "toBuy": "\(coinToBuy)",
             "sellAmount": sellAmount,
             "buyAmount": buyAmount
         ]
@@ -121,7 +121,7 @@ class UserService {
         request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         let body: [String: AnyHashable] = [
-            "coinid": "\(coinId)",
+            "id": "\(coinId)",
             "count": count,
             "buytotal": buytotal
         ]
@@ -145,7 +145,7 @@ class UserService {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
         let body: [String: AnyHashable] = [
-            "coinid": "\(coinId)"
+            "id": "\(coinId)"
         ]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
         let task = URLSession.shared.dataTask(with: request) { _, _, error in
@@ -158,6 +158,75 @@ class UserService {
     }
 
     // MARK: - Stocks portfolio
-    
 
+    func updateStockWallet(_ apikey: String, _ userId: String, _ symbolToSell: String, _ symbolToBuy: String, _ sellAmount: Double, _ buyAmount: Double) {
+        guard let url = URL(string: "http://localhost:8080/api/v1/users/\(userId)/stockwallet/") else {
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let body: [String: AnyHashable] = [
+            "toSell": "\(symbolToSell)",
+            "toBuy": "\(symbolToBuy)",
+            "sellAmount": sellAmount,
+            "buyAmount": buyAmount
+        ]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
+        let task = URLSession.shared.dataTask(with: request) { _, _, error in
+            guard error == nil else {
+                return
+            }
+            self.loadUser(apikey: apikey, userID: userId)
+        }
+        task.resume()
+    }
+
+    func updateStockPortfolio(_ apikey: String, _ userId: String, _ symbol: String, _ count: Double, _ buytotal: Double) {
+        guard let url = URL(string: "http://localhost:8080/api/v1/users/\(userId)/stockportfolio/") else {
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let body: [String: AnyHashable] = [
+            "id": "\(symbol)",
+            "count": count,
+            "buytotal": buytotal
+        ]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
+        let task = URLSession.shared.dataTask(with: request) { _, _, error in
+            guard error == nil else {
+                return
+            }
+            self.loadUser(apikey: apikey, userID: userId)
+        }
+        task.resume()
+    }
+
+    func updateStockFavs(_ apikey: String, _ userId: String, _ symbol: String) {
+        guard let url = URL(string: "http://localhost:8080/api/v1/users/\(userId)/stockfavfolio/") else {
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
+        let body: [String: AnyHashable] = [
+            "id": "\(symbol)"
+        ]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
+        let task = URLSession.shared.dataTask(with: request) { _, _, error in
+            guard error == nil else {
+                return
+            }
+            self.loadUser(apikey: apikey, userID: userId)
+        }
+        task.resume()
+    }
 }
