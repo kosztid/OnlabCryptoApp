@@ -1,26 +1,19 @@
-//
-//  PortfolioListItem.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 03. 02..
-//
-
 import SwiftUI
 
 struct PortfolioListItem: View {
     @ObservedObject var presenter: PortfolioPresenter
     var holding: Double
-    // swiftlint:disable next line_length
+    // swiftlint:disable:next line_length
    // var coin = CoinModel(id: "bitcoin", symbol: "btc", name: "teszt", image: "teszt", currentPrice: 10, marketCap: 10, marketCapRank: 279, fullyDilutedValuation: 10, totalVolume: 10, high24H: 10, low24H: 10, priceChange24H: 10, priceChangePercentage24H: 10, marketCapChange24H: 10, marketCapChangePercentage24H: 10, circulatingSupply: 10, totalSupply: 10, maxSupply: 10, ath: 10, athChangePercentage: 10, athDate: "teszt", atl: 10, atlChangePercentage: 10, atlDate: "teszt", lastUpdated: "teszt", sparklineIn7D: SparklineIn7D(price: []), priceChangePercentage24HInCurrency: 10)
     var coin: CoinModel
     
     var body: some View {
-        ZStack{
+        ZStack {
             Color.theme.backgroundcolor
                 .ignoresSafeArea()
 
             HStack {
-                HStack(alignment: .center){
+                HStack(alignment: .center) {
                     CachedAsyncImage(url: URL(string: coin.image)){ image in
                         image
                             .resizable()
@@ -44,12 +37,12 @@ struct PortfolioListItem: View {
                             .foregroundColor((coin.priceChangePercentage24H ?? 0) >= 0 ? Color.theme.green : Color.theme.red)
                             .font(.system(size: 12))
                     }
-                    .frame(alignment:.trailing)
+                    .frame(alignment: .trailing)
                 }
                 .padding(.trailing, 10)
                 .frame(alignment: .leading)
                 Spacer()
-                HStack{
+                HStack {
                     VStack(alignment: .leading) {
                         Text("\(self.holding.format2digits())")
                             .foregroundColor(Color.theme.accentcolor)

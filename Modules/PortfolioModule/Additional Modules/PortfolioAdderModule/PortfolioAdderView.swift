@@ -1,10 +1,3 @@
-//
-//  PortfolioAdderView.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 03. 02..
-//
-
 import SwiftUI
 
 struct PortfolioAdderView: View {

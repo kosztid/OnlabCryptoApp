@@ -1,10 +1,3 @@
-//
-//  PortfolioAdderInteractor.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 03. 02..
-//
-
 import Foundation
 
 class PortfolioAdderInteractor{
@@ -21,6 +14,6 @@ class PortfolioAdderInteractor{
     }
 
     func addCoin(count: Double){
-        model.addHolding(coinid: coin.id, coincount: count,currprice: coin.currentPrice)
+        model.addHolding(coinid: coin.id, coincount: count, currprice: coin.currentPrice)
     }
 }
