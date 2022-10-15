@@ -60,6 +60,7 @@ struct SwapView: View {
                             .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.theme.accentcolorsecondary, lineWidth: 2))
                             .cornerRadius(10)
                             .disableAutocorrection(true)
+                            .keyboardType(.numberPad)
                             .accessibilityIdentifier("SwapSellTextField")
                     }
                     .font(.system(size: 24))
@@ -111,8 +112,8 @@ struct SwapView: View {
                             .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.theme.accentcolorsecondary, lineWidth: 2))
                             .cornerRadius(10)
                             .disableAutocorrection(true)
+                            .keyboardType(.numberPad)
                             .accessibilityIdentifier("SwapBuyTextField")
-                        // .onChange(of: presenter.coinstobuy){presenter.setSellAmount()}
                     }
                     .font(.system(size: 24))
                     .foregroundColor(Color.theme.accentcolor)
