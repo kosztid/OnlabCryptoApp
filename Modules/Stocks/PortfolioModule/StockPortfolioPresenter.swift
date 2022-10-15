@@ -40,6 +40,17 @@ class StockPortfolioPresenter: ObservableObject {
         return selected == self.selection
     }
 
+    func portfoliototal() -> Double {
+        return interactor.portfoliototal()
+    }
+
+    func portfoliobuytotal() -> Double {
+        return interactor.portfoliobuytotal()
+    }
+    func favfoliochange() -> Double {
+        return interactor.favfoliochange()
+    }
+
     func makeList(selected: String) -> AnyView {
         if selected == "portfolio" {
             return AnyView(
