@@ -18,6 +18,8 @@ class StockSwapInteractor {
         } else {
             model.modifyStockwallet(stockToSell, stockToBuy, sellamount, buyamount)
             sendTradeHistory(id: "1", stockToSell: stockToSell, sellamount: sellamount, stockToBuy: stockToBuy, buyamount: buyamount)
+            model.stocksToBuy = 0
+            model.stocksToSell = 0
         }
     }
 
