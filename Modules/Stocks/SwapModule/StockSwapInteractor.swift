@@ -48,10 +48,10 @@ class StockSwapInteractor {
         model.buyorsell = boolean
     }
     func setStockstoBuy(amount: Double) {
-        model.coinstobuy = amount
+        model.stocksToBuy = amount
     }
     func setStockstoSell(amount: Double) {
-        model.coinstosell = amount
+        model.stocksToSell = amount
     }
 
     func getAccountInfo() -> String {
