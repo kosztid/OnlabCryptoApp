@@ -24,18 +24,20 @@ struct StockPortfolioView: View {
                 .padding(.horizontal, 5)
                 .frame(height: 100, alignment: .leading)
                 presenter.makeList(selected: presenter.selection)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        if presenter.signedin {
-                            presenter.makeButtonForAccount()
-                                .accessibilityIdentifier("PortfolioAccountButton")
-                        } else {
-                            presenter.makeButtonForLogin()
-                                .accessibilityIdentifier("PortfolioLoginButton")
+                    .background(Color.theme.backgroundcolor)
+                    .scrollContentBackground(.hidden)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            if presenter.signedin {
+                                presenter.makeButtonForAccount()
+                                    .accessibilityIdentifier("PortfolioAccountButton")
+                            } else {
+                                presenter.makeButtonForLogin()
+                                    .accessibilityIdentifier("PortfolioLoginButton")
+                            }
                         }
                     }
-                }
-                .listStyle(PlainListStyle())
+                    .listStyle(PlainListStyle())
             }
         }
     }

@@ -85,6 +85,8 @@ struct StockSearchView: View {
                             .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                     }
                 }
+                .background(Color.theme.backgroundcolor)
+                .scrollContentBackground(.hidden)
                 .listStyle(PlainListStyle())
             }
         }.background(Color.theme.backgroundcolor)
