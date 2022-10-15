@@ -1,15 +1,15 @@
 import Foundation
 
-class PortfolioAdderInteractor{
+class PortfolioAdderInteractor {
     let coin: CoinModel
     let model: DataModel
-    
-    init(coin: CoinModel, model: DataModel){
+
+    init(coin: CoinModel, model: DataModel) {
         self.coin = coin
         self.model = model
     }
-    
-    func coindata() -> CoinModel{
+
+    func coindata() -> CoinModel {
         return coin
     }
 

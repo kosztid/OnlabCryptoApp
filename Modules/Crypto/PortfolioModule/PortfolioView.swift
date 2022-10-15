@@ -1,15 +1,8 @@
-//
-//  PortfolioView.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 02. 25..
-//
-
 import SwiftUI
 
 struct PortfolioView: View {
     @ObservedObject var presenter: PortfolioPresenter
-    
+
     var body: some View {
         ZStack {
             Color.theme.backgroundcolor
@@ -31,18 +24,20 @@ struct PortfolioView: View {
                 .padding(.horizontal, 5)
                 .frame(height: 100, alignment: .leading)
                 presenter.makeList(selected: presenter.selection)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        if presenter.signedin {
-                            presenter.makeButtonForAccount()
-                                .accessibilityIdentifier("PortfolioAccountButton")
-                        } else {
-                            presenter.makeButtonForLogin()
-                                .accessibilityIdentifier("PortfolioLoginButton")
+                    .background(Color.theme.backgroundcolor)
+                    .scrollContentBackground(.hidden)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            if presenter.signedin {
+                                presenter.makeButtonForAccount()
+                                    .accessibilityIdentifier("PortfolioAccountButton")
+                            } else {
+                                presenter.makeButtonForLogin()
+                                    .accessibilityIdentifier("PortfolioLoginButton")
+                            }
                         }
                     }
-                }
-                .listStyle(PlainListStyle())
+                    .listStyle(PlainListStyle())
             }
         }
     }

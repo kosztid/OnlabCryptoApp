@@ -3,7 +3,7 @@ import SwiftUI
 import Combine
 
 class CoinDetailPresenter: ObservableObject {
-    @State var showalert : Bool = false
+    @State var showalert: Bool = false
     private let interactor: CoinDetailInteractor
     private let router = CoinDetailRouter()
 
@@ -38,7 +38,7 @@ class CoinDetailPresenter: ObservableObject {
     }
 
     func makeFavButton() -> some View {
-        Button() {
+        Button {
             self.interactor.addFavCoin()
         } label: {
             Label("", systemImage: interactor.isFav() ? "star.fill" : "star")

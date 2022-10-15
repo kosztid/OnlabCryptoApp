@@ -10,7 +10,7 @@ class PortfolioPresenter: ObservableObject {
     private let interactor: PortfolioInteractor
     private var cancellables = Set<AnyCancellable>()
     private let router = PortfolioRouter()
-    
+
     init(interactor: PortfolioInteractor) {
         self.interactor = interactor
 

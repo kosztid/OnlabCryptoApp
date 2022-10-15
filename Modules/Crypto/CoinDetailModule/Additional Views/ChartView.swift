@@ -1,10 +1,3 @@
-//
-//  ChartView.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 02. 26..
-//
-
 import SwiftUI
 
 struct ChartView: View {
@@ -20,13 +13,13 @@ struct ChartView: View {
         }
     }
 }
-struct LineGraph: Shape{
+struct LineGraph: Shape {
     var values: [CGFloat]
     let screenwidth = UIScreen.main.bounds.width
-    
+
     func path(in rect: CGRect) -> Path {
 
-        func point(at idx: Int) -> CGPoint{
+        func point(at idx: Int) -> CGPoint {
             let point = values[idx]
             let xcoord = rect.width * CGFloat(idx) / CGFloat(values.count-1)
             let ycoord = (1 - point) * rect.height

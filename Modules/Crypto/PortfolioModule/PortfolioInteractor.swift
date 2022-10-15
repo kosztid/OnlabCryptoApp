@@ -1,10 +1,3 @@
-//
-//  PortfolioInteractor.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 02. 25..
-//
-
 import Foundation
 
 class PortfolioInteractor {
@@ -13,7 +6,7 @@ class PortfolioInteractor {
     init(model: DataModel) {
         self.model = model
     }
-    
+
     func heldcoins() -> [String] {
         var arr: [String] = []
         for coin in model.heldcoins {
@@ -21,7 +14,7 @@ class PortfolioInteractor {
         }
         return arr
     }
-    
+
     func heldfavcoins() -> [String] {
         var arr: [String] = []
         for coin in model.favcoins {

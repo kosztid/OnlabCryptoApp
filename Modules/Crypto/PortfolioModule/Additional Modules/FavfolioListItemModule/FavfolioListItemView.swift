@@ -10,14 +10,14 @@ import SwiftUI
 struct FavfolioListItemView: View {
     @ObservedObject var presenter: FavfolioListItemPresenter
     var body: some View {
-        ZStack{
+        ZStack {
             Color.theme.backgroundcolor
                 .ignoresSafeArea()
-            
+
             HStack {
 
-                HStack(alignment: .center){
-                    CachedAsyncImage(url: URL(string: presenter.getcoin().image)){ image in
+                HStack(alignment: .center) {
+                    CachedAsyncImage(url: URL(string: presenter.getcoin().image)) { image in
                         image
                             .resizable()
                             .scaledToFit()
@@ -53,10 +53,3 @@ struct FavfolioListItemView: View {
         }
     }
 }
-/*
-struct FavfolioListItemView_Previews: PreviewProvider {
-    static var previews: some View {
-        FavfolioListItemView()
-    }
-}
-*/

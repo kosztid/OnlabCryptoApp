@@ -23,8 +23,7 @@ class CoinDetailInteractor {
     func getmodel() -> DataModel {
         return model
     }
-    
-    func held() -> Bool{
+    func held() -> Bool {
         return !(model.heldcoins.filter({ $0.coinid == self.coin.id }).isEmpty)
     }
 
@@ -35,7 +34,6 @@ class CoinDetailInteractor {
             return 0.0
         }
     }
-    
     func addFavCoin() {
         model.addFavCoin(coinid: coin.id)
     }
