@@ -3,42 +3,39 @@ import SwiftUI
 struct ListOfCoinsView: View {
     @ObservedObject var presenter: ListOfCoinsPresenter
     var body: some View {
-        ZStack {
-            Color.theme.backgroundcolor
-                .ignoresSafeArea()
-            List {
-                ForEach(presenter.coins){ coin in
-                    ZStack {
-                        Color.theme.backgroundcolor
-                                .ignoresSafeArea()
-                        ListOfCoinsListItem(presenter: presenter, coin: coin)
-                            .frame(height: 40)
-                        self.presenter.linkBuilder(for: coin) {
-                            EmptyView()
-                        }.buttonStyle(PlainButtonStyle())
-                    }
-                }
-                .listRowSeparatorTint(Color.theme.backgroundsecondary)
-                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-            }
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    presenter.makeButtonForViewchange()
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    if presenter.signedin {
-                        presenter.makeButtonForAccount()
-                            .accessibilityIdentifier("PortfolioAccountButton")
-                    } else {
-                        presenter.makeButtonForLogin()
-                            .accessibilityIdentifier("PortfolioLoginButton")
-                    }
+        List {
+            ForEach(presenter.coins) { coin in
+                ZStack {
+                    Color.theme.backgroundcolor
+                        .ignoresSafeArea()
+                    ListOfCoinsListItem(presenter: presenter, coin: coin)
+                        .frame(height: 40)
+                    self.presenter.linkBuilder(for: coin) {
+                        EmptyView()
+                    }.buttonStyle(PlainButtonStyle())
                 }
             }
-            .listStyle(PlainListStyle())
+            .listRowSeparatorTint(Color.theme.backgroundsecondary)
+            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
         }
-        
+        .background(Color.theme.backgroundcolor)
+        .scrollContentBackground(.hidden)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                presenter.makeButtonForViewchange()
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                if presenter.signedin {
+                    presenter.makeButtonForAccount()
+                        .accessibilityIdentifier("PortfolioAccountButton")
+                } else {
+                    presenter.makeButtonForLogin()
+                        .accessibilityIdentifier("PortfolioLoginButton")
+                }
+            }
+        }
+        .listStyle(PlainListStyle())
     }
 }
 
