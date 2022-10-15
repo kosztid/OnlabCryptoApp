@@ -1,11 +1,9 @@
 import SwiftUI
 
-
 struct StockSwapView: View {
     @ObservedObject var presenter: StockSwapPresenter
     @State private var showingAlert = false
-    // @State var coinstobuy : Double = 0
-    // @State var coinstosell : Double = 0
+    @FocusState private var keyboardIsFocused: Bool
     let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -34,7 +32,7 @@ struct StockSwapView: View {
                             get: { self.presenter.stockstosell },
                             set: { self.presenter.setStockstosell(amount: Double($0)) }
                         ), formatter: formatter, onEditingChanged: { (changed) in
-                            //presenter.self.coinstosell = self.coinstosell
+                            // presenter.self.coinstosell = self.coinstosell
                             if changed {
                                 presenter.setBuyorSell(boolean: "sell")
                             } else {
@@ -48,6 +46,7 @@ struct StockSwapView: View {
                             .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.theme.accentcolorsecondary, lineWidth: 2))
                             .cornerRadius(10)
                             .disableAutocorrection(true)
+                            .keyboardType(.numberPad)
                             .accessibilityIdentifier("StockSwapSellTextField")
                     }
                     .font(.system(size: 24))
@@ -69,7 +68,7 @@ struct StockSwapView: View {
                             Text("\(presenter.ownedamount(stockSymbol: presenter.stock2)) \(presenter.selected(stockSymbol: presenter.stock2).symbol) ")
                         }.font(.system(size: 12))
 
-                        TextField("Amount to buy", value:.init(
+                        TextField("Amount to buy", value: .init(
                             get: { self.presenter.stockstobuy },
                             set: { self.presenter.setStockstobuy(amount: Double($0)) }
                         ), formatter: formatter, onEditingChanged: { (changed) in
@@ -87,6 +86,7 @@ struct StockSwapView: View {
                             .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.theme.accentcolorsecondary, lineWidth: 2))
                             .cornerRadius(10)
                             .disableAutocorrection(true)
+                            .keyboardType(.numberPad)
                             .accessibilityIdentifier("StockSwapBuyTextField")
                     }
                     .font(.system(size: 24))
@@ -97,6 +97,18 @@ struct StockSwapView: View {
                 HStack(alignment: .center) {
                     presenter.makeButtonForSwap()
                         .accessibilityIdentifier("StockSwapButton")
+                }
+            }
+            .focused($keyboardIsFocused)
+        }
+        .onDisappear {
+            keyboardIsFocused = false
+        }
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Kész") {
+                    keyboardIsFocused = false
                 }
             }
         }
