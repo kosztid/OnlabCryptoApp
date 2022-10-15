@@ -8,33 +8,20 @@
 import Foundation
 import Combine
 
-class DataDownloader {
+class CoinService {
     @Published var coins: [CoinModel] = []
     @Published var coindetail: [CoinDetailModel] = []
-    @Published var stocks: [StockListItem] = []
-    @Published var detailedStocks: [Stock] = []
-    @Published var news = News(status: nil, totalResults: nil, articles: nil)
-    @Published var stockNews = News(status: nil, totalResults: nil, articles: nil)
-    var coinsub: AnyCancellable?
-    var newssub: AnyCancellable?
-    var stockNewssub: AnyCancellable?
-    var stocksSub: AnyCancellable?
-    var stockSub: AnyCancellable?
-    var singlecoinsub: AnyCancellable?
-    
-    init(){
-        loadCoins()
-        loadnews()
-        loadStocknews()
-        loadStocks()
-    }
 
+    var coinsub: AnyCancellable?
+
+    init() {
+        loadCoins()
+    }
     func loadCoins() {
         guard let url = URL(string: "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=200&page=1&sparkline=true&price_change_percentage=24h")
         else {
             return
         }
-
         coinsub = URLSession.shared.dataTaskPublisher(for: url)
             .subscribe(on: DispatchQueue.global(qos: .default))
             .tryMap { (output) -> Data in
@@ -58,21 +45,28 @@ class DataDownloader {
                 self?.coinsub?.cancel()
             }
     }
+}
+
+class StockService {
+    @Published var stocks: [StockListItem] = []
+    @Published var detailedStocks: [Stock] = []
+
+    var stocksSub: AnyCancellable?
+
+    init() {
+        loadStocks()
+    }
 
     func loadStocks() {
-        print("loadstocks")
-        detailedStocks = []
-        guard let url = URL(string: "https://api.nasdaq.com/api/screener/stocks?tableonly=true&limit=10&exchange=NASDAQ")
+        guard let url = URL(string: "https://api.nasdaq.com/api/screener/stocks?tableonly=true&limit=100&exchange=NASDAQ")
         else {
             return
         }
-
         stocksSub = URLSession.shared.dataTaskPublisher(for: url)
             .subscribe(on: DispatchQueue.global(qos: .default))
             .tryMap { (output) -> Data in
                 guard let response = output.response as? HTTPURLResponse,
                 response.statusCode >= 200 && response.statusCode < 300 else {
-
                     throw URLError(.badServerResponse)
                 }
                 return output.data
@@ -88,12 +82,12 @@ class DataDownloader {
                 }
             } receiveValue: { [weak self] (returned) in
                 self?.stocks = returned.data.table.rows
+                self?.stocks.append(StockListItem(symbol: "USD", name: "US DOLLAR", lastsale: "$1", netchange: "0", pctchange: "0%", marketCap: "0", url: "0"))
                 self?.stocksSub?.cancel()
             }
     }
 
     func loadSingleStock(symbol: String) {
-        print("lefutott")
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let stringdateToday = dateFormatter.string(from: Date())
@@ -108,23 +102,37 @@ class DataDownloader {
                     print("error getting quote: \(error)")
                     return
                 }
-
                 guard let stockData = data else {
                     print("symbol search data not valid")
                     return
                 }
-
                 let returnedStock = try? JSONDecoder().decode(Stock.self, from: stockData)
                 guard let stock = returnedStock else {
                     return
                 }
-                self.detailedStocks.append(stock)
+                if symbol == "USD" {
+                    let result = Result(v: 1, vw: 1, o: 1, c: 1, h: 1, l: 1, t: 1, n: 1)
+                    self.detailedStocks.append(Stock(ticker: "USD", queryCount: 1, resultsCount: 1, adjusted: true, results: [result], status: "OK", requestID: UUID().uuidString, count: 1))
+                } else {
+                    self.detailedStocks.append(stock)
+                }
             }
             task.resume()
         }
-
     }
+}
 
+class NewsService {
+    @Published var news = News(status: nil, totalResults: nil, articles: nil)
+    @Published var stockNews = News(status: nil, totalResults: nil, articles: nil)
+
+    var newssub: AnyCancellable?
+    var stockNewssub: AnyCancellable?
+
+    init() {
+        loadnews()
+        loadStocknews()
+    }
     func loadnews() {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyyMMdd"
@@ -191,36 +199,5 @@ class DataDownloader {
                 self?.stockNews = returnednews
                 self?.stockNewssub?.cancel()
             }
-    }
-
-    func loadSinglecoinData(coinid: String) {
-        let urlstring = "https://api.coingecko.com/api/v3/coins/bitcoin?localization=false&tickers=false&market_data=false&community_data=false&developer_data=false&sparkline=false"
-        guard let url = URL(string: urlstring)
-            else {
-                return
-            }
-
-            singlecoinsub = URLSession.shared.dataTaskPublisher(for: url)
-                .subscribe(on: DispatchQueue.global(qos: .default))
-                .tryMap { (output) -> Data in
-                    guard let response = output.response as? HTTPURLResponse,
-                    response.statusCode >= 200 && response.statusCode < 300 else {
-                        throw URLError(.badServerResponse)
-                    }
-                    return output.data
-                }
-                .receive(on: DispatchQueue.main)
-                .decode(type: [CoinDetailModel].self, decoder: JSONDecoder())
-                .sink {(completion) in
-                    switch completion {
-                    case .finished:
-                        break
-                    case .failure(let error):
-                        print(error.localizedDescription)
-                    }
-                } receiveValue: { [weak self] (returnedCoins) in
-                    self?.coindetail = returnedCoins
-                    self?.singlecoinsub?.cancel()
-                }
     }
 }

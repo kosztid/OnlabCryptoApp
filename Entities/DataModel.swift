@@ -1,10 +1,3 @@
-//
-//  DataModel.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 02. 26..
-//
-
 import Foundation
 import SwiftUI
 import Combine
@@ -55,7 +48,7 @@ import FirebaseStorage
  */
 final class DataModel: ObservableObject {
     @Published var lastmessageId = ""
-    let auth : Auth
+    let auth: Auth
     let storage: Storage
     @Published var currencyType = CurrencyTypes.crypto
     @Published var isSignedIn = false
@@ -67,7 +60,9 @@ final class DataModel: ObservableObject {
     @Published var stockNews = News(status: nil, totalResults: nil, articles: nil)
     @Published var cryptoNews = News(status: nil, totalResults: nil, articles: nil)
     @Published var communities: [MessageGroupModel] = []
-    private let datadownloader = DataDownloader()
+    private let coinService = CoinService()
+    private let stockService = StockService()
+    private let newsService = NewsService()
     private let communityService = CommunityService()
     private let apiService = UserService()
     @Published var heldcoins: [CryptoServerModel] = []
@@ -99,19 +94,19 @@ final class DataModel: ObservableObject {
 
     }
     func addSub() {
-        datadownloader.$coins
+        coinService.$coins
             .sink { [weak self] (datareceived) in self?.coins = datareceived}
             .store(in: &cancellables)
 
-        datadownloader.$stocks
+        stockService.$stocks
             .sink { [weak self] (datareceived) in self?.stocks = datareceived}
             .store(in: &cancellables)
 
-        datadownloader.$news
+        newsService.$news
             .sink { [weak self] (datareceived) in self?.cryptoNews = datareceived}
             .store(in: &cancellables)
 
-        datadownloader.$stockNews
+        newsService.$stockNews
             .sink { [weak self] (datareceived) in self?.stockNews = datareceived}
             .store(in: &cancellables)
 
@@ -134,7 +129,7 @@ final class DataModel: ObservableObject {
         apiService.$stockWallet
             .sink { [weak self] (datareceived) in self?.ownedStocks = datareceived}
             .store(in: &cancellables)
-        
+
         communityService.$communities
             .sink { [weak self] (datareceived) in self?.communities = datareceived}
             .store(in: &cancellables)
@@ -216,7 +211,7 @@ final class DataModel: ObservableObject {
         }
     }
 
-    func modifywallet( _ coinToSell: String,_ coinToBuy: String, _ sellAmount: Double, _ buyAmount: Double) {
+    func modifywallet( _ coinToSell: String, _ coinToBuy: String, _ sellAmount: Double, _ buyAmount: Double) {
         let currentUser = self.auth.currentUser
         currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
             if let error = error {
@@ -333,11 +328,11 @@ final class DataModel: ObservableObject {
             let userid = self.auth.currentUser?.uid
             if events.count == 0 {
                 // swiftlint:disable:next line_length
-                let notificationcoins = [ChangeDataModel(id: UUID().uuidString, coinid: "bitcoin", price: self.coins.first(where: {$0.id == "bitcoin"})?.currentPrice ?? 0),ChangeDataModel(id: UUID().uuidString, coinid: "ethereum", price: self.coins.first(where: {$0.id == "ethereum"})?.currentPrice ?? 0),ChangeDataModel(id: UUID().uuidString, coinid: "terra-luna", price: self.coins.first(where: {$0.id == "terra-luna"})?.currentPrice ?? 0)]
+                let notificationcoins = [ChangeDataModel(id: UUID().uuidString, coinid: "bitcoin", price: self.coins.first(where: {$0.id == "bitcoin"})?.currentPrice ?? 0), ChangeDataModel(id: UUID().uuidString, coinid: "ethereum", price: self.coins.first(where: {$0.id == "ethereum"})?.currentPrice ?? 0), ChangeDataModel(id: UUID().uuidString, coinid: "terra-luna", price: self.coins.first(where: {$0.id == "terra-luna"})?.currentPrice ?? 0)]
                 for coinid in 0...notificationcoins.count-1 {
                     DispatchQueue.main.async {
                         // swiftlint:disable:next line_length
-                        database.collection("events").document(userid!).collection("events").document(notificationcoins[coinid].id).setData(["id":notificationcoins[coinid].id, "coinid":notificationcoins[coinid].coinid, "price": notificationcoins[coinid].price], merge: true){ error in
+                        database.collection("events").document(userid!).collection("events").document(notificationcoins[coinid].id).setData(["id":notificationcoins[coinid].id, "coinid": notificationcoins[coinid].coinid, "price": notificationcoins[coinid].price], merge: true) { error in
                             if error == nil {
                             } else {
                                 // error handling
@@ -346,7 +341,7 @@ final class DataModel: ObservableObject {
                     }
                 }
             } else {
-                for coinid in 0...events.count-1 {
+                for coinid in 0...events.count - 1 {
                     DispatchQueue.main.async {
                         // swiftlint:disable:next line_length
                         database.collection("events").document(userid!).collection("events").document(self.events[coinid].id).setData(["id": self.events[coinid].id, "coinid": self.events[coinid].coinid, "price": self.coins.first(where: {$0.id == self.events[coinid].coinid})?.currentPrice ?? 0], merge: true) { error in
@@ -356,12 +351,11 @@ final class DataModel: ObservableObject {
                             }
                         }
                     }
-                    
                 }
             }
         }
     }
-    
+
     func sendPhoto(image: UIImage, message: MessageModel, communityid: String) {
         let id = UUID().uuidString
         let ref = storage.reference(withPath: id)
