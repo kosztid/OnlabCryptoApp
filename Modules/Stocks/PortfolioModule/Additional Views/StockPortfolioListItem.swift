@@ -20,7 +20,7 @@ struct StockPortfolioListItem: View {
                         .foregroundColor(Color.theme.accentcolor)
                         .font(.system(size: 16))
                     Text(stockData.pctchange)
-                        .foregroundColor( Int.random(in: 0...1) % 2 == 0 ? Color.theme.green : Color.theme.red)
+                        .foregroundColor(stockData.pctchange.contains("-") ? Color.theme.red : Color.theme.green)
                         .font(.system(size: 12))
                 }
                 .padding(.trailing, 5)

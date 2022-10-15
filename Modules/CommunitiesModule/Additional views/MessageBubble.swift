@@ -11,10 +11,10 @@ struct MessageBubble: View {
     var message: MessageModel
     var sender: String
     var body: some View {
-        VStack(alignment: (message.sender == sender) ? .trailing : .leading){
+        VStack(alignment: (message.sender == sender) ? .trailing : .leading) {
             if message.image == true {
                 HStack {
-                    CachedAsyncImage(url: URL(string: message.message )){ image in
+                    CachedAsyncImage(url: URL(string: message.message )) { image in
                         image
                             .resizable()
                             .scaledToFit()
@@ -25,7 +25,7 @@ struct MessageBubble: View {
                     .frame(width: UIScreen.main.bounds.width*0.8)
                     .cornerRadius(10)
                 }
-                .frame(maxWidth: UIScreen.main.bounds.width*0.95, alignment: (message.sender == sender) ? .trailing : .leading)
+                .frame(maxWidth: UIScreen.main.bounds.width * 0.95, alignment: (message.sender == sender) ? .trailing : .leading)
             } else {
                 HStack {
                     Text(message.message)
@@ -35,7 +35,7 @@ struct MessageBubble: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .foregroundColor((message.sender == sender) ? Color.theme.backgroundcolor : Color.theme.accentcolor )
                 }
-                .frame(maxWidth: UIScreen.main.bounds.width*0.95, alignment: (message.sender == sender) ? .trailing : .leading)
+                .frame(maxWidth: UIScreen.main.bounds.width * 0.95, alignment: (message.sender == sender) ? .trailing : .leading)
             }
         }.frame(maxWidth: .infinity)
     }

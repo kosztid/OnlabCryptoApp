@@ -1,27 +1,20 @@
-//
-//  LoginScreenView.swift
-//  Onlab
-//
-//  Created by Kosztolánczi Dominik on 2022. 02. 22..
-//
-
 import SwiftUI
 
 struct LoginScreenView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @ObservedObject var presenter: LoginScreenPresenter
-    @State var email : String = ""
-    @State var password : String = ""
+    @State var email = ""
+    @State var password = ""
     @State private var isSecured: Bool = true
     @State private var showingAlert = false
-    
+
     var body: some View {
         NavigationView {
-            ZStack{
+            ZStack {
                 Color.theme.backgroundcolor.ignoresSafeArea(.all)
-                
-                VStack{
-                    Label("",systemImage: "bitcoinsign.circle")
+
+                VStack {
+                    Label("", systemImage: "bitcoinsign.circle")
                         .font(.system(size: 200))
                         .foregroundColor(Color.theme.accentcolor)
                     Text("Bejelentkezés")
@@ -36,8 +29,7 @@ struct LoginScreenView: View {
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
                         .accessibilityIdentifier("LoginEmailTextField")
-                
-                    
+
                     ZStack(alignment: .trailing) {
                                 if isSecured {
                                     SecureField("Password", text: $password)
@@ -64,18 +56,16 @@ struct LoginScreenView: View {
                                         .accentColor(.gray)
                                 }.offset(x: -20)
                             }
-                    
-                    
 
-                    Button{
+                    Button {
                         guard presenter.isValidEmail(email: self.email), !self.password.isEmpty else {
                             return
                         }
                         presenter.signIn(email: self.email, password: self.password)
-                        //self.presentationMode.wrappedValue.dismiss()
-                    } label : {
+                        // self.presentationMode.wrappedValue.dismiss()
+                    } label: {
                         Text("Bejelentkezés")
-                            .frame(height:50)
+                            .frame(height: 50)
                             .frame(maxWidth: .infinity)
                             .font(.system(size: 20))
                             .background(Color.theme.backgroundsecondary)
@@ -86,11 +76,11 @@ struct LoginScreenView: View {
                         Button("OK", role: .cancel) {presenter.setlogerrorfalse() }
                             }
                     .accessibilityIdentifier("LoginButton")
-                    HStack{
+                    HStack {
                         Spacer()
                         presenter.toRegisterView()
                         Spacer()
-                        Button("Mégse"){
+                        Button("Mégse") {
                             self.presentationMode.wrappedValue.dismiss()
                         }.foregroundColor(Color.theme.accentcolor)
                         Spacer()
@@ -100,12 +90,12 @@ struct LoginScreenView: View {
                 .padding(10)
             }
         }
-        .onChange(of: presenter.loginerror){ logerror in
+        .onChange(of: presenter.loginerror) { _ in
             if presenter.loginerror == true {
                 self.showingAlert = true
             }
         }
-        .onChange(of: presenter.signedin){change in
+        .onChange(of: presenter.signedin) { _ in
             self.presentationMode.wrappedValue.dismiss()
         }
         .navigationBarHidden(true)

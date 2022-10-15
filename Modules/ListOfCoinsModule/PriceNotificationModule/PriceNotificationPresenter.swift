@@ -1,10 +1,3 @@
-//
-//  PriceNotificationPresenter.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 05. 02..
-//
-
 import Foundation
 import Combine
 
@@ -12,7 +5,7 @@ class PriceNotificationPresenter: ObservableObject {
     private let interactor: PriceNotificationInteractor
     @Published var events: [ChangeDataModel] = []
     private var cancellables = Set<AnyCancellable>()
-    
+
     init(interactor: PriceNotificationInteractor) {
         self.interactor = interactor
 

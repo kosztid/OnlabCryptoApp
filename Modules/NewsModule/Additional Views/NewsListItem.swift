@@ -1,21 +1,13 @@
-//
-//  NewsListItem.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 03. 18..
-//
-
 import SwiftUI
 
 struct NewsListItem: View {
     @ObservedObject var presenter: NewsPresenter
     var article: Article
     var body: some View {
-        ZStack{
+        ZStack {
             Color.theme.backgroundcolor
                 .ignoresSafeArea()
-            
-            HStack{
+            HStack {
                 Text(article.title!)
                     .font(.system(size: 16))
                     .frame(alignment: .leading)
@@ -26,10 +18,3 @@ struct NewsListItem: View {
         }
     }
 }
-/*
-struct NewsListItem_Previews: PreviewProvider {
-    static var previews: some View {
-        NewsListItem()
-    }
-}
-*/

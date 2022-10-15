@@ -1,10 +1,3 @@
-//
-//  MessagerView.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 03. 05..
-//
-
 import SwiftUI
 import simd
 
@@ -13,21 +6,20 @@ struct MessagerView: View {
     @State var newmessage: String = ""
     @State var showImagePicker = false
     @State var image: UIImage?
-    
+
     var body: some View {
-        ZStack{
+        ZStack {
             Color.theme.backgroundcolor
                 .ignoresSafeArea()
-            VStack{
+            VStack {
                 ScrollViewReader { proxy in
                     ScrollView {
-                        ForEach(presenter.community.messages){ message in
+                        ForEach(presenter.community.messages) { message in
                             ZStack {
                                 Color.theme.backgroundcolor
                                         .ignoresSafeArea()
                                 MessageBubble(message: message,sender: presenter.getAccountInfo())
                             }
-                            
                         }
                     }
                     .onChange(of: presenter.community.lastid, perform: { id in
@@ -52,23 +44,22 @@ struct MessagerView: View {
                         .foregroundColor(Color.black)
                         .font(.system(size: 20))
                         .disableAutocorrection(true)
-                        .frame(height: 40,alignment: .center)
+                        .frame(height: 40, alignment: .center)
                         .padding(10)
                         .disabled(presenter.issignedin() == false)
                         .accessibilityIdentifier("MessageTextfield")
-                    
                     if self.image == nil {
-                        Button{showImagePicker.toggle()
-                            
-                        }label:{
+                        Button{
+                            showImagePicker.toggle()
+                        } label: {
                             Image(systemName: "photo")
                                 .accentColor(Color.theme.accentcolorsecondary)
                                 .font(.system(size: 18))
                         }.offset(x: -(UIScreen.main.bounds.width*0.15))
-                        
                     } else {
-                        Button{showImagePicker.toggle()
-                        }label:{
+                        Button {
+                            showImagePicker.toggle()
+                        } label: {
                             Image(systemName: "photo.fill")
                                 .accentColor(Color.theme.accentcolorsecondary)
                                 .font(.system(size: 18))
@@ -101,7 +92,7 @@ struct MessagerView: View {
                         .accessibilityIdentifier("MessageMembersButton")
                 }
             }
-        }.fullScreenCover(isPresented: $showImagePicker, onDismiss: nil){
+        }.fullScreenCover(isPresented: $showImagePicker, onDismiss: nil) {
             ImagePicker(image: $image)
         }
     }

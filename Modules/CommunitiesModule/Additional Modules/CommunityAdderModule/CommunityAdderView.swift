@@ -10,13 +10,13 @@ import SwiftUI
 struct CommunityAdderView: View {
     @Environment(\.presentationMode) private var presentationMode
     @ObservedObject var presenter: CommunityAdderPresenter
-    @State var communityname : String = ""
+    @State var communityname = ""
     var body: some View {
-        ZStack{
+        ZStack {
             Color.theme.backgroundcolor
                 .ignoresSafeArea()
-            VStack{
-                HStack{
+            VStack {
+                HStack {
                     Text("Please choose a name for you community:")
                         .foregroundColor(Color.theme.accentcolor)
                         .font(.system(size: 20))
@@ -36,9 +36,9 @@ struct CommunityAdderView: View {
                         presenter.addCommunity(name: communityname)
                         self.presentationMode.wrappedValue.dismiss()
                     }
-                } label : {
+                } label: {
                     Text("Add")
-                        .frame(height:50)
+                        .frame(height: 50)
                         .frame(maxWidth: .infinity)
                         .font(.system(size: 20))
                         .foregroundColor(Color.theme.accentcolor)
@@ -52,10 +52,3 @@ struct CommunityAdderView: View {
         .background(Color.theme.backgroundcolor)
     }
 }
-/*
-struct CommunityAdderView_Previews: PreviewProvider {
-    static var previews: some View {
-        CommunityAdderView()
-    }
-}
-*/

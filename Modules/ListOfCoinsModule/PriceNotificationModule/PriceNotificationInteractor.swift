@@ -1,10 +1,3 @@
-//
-//  PriceNotificationInteractor.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 05. 02..
-//
-
 import Foundation
 
 class PriceNotificationInteractor {
@@ -21,5 +14,3 @@ class PriceNotificationInteractor {
         return model.coins.first(where: {$0.id == coinid})?.name ?? "noname"
     }
 }
-
-

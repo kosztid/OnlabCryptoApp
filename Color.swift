@@ -24,5 +24,4 @@ struct ColorTheme {
     let messagesent = Color("MessageBubbleSent")
     let messagereceived = Color("MessageBubbleReceived")
     let textbox = Color("TextboxColor")
-    
 }

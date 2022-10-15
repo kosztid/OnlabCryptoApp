@@ -39,7 +39,7 @@ struct CoinDetailModel: Identifiable, Codable {
         case publicInterestScore = "public_interest_score"
         case lastUpdated = "last_updated"
     }
-    
+
     struct Description: Codable {
         let en: String?
     }

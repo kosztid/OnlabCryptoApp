@@ -1,14 +1,7 @@
-//
-//  SwapInteractor.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 02. 25..
-//
-
 import Foundation
 import SwiftUI
 
-class StockSwapInteractor{
+class StockSwapInteractor {
     let model: DataModel
 
     init(model: DataModel) {

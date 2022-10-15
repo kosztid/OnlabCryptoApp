@@ -21,7 +21,6 @@ struct ContentView: View {
         case swap
         case portfolio
         case news
-        
     }
     
     var body: some View {
@@ -80,7 +79,7 @@ struct ContentView: View {
                         CommunitiesView(presenter: CommunitiesPresenter(interactor: CommunitiesInteractor(model: model)))
                     }
                 }
-                .tabItem { Label("Chat", systemImage: "message") }
+                .tabItem { Label("Communities", systemImage: "message") }
                 .tag(Tab.communities)
             }
         }
@@ -135,7 +134,7 @@ struct ContentView: View {
                         CommunitiesView(presenter: CommunitiesPresenter(interactor: CommunitiesInteractor(model: model)))
                     }
                 }
-                .tabItem { Label("Chat", systemImage: "message") }
+                .tabItem { Label("Communities", systemImage: "message") }
                 .tag(Tab.communities)
             }
         }

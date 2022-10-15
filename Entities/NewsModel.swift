@@ -1,13 +1,6 @@
-//
-//  NewsModel.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 03. 16..
-//
-
 import Foundation
 
-struct News: Codable,Hashable {
+struct News: Codable, Hashable {
     let status: String?
     let totalResults: Double?
     let articles: [Article]?
@@ -31,8 +24,7 @@ struct Article: Codable, Hashable {
 }
 
 // MARK: - Source
-struct Source: Codable,Hashable {
+struct Source: Codable, Hashable {
     let id: String?
     let name: String?
 }
-

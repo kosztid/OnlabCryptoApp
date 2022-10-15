@@ -8,9 +8,9 @@
 import Foundation
 import SwiftUI
 
-class LoginScreenRouter{
-    
-    func makeRegisterView(model: DataModel) -> some View{
+class LoginScreenRouter {
+
+    func makeRegisterView(model: DataModel) -> some View {
         let presenter = RegisterScreenPresenter(interactor: RegisterScreenInteractor(model: model))
         return RegisterScreenView(presenter: presenter)
     }

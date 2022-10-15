@@ -7,14 +7,14 @@
 
 import Foundation
 
-class CommunityAdderInteractor{
+class CommunityAdderInteractor {
     let model: DataModel
-    
-    init(model: DataModel){
+
+    init(model: DataModel) {
         self.model = model
     }
 
-    func addCommunity(name: String){
+    func addCommunity(name: String) {
         model.addCommunity(name: name)
     }
 }

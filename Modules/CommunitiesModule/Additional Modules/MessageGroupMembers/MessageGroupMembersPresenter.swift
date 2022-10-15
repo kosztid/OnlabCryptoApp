@@ -7,11 +7,10 @@
 
 import Foundation
 
-class MessageGroupMembersPresenter: ObservableObject{
+class MessageGroupMembersPresenter: ObservableObject {
     private let interactor: MessageGroupMembersInteractor
     @Published var community: MessageGroupModel
-    
-    init(interactor: MessageGroupMembersInteractor,community: MessageGroupModel){
+    init(interactor: MessageGroupMembersInteractor, community: MessageGroupModel) {
         self.interactor = interactor
         self.community = community
     }

@@ -9,14 +9,13 @@ import Foundation
 
 class LoginScreenInteractor {
     let model: DataModel
-    
-    init(model: DataModel){
+    init(model: DataModel) {
         self.model = model
     }
-    func signIn(email: String, password: String){
+    func signIn(email: String, password: String) {
         return model.signIn(email: email, password: password)
     }
-    func setlogerrorfalse(){
+    func setlogerrorfalse() {
         model.loginerror = false
     }
 }

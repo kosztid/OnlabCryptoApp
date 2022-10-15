@@ -53,7 +53,7 @@ class StockDetailPresenter: ObservableObject {
     }
 
     func makeFavButton() -> some View {
-        Button() {
+        Button {
             self.interactor.addFavStock()
         } label: {
 // TODO: interactor.isFav()

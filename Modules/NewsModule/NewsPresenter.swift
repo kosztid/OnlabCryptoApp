@@ -9,14 +9,14 @@ import Foundation
 import Combine
 import SwiftUI
 
-class NewsPresenter: ObservableObject{
+class NewsPresenter: ObservableObject {
     @Published var news: News = News(status: nil, totalResults: nil, articles: nil)
     private let interactor: NewsInteractor
     private var cancellables = Set<AnyCancellable>()
     private let router = NewsRouter()
     private let newsTypes: NewsTypes
-    
-    init(interactor: NewsInteractor, newsType: NewsTypes){
+
+    init(interactor: NewsInteractor, newsType: NewsTypes) {
         self.interactor = interactor
         self.newsTypes = newsType
         if newsType == .crypto {
@@ -30,12 +30,11 @@ class NewsPresenter: ObservableObject{
         }
 
     }
-    
     func linkBuilder<Content: View>(
         for article: Article,
         @ViewBuilder content: () -> Content
     ) -> some View {
-        NavigationLink(destination: router.makeNewsDetailView(article: article)){
+        NavigationLink(destination: router.makeNewsDetailView(article: article)) {
             }.buttonStyle(PlainButtonStyle())
             .opacity(0)
     }

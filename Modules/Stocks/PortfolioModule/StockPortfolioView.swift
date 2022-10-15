@@ -2,7 +2,7 @@ import SwiftUI
 
 struct StockPortfolioView: View {
     @ObservedObject var presenter: StockPortfolioPresenter
-    
+
     var body: some View {
         ZStack {
             Color.theme.backgroundcolor

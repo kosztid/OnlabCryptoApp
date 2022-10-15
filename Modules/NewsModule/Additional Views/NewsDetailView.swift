@@ -10,26 +10,26 @@ import SwiftUI
 struct NewsDetailView: View {
     var article: Article
     var body: some View {
-        ZStack{
+        ZStack {
             Color.theme.backgroundcolor
                 .ignoresSafeArea()
-            ScrollView{
-                VStack(alignment: .leading){
-                    HStack{
+            ScrollView {
+                VStack(alignment: .leading) {
+                    HStack {
                         Text(article.title ?? "Nincs cím")
                             .font(.system(size: 26))
                             .frame(alignment: .leading)
                             .foregroundColor(Color.theme.accentcolor)
                     }.frame(alignment: .leading)
-                    HStack{
-                        HStack{
+                    HStack {
+                        HStack {
                             Text(article.author ?? "Nincs szerző")
                                 .font(.system(size: 16))
                                 .frame(alignment: .leading)
                                 .foregroundColor(Color.theme.accentcolorsecondary)
                         }
                         Spacer()
-                        HStack{
+                        HStack {
                             Text(article.publishedAt ?? "PublishDate")
                                 .font(.system(size: 16))
                                 .frame(alignment: .leading)
@@ -37,7 +37,7 @@ struct NewsDetailView: View {
                         }
                     }
                     .padding(.horizontal, 5.0)
-                    CachedAsyncImage(url: URL(string: article.urlToImage ?? "")){ image in
+                    CachedAsyncImage(url: URL(string: article.urlToImage ?? "")) { image in
                         image
                             .resizable()
                             .scaledToFit()
@@ -49,7 +49,7 @@ struct NewsDetailView: View {
                     .cornerRadius(20)
                 }
                 .padding(.bottom, 10)
-                VStack{
+                VStack {
                     Text(article.content?.dropLast(13) ?? "Nincs szöveg")
                         .font(.body)
                         .foregroundColor(Color.theme.accentcolor)
@@ -60,7 +60,6 @@ struct NewsDetailView: View {
                 }
             }
             .padding(10)
-        }
-            
+        }   
     }
 }

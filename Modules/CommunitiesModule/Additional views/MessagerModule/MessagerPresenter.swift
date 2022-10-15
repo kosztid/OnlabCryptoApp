@@ -1,10 +1,3 @@
-//
-//  MessagerPresenter.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 03. 05..
-//
-
 import Foundation
 import SwiftUI
 
@@ -13,7 +6,7 @@ class MessagerPresenter: ObservableObject {
     @Published var community: MessageGroupModel
     private let router = MessagerRouter()
 
-    init(interactor: MessagerInteractor,community: MessageGroupModel){
+    init(interactor: MessagerInteractor, community: MessageGroupModel) {
         self.interactor = interactor
         self.community = community
     }
@@ -28,7 +21,7 @@ class MessagerPresenter: ObservableObject {
     func messagesGet() -> [MessageModel] {
         return community.messages
     }
-    func getAccountInfo() -> String{
+    func getAccountInfo() -> String {
         return interactor.getAccountInfo()
     }
     func issignedin() -> Bool {

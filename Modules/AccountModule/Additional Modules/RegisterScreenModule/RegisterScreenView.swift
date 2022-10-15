@@ -10,15 +10,15 @@ import SwiftUI
 struct RegisterScreenView: View {
     @Environment(\.presentationMode) private var presentationMode
     @ObservedObject var presenter: RegisterScreenPresenter
-    @State var email : String = ""
-    @State var password : String = ""
+    @State var email = ""
+    @State var password = ""
     @State var isSecured: Bool = true
     @State private var showingAlert = false
-    
+
     var body: some View {
         ScrollView {
-            VStack{
-                Label("",systemImage: "network")
+            VStack {
+                Label("", systemImage: "network")
                     .font(.system(size: 200))
                     .foregroundColor(Color.theme.accentcolor)
                 Text("Regisztráció")
@@ -32,7 +32,7 @@ struct RegisterScreenView: View {
                     .cornerRadius(10)
                     .disableAutocorrection(true)
                     .autocapitalization(.none)
-                
+
                 ZStack(alignment: .trailing) {
                             if isSecured {
                                 SecureField("Password", text: $password)
@@ -59,14 +59,14 @@ struct RegisterScreenView: View {
                             }.offset(x: -20)
                         }
 
-                Button{
+                Button {
                     guard presenter.isValidEmail(email: self.email), self.password.count > 5 else {
                         return
                     }
                     presenter.register(email: self.email, password: self.password)
-                } label : {
+                } label: {
                     Text("Fiók létrehozása")
-                        .frame(height:50)
+                        .frame(height: 50)
                         .frame(maxWidth: .infinity)
                         .font(.system(size: 20))
                         .background(Color.theme.backgroundsecondary)
@@ -79,12 +79,12 @@ struct RegisterScreenView: View {
             }
             .padding(10)
         }
-        .onChange(of: presenter.registererror){ regerror in
+        .onChange(of: presenter.registererror) { _ in
             if presenter.registererror == true {
                 self.showingAlert = true
             }
         }
-        .onChange(of: presenter.registered){ register in
+        .onChange(of: presenter.registered) { _ in
             self.presentationMode.wrappedValue.dismiss()
             presenter.setregisteredfalse()
         }

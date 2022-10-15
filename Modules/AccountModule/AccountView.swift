@@ -9,23 +9,38 @@ import SwiftUI
 
 struct AccountView: View {
     var presenter: AccountPresenter
+    @State var accountPrivate = true
     var body: some View {
-        ZStack{
+        ZStack {
             Color.theme.backgroundcolor
-            VStack{
-                VStack(alignment:.center){
-                    Text("Email address:")
-                    Text(presenter.currentUserEmail())
-                }
-                .font(.system(size: 18))
-                .foregroundColor(Color.theme.accentcolor)
-                
+            VStack {
+                emailField
+                privateToggle
+                Spacer()
+
                 presenter.makeLogoutButton()
                     .accessibilityIdentifier("AccountSignOutButton")
             }
             .padding(10)
-        }.background(Color.theme.backgroundcolor)
-        
+        }
+        .onChange(of: accountPrivate) { _ in
+            presenter.accountPrivate = self.accountPrivate
+            print(presenter.accountPrivate)
+        }
+        .background(Color.theme.backgroundcolor)
+    }
+
+    var emailField: some View {
+        VStack(alignment: .center) {
+            Text("Email address:")
+            Text(presenter.currentUserEmail())
+        }
+        .font(.system(size: 18))
+        .foregroundColor(Color.theme.accentcolor)
+    }
+
+    var privateToggle: some View {
+        Toggle("Account láthatóság privát", isOn: $accountPrivate)
     }
 }
 
@@ -34,4 +49,3 @@ struct AccountView_Previews: PreviewProvider {
         AccountView(presenter: AccountPresenter(interactor: AccountInteractor(model: DataModel())))
     }
 }
-

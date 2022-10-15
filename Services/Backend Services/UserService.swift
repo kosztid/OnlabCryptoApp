@@ -15,9 +15,9 @@ class UserService {
     @Published var stockFavs: [StockServerModel] = []
     @Published var stockPortfolio: [StockServerModel] = []
     @Published var stockWallet: [StockServerModel] = []
-    
+
     var userSub: AnyCancellable?
-    
+
     // MARK: - User data, account
     func loadUser(apikey: String, userID: String) {
         print("lefutott")
