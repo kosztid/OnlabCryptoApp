@@ -1,4 +1,5 @@
 import Combine
+import Foundation
 
 class NewsService {
     @Published var news = News(status: nil, totalResults: nil, articles: nil)
@@ -22,7 +23,6 @@ class NewsService {
         let stringdateLastWeek = dateFormatter.string(from: Date.now.addingTimeInterval(-604800))
         print(stringdateLastWeek)
         newssub = URLSession.shared.dataTaskPublisher(for: url)
-            .subscribe(on: DispatchQueue.global(qos: .default))
             .tryMap { (output) -> Data in
                 guard let response = output.response as? HTTPURLResponse,
                 response.statusCode >= 200 && response.statusCode < 300 else {

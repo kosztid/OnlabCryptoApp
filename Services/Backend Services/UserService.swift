@@ -1,5 +1,6 @@
 import Combine
 import Foundation
+import FirebaseAuth
 
 struct Favfolio: Codable {
     let id: Int
@@ -9,19 +10,106 @@ struct Favfolio: Codable {
 }
 
 class UserService {
+    let port = "8090"
     @Published var cryptoFavs: [CryptoServerModel] = []
     @Published var cryptoPortfolio: [CryptoServerModel] = []
     @Published var cryptoWallet: [CryptoServerModel] = []
     @Published var stockFavs: [StockServerModel] = []
     @Published var stockPortfolio: [StockServerModel] = []
     @Published var stockWallet: [StockServerModel] = []
+    @Published var isSignedIn = false
+    @Published var loginError = false
+    @Published var registerError = false
+    @Published var registered = false
+    let auth: Auth
 
     var userSub: AnyCancellable?
+
+    init() {
+        self.auth = Auth.auth()
+    }
+
+    func signOut() {
+        try?auth.signOut()
+        DispatchQueue.main.async {
+            self.isSignedIn = false
+        }
+    }
+    func signin(_ email: String, _ password: String) {
+        auth.signIn(withEmail: email, password: password) { result, error in
+            guard result != nil, error == nil else {
+                self.loginError = true
+                return
+            }
+            let currentUser = self.auth.currentUser
+            currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
+                if let error = error {
+                    print(error.localizedDescription)
+                    return
+                }
+                DispatchQueue.main.async {
+                    self.isSignedIn = true
+                    print(self.auth.currentUser!.uid)
+                    print(self.auth.currentUser!.email ?? "")
+                    self.loadUser(apikey: idToken ?? "error", userID: self.auth.currentUser!.uid)
+                    //   self.communityService.loadCommunities(apikey: idToken ?? "error")
+                }
+            }
+
+        }
+    }
+
+    func register(_ email: String, _ password: String) {
+        auth.createUser(withEmail: email, password: password) { result, error in
+            guard result != nil, error == nil else {
+                self.registerError = true
+                print("error creating user")
+                return
+            }
+            self.registered = true
+            DispatchQueue.main.async {
+                let currentUser = self.auth.currentUser
+                let id = currentUser?.uid
+                currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
+                    if let error = error {
+                        print(error.localizedDescription)
+                        return
+                    }
+                    self.registerUser(idToken ?? "error", id ?? "error", email)
+                }
+            }
+        }
+    }
+
+
+    func userReload() {
+        auth.currentUser?.reload(completion: { (error) in
+            if let error = error {
+                print(String(describing: error))
+            } else {
+                let currentUser = self.auth.currentUser
+                currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
+                    if let error = error {
+                        print(error.localizedDescription)
+                        return
+                    }
+                    DispatchQueue.main.async {
+                        self.isSignedIn = true
+                        print(self.auth.currentUser!.uid)
+                        print(self.auth.currentUser!.email ?? "")
+                        print(idToken)
+                        self.loadUser(apikey: idToken ?? "error", userID: self.auth.currentUser!.uid)
+                        //    self.communityService.loadCommunities(apikey: idToken ?? "error")
+                    }
+                }
+            }
+        })
+    }
 
     // MARK: - User data, account
     func loadUser(apikey: String, userID: String) {
         print("lefutott")
-        guard let url = URL(string: "http://localhost:8080/api/v1/users/\(userID)")
+        guard let url = URL(string: "http://localhost:\(port)/api/v1/users/\(userID)")
         else {
             return
         }
@@ -36,8 +124,8 @@ class UserService {
                 guard let response = output.response as? HTTPURLResponse,
                       response.statusCode >= 200 && response.statusCode < 300 else {
 
-                          throw URLError(.badServerResponse)
-                      }
+                    throw URLError(.badServerResponse)
+                }
                 return output.data
             }
             .receive(on: DispatchQueue.main)
@@ -50,20 +138,18 @@ class UserService {
                     print(error.localizedDescription)
                 }
             } receiveValue: { [weak self] (returnedUser) in
-                print(returnedUser.favfolio)
                 self?.cryptoFavs = returnedUser.favfolio
                 self?.cryptoPortfolio = returnedUser.portfolio
                 self?.cryptoWallet = returnedUser.wallet
                 self?.stockFavs = returnedUser.stockfavfolio
                 self?.stockPortfolio = returnedUser.stockportfolio
                 self?.stockWallet = returnedUser.stockwallet
-                print(returnedUser.stockportfolio)
                 self?.userSub?.cancel()
             }
     }
 
     func registerUser(_ apikey: String, _ userId: String, _ email: String) {
-        guard let url = URL(string: "http://localhost:8080/api/v1/users") else {
+        guard let url = URL(string: "http://localhost:\(port)/api/v1/users") else {
             return
         }
 
@@ -87,7 +173,7 @@ class UserService {
 
     // MARK: - Crypto portfolio
     func updateWallet(_ apikey: String, _ userId: String, _ coinToSell: String, _ coinToBuy: String, _ sellAmount: Double, _ buyAmount: Double) {
-        guard let url = URL(string: "http://localhost:8080/api/v1/users/\(userId)/wallet/") else {
+        guard let url = URL(string: "http://localhost:\(port)/api/v1/users/\(userId)/wallet/") else {
             return
         }
 
@@ -112,31 +198,31 @@ class UserService {
     }
 
     func updatePortfolio(_ apikey: String, _ userId: String, _ coinId: String, _ count: Double, _ buytotal: Double) {
-        guard let url = URL(string: "http://localhost:8080/api/v1/users/\(userId)/portfolio/") else {
+        guard let url = URL(string: "http://localhost:\(port)/api/v1/users/\(userId)/portfolio/") else {
             return
         }
 
-        var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
-        request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        var request = URLRequest(url: url) /* 1 */
+        request.httpMethod = "PUT" /* 2 */
+        request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization") /* 3 */
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type") /* 4 */
         let body: [String: AnyHashable] = [
             "id": "\(coinId)",
             "count": count,
             "buytotal": buytotal
         ]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
-        let task = URLSession.shared.dataTask(with: request) { _, _, error in
+        let task = URLSession.shared.dataTask(with: request) { _, _, error in /* 5 */
             guard error == nil else {
                 return
             }
-            self.loadUser(apikey: apikey, userID: userId)
+            self.loadUser(apikey: apikey, userID: userId) /* 6 */
         }
         task.resume()
     }
 
     func updateFavs(_ apikey: String, _ userId: String, _ coinId: String) {
-        guard let url = URL(string: "http://localhost:8080/api/v1/users/\(userId)/favfolio/") else {
+        guard let url = URL(string: "http://localhost:\(port)/api/v1/users/\(userId)/favfolio/") else {
             return
         }
 
@@ -160,7 +246,7 @@ class UserService {
     // MARK: - Stocks portfolio
 
     func updateStockWallet(_ apikey: String, _ userId: String, _ symbolToSell: String, _ symbolToBuy: String, _ sellAmount: Double, _ buyAmount: Double) {
-        guard let url = URL(string: "http://localhost:8080/api/v1/users/\(userId)/stockwallet/") else {
+        guard let url = URL(string: "http://localhost:\(port)/api/v1/users/\(userId)/stockwallet/") else {
             return
         }
 
@@ -185,7 +271,7 @@ class UserService {
     }
 
     func updateStockPortfolio(_ apikey: String, _ userId: String, _ symbol: String, _ count: Double, _ buytotal: Double) {
-        guard let url = URL(string: "http://localhost:8080/api/v1/users/\(userId)/stockportfolio/") else {
+        guard let url = URL(string: "http://localhost:\(port)/api/v1/users/\(userId)/stockportfolio/") else {
             return
         }
 
@@ -209,7 +295,7 @@ class UserService {
     }
 
     func updateStockFavs(_ apikey: String, _ userId: String, _ symbol: String) {
-        guard let url = URL(string: "http://localhost:8080/api/v1/users/\(userId)/stockfavfolio/") else {
+        guard let url = URL(string: "http://localhost:\(port)/api/v1/users/\(userId)/stockfavfolio/") else {
             return
         }
 

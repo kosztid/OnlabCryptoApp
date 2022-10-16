@@ -59,12 +59,12 @@ final class DataModel: ObservableObject {
     @Published var coins: [CoinModel] = []
     @Published var stockNews = News(status: nil, totalResults: nil, articles: nil)
     @Published var cryptoNews = News(status: nil, totalResults: nil, articles: nil)
-    @Published var communities: [MessageGroupModel] = []
+    @Published var communities: [CommunityModel] = []
     private let coinService = CoinService()
     private let stockService = StockService()
     private let newsService = NewsService()
     private let communityService = CommunityService()
-    private let apiService = UserService()
+    private let userService = UserService()
     @Published var heldcoins: [CryptoServerModel] = []
     @Published var favcoins: [CryptoServerModel] = []
     @Published var ownedcoins: [CryptoServerModel] = []
@@ -110,23 +110,36 @@ final class DataModel: ObservableObject {
             .sink { [weak self] (datareceived) in self?.stockNews = datareceived}
             .store(in: &cancellables)
 
-        apiService.$cryptoFavs
+        userService.$cryptoFavs
             .sink { [weak self] (datareceived) in self?.favcoins = datareceived}
             .store(in: &cancellables)
-        apiService.$cryptoPortfolio
+        userService.$cryptoPortfolio
             .sink { [weak self] (datareceived) in self?.heldcoins = datareceived}
             .store(in: &cancellables)
-        apiService.$cryptoWallet
+        userService.$cryptoWallet
             .sink { [weak self] (datareceived) in self?.ownedcoins = datareceived}
             .store(in: &cancellables)
 
-        apiService.$stockFavs
+        userService.$loginError
+            .sink { [weak self] (datareceived) in self?.loginerror = datareceived}
+            .store(in: &cancellables)
+        userService.$registerError
+            .sink { [weak self] (datareceived) in self?.registererror = datareceived}
+            .store(in: &cancellables)
+        userService.$isSignedIn
+            .sink { [weak self] (datareceived) in self?.isSignedIn = datareceived}
+            .store(in: &cancellables)
+        userService.$registered
+            .sink { [weak self] (datareceived) in self?.registered = datareceived}
+            .store(in: &cancellables)
+
+        userService.$stockFavs
             .sink { [weak self] (datareceived) in self?.favStocks = datareceived}
             .store(in: &cancellables)
-        apiService.$stockPortfolio
+        userService.$stockPortfolio
             .sink { [weak self] (datareceived) in self?.heldStocks = datareceived}
             .store(in: &cancellables)
-        apiService.$stockWallet
+        userService.$stockWallet
             .sink { [weak self] (datareceived) in self?.ownedStocks = datareceived}
             .store(in: &cancellables)
 
@@ -141,7 +154,7 @@ final class DataModel: ObservableObject {
                 print(error.localizedDescription)
                 return
             }
-            self.apiService.updateFavs(idToken ?? "error", self.auth.currentUser!.uid, coinid)
+            self.userService.updateFavs(idToken ?? "error", self.auth.currentUser!.uid, coinid)
         }
         favcoinPullFromDB()
     }
@@ -152,14 +165,14 @@ final class DataModel: ObservableObject {
                 print(error.localizedDescription)
                 return
             }
-            self.apiService.updateStockFavs(idToken ?? "error", self.auth.currentUser!.uid, symbol)
+            self.userService.updateStockFavs(idToken ?? "error", self.auth.currentUser!.uid, symbol)
         }
         favcoinPullFromDB()
     }
 
     func favcoinPullFromDB() {
         DispatchQueue.main.async {
-            self.favcoins = self.apiService.cryptoFavs
+            self.favcoins = self.userService.cryptoFavs
         }
     }
 
@@ -171,7 +184,7 @@ final class DataModel: ObservableObject {
                 return
             }
             print("token:\(idToken ?? "error")")
-            self.apiService.updatePortfolio(idToken ?? "error", self.auth.currentUser!.uid, cointoremove.id, 0.0, 0.0)
+            self.userService.updatePortfolio(idToken ?? "error", self.auth.currentUser!.uid, cointoremove.id, 0.0, 0.0)
         }
 
     }
@@ -183,7 +196,7 @@ final class DataModel: ObservableObject {
                 return
             }
             print("token:\(idToken ?? "error")")
-            self.apiService.updateStockPortfolio(idToken ?? "error", self.auth.currentUser!.uid, symbol, 0.0, 0.0)
+            self.userService.updateStockPortfolio(idToken ?? "error", self.auth.currentUser!.uid, symbol, 0.0, 0.0)
         }
 
     }
@@ -196,7 +209,7 @@ final class DataModel: ObservableObject {
                 return
             }
             print("token:\(idToken ?? "error")")
-            self.apiService.updatePortfolio(idToken ?? "error", self.auth.currentUser!.uid, coinid, coincount, currprice)
+            self.userService.updatePortfolio(idToken ?? "error", self.auth.currentUser!.uid, coinid, coincount, currprice)
         }
     }
     func addStockHolding(symbol: String, count: Double, currprice: Double) {
@@ -207,7 +220,7 @@ final class DataModel: ObservableObject {
                 return
             }
             print("token:\(idToken ?? "error")")
-            self.apiService.updateStockPortfolio(idToken ?? "error", self.auth.currentUser!.uid, symbol, count, currprice)
+            self.userService.updateStockPortfolio(idToken ?? "error", self.auth.currentUser!.uid, symbol, count, currprice)
         }
     }
 
@@ -218,7 +231,7 @@ final class DataModel: ObservableObject {
                 print(error.localizedDescription)
                 return
             }
-        self.apiService.updateWallet(idToken ?? "error", self.auth.currentUser!.uid, coinToSell, coinToBuy, sellAmount, buyAmount)
+        self.userService.updateWallet(idToken ?? "error", self.auth.currentUser!.uid, coinToSell, coinToBuy, sellAmount, buyAmount)
         }
     }
     func modifyStockwallet( _ stockToSell: String,_ stockToBuy: String, _ sellAmount: Double, _ buyAmount: Double) {
@@ -228,18 +241,18 @@ final class DataModel: ObservableObject {
                 print(error.localizedDescription)
                 return
             }
-        self.apiService.updateStockWallet(idToken ?? "error", self.auth.currentUser!.uid, stockToSell, stockToBuy, sellAmount, buyAmount)
+        self.userService.updateStockWallet(idToken ?? "error", self.auth.currentUser!.uid, stockToSell, stockToBuy, sellAmount, buyAmount)
         }
     }
     func walletPullFromDB() {
         DispatchQueue.main.async {
-            self.ownedcoins = self.apiService.cryptoWallet
+            self.ownedcoins = self.userService.cryptoWallet
         }
     }
 
     func portfolioPullFromDB() {
         DispatchQueue.main.async {
-            self.heldcoins = self.apiService.cryptoPortfolio
+            self.heldcoins = self.userService.cryptoPortfolio
         }
     }
     func addCommunityMember(id: String, member: String) {
@@ -254,8 +267,6 @@ final class DataModel: ObservableObject {
                     }
                 }}
         }
-    }
-    func communitiesPullFromDB() {
     }
 
     func messagemembersPullFromDB(idtoget: String) {
@@ -275,9 +286,6 @@ final class DataModel: ObservableObject {
                 // error handling
             }
         }
-    }
-
-    func messagesPullFromDB(idtoget: String) {
     }
     func addCommunity(name: String) {
         self.auth.currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
@@ -365,7 +373,7 @@ final class DataModel: ObservableObject {
             } else {
                 print(error!.localizedDescription)
             }
-            ref.downloadURL {url, error in
+            ref.downloadURL { url, error in
                 if let error = error {
                     print(error.localizedDescription)
                 }
@@ -378,93 +386,20 @@ final class DataModel: ObservableObject {
     }
 
     func userreload() {
-        auth.currentUser?.reload(completion: { (error) in
-            if let error = error {
-                print(String(describing: error))
-            } else {
-                let currentUser = self.auth.currentUser
-                currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
-                    if let error = error {
-                        print(error.localizedDescription)
-                        return
-                    }
-                    DispatchQueue.main.async {
-                        self.isSignedIn = true
-                        print(self.auth.currentUser!.uid)
-                        print(self.auth.currentUser!.email ?? "")
-                        print(idToken)
-                        self.apiService.loadUser(apikey: idToken ?? "error", userID: self.auth.currentUser!.uid)
-                        self.communityService.loadCommunities(apikey: idToken ?? "error")
-                    }
-                }
-            }
-        })
+        userService.userReload()
     }
 
     func signIn(email: String, password: String) {
-        auth.signIn(withEmail: email, password: password) { result, error in
-            guard result != nil, error == nil else {
-                self.loginerror = true
-                return
-            }
-            let currentUser = self.auth.currentUser
-            currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
-                if let error = error {
-                    print(error.localizedDescription)
-                    return
-                }
-                DispatchQueue.main.async {
-                    self.isSignedIn = true
-                    print(self.auth.currentUser!.uid)
-                    print(self.auth.currentUser!.email ?? "")
-                    self.apiService.loadUser(apikey: idToken ?? "error", userID: self.auth.currentUser!.uid)
-                    self.communityService.loadCommunities(apikey: idToken ?? "error")
-                }
-            }
-
-        }
+        userService.signin(email, password)
     }
 
     func register(email: String, password: String) {
-        auth.createUser(withEmail: email, password: password) { result, error in
-            guard result != nil, error == nil else {
-                self.registererror = true
-                print("error creating user")
-                return
-            }
-            self.registered = true
-            DispatchQueue.main.async {
-                let database = Firestore.firestore()
-                let currentUser = self.auth.currentUser
-                let id = currentUser?.uid
-                currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
-                    if let error = error {
-                        print(error.localizedDescription)
-                        return
-                    }
-                    self.apiService.registerUser(idToken ?? "error", id ?? "error", email)
-                }
-                database.collection("users").document(id ?? "err").setData(["email": email]) { error in
-                    if error == nil {
-                    } else {
-                        // error handling
-                    }
-                    database.collection("events").document(id ?? "err").setData(["id": id ?? "err"]) {
-                        error in
-                        if error == nil {
-                        } else {
-                            // error handling
-                        }
-                    }
-                }
-            }
-        }
+        userService.register(email, password)
     }
 
     func signOut() {
-        try?auth.signOut()
+        userService.signOut()
         DispatchQueue.main.async {
-            self.isSignedIn = false
             self.heldcoins = []
             self.favcoins = []
             self.ownedcoins = []

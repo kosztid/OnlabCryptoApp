@@ -2,11 +2,12 @@ import Foundation
 import Combine
 
 class CommunityService {
-    @Published var communities: [MessageGroupModel] = []
+    let port = "8090"
+    @Published var communities: [CommunityModel] = []
     var communitySub: AnyCancellable?
     
     func sendMessage(_ apikey: String, _ communityID: String, _ message: MessageModel) {
-        guard let url = URL(string: "http://localhost:8080/api/v1/communities/\(communityID)") else {
+        guard let url = URL(string: "http://localhost:\(port)/api/v1/communities/\(communityID)") else {
             return
         }
 
@@ -33,7 +34,7 @@ class CommunityService {
     }
 
     func loadCommunities(apikey: String) {
-        let baseUrl = "http://localhost:8080/api/v1/communities"
+        let baseUrl = "http://localhost:\(port)/api/v1/communities"
         guard let url = URL(string: "\(baseUrl)")
         else {
             return
@@ -53,7 +54,7 @@ class CommunityService {
                 return output.data
             }
             .receive(on: DispatchQueue.main)
-            .decode(type: [MessageGroupModel].self, decoder: JSONDecoder())
+            .decode(type: [CommunityModel].self, decoder: JSONDecoder())
             .sink {(completion) in
                 switch completion {
                 case .finished:
@@ -62,7 +63,7 @@ class CommunityService {
                     print(error.localizedDescription)
                 }
             } receiveValue: { [weak self] (community) in
-                print(community)
+
                 self?.communities = community
                 for index in 0...(community.count - 1) {
                     let dateFormatter = DateFormatter()
@@ -72,7 +73,6 @@ class CommunityService {
                     }
                     if let id = self?.communities[index].messages.last?.id {
                         self?.communities[index].lastid = id
-                        print(id)
                     }
                 }
                 self?.communitySub?.cancel()
@@ -80,7 +80,7 @@ class CommunityService {
     }
 
     func addCommunity(_ apikey: String, _ communityName: String) {
-        guard let url = URL(string: "http://localhost:8080/api/v1/communities/") else {
+        guard let url = URL(string: "http://localhost:\(port)/api/v1/communities/") else {
             return
         }
 
