@@ -8,7 +8,7 @@ class CommunitiesPresenter: ObservableObject {
 
     private var cancellables = Set<AnyCancellable>()
 
-    @Published var communities: [MessageGroupModel] = []
+    @Published var communities: [CommunityModel] = []
     @Published var signedin: Bool = false
     @Published var viewType = CommunityTabViews.communities
 
@@ -24,7 +24,7 @@ class CommunitiesPresenter: ObservableObject {
     }
 
     func linkBuilder<Content: View>(
-        for community: MessageGroupModel,
+        for community: CommunityModel,
         @ViewBuilder content: () -> Content
     ) -> some View {
         NavigationLink(destination: router.gotoChat(model: interactor.model, community: community)) {

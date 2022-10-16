@@ -3,10 +3,10 @@ import SwiftUI
 
 class MessagerPresenter: ObservableObject {
     private let interactor: MessagerInteractor
-    @Published var community: MessageGroupModel
+    @Published var community: CommunityModel
     private let router = MessagerRouter()
 
-    init(interactor: MessagerInteractor, community: MessageGroupModel) {
+    init(interactor: MessagerInteractor, community: CommunityModel) {
         self.interactor = interactor
         self.community = community
     }
