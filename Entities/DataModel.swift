@@ -64,7 +64,7 @@ final class DataModel: ObservableObject {
     private let stockService = StockService()
     private let newsService = NewsService()
     private let communityService = CommunityService()
-    private let userService = UserService()
+    @ObservedObject private var userService = UserService()
     @Published var heldcoins: [CryptoServerModel] = []
     @Published var favcoins: [CryptoServerModel] = []
     @Published var ownedcoins: [CryptoServerModel] = []
@@ -154,9 +154,9 @@ final class DataModel: ObservableObject {
                 print(error.localizedDescription)
                 return
             }
-            self.userService.updateFavs(idToken ?? "error", self.auth.currentUser!.uid, coinid)
+            self.userService.updateFavs(coinid)
         }
-        favcoinPullFromDB()
+//        favcoinPullFromDB()
     }
     func addFavStock(symbol: String) {
         let currentUser = self.auth.currentUser
@@ -165,7 +165,9 @@ final class DataModel: ObservableObject {
                 print(error.localizedDescription)
                 return
             }
-            self.userService.updateStockFavs(idToken ?? "error", self.auth.currentUser!.uid, symbol)
+            DispatchQueue.main.async {
+                self.userService.updateStockFavs(idToken ?? "error", self.auth.currentUser!.uid, symbol)
+            }
         }
         favcoinPullFromDB()
     }
@@ -176,18 +178,6 @@ final class DataModel: ObservableObject {
         }
     }
 
-    func removeCoin(cointoremove: CoinModel) {
-        let currentUser = self.auth.currentUser
-        currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
-            if let error = error {
-                print(error.localizedDescription)
-                return
-            }
-            print("token:\(idToken ?? "error")")
-            self.userService.updatePortfolio(idToken ?? "error", self.auth.currentUser!.uid, cointoremove.id, 0.0, 0.0)
-        }
-
-    }
     func removeStock(symbol: String) {
         let currentUser = self.auth.currentUser
         currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
@@ -209,7 +199,7 @@ final class DataModel: ObservableObject {
                 return
             }
             print("token:\(idToken ?? "error")")
-            self.userService.updatePortfolio(idToken ?? "error", self.auth.currentUser!.uid, coinid, coincount, currprice)
+            self.userService.updatePortfolio(coinid, coincount, currprice)
         }
     }
     func addStockHolding(symbol: String, count: Double, currprice: Double) {
