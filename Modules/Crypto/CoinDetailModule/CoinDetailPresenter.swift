@@ -5,6 +5,7 @@ import Combine
 class CoinDetailPresenter: ObservableObject {
     @State var showalert: Bool = false
     private let interactor: CoinDetailInteractor
+    @Published var favcoins: [CryptoServerModel] = []
     private let router = CoinDetailRouter()
 
     @Published var signedin = false
@@ -15,6 +16,10 @@ class CoinDetailPresenter: ObservableObject {
 
         self.getmodel().$isSignedIn
             .assign(to: \.signedin, on: self)
+            .store(in: &cancellables)
+
+        interactor.getFavs()
+            .assign(to: \.favcoins, on: self)
             .store(in: &cancellables)
     }
 
@@ -47,12 +52,19 @@ class CoinDetailPresenter: ObservableObject {
         }
         .buttonStyle(BorderlessButtonStyle())
     }
+    func hintText() -> String {
+        if interactor.getCoinCount() > 0 {
+            return String(interactor.getCoinCount())
+        } else {
+            return "Mennyiség"
+        }
+    }
     func makeAddButton() -> some View {
-        Button("ADD") {
+        Button("Add") {
             self.showalert = true
         }
         .alert(isPresented: $showalert) {
-            Alert(title: Text("Add"), message: Text("type in the amount"), primaryButton: .destructive(Text("Add")) {}, secondaryButton: .cancel())
+            Alert(title: Text("Add"), message: Text("Type in the amount"), primaryButton: .destructive(Text("Add")) {}, secondaryButton: .cancel())
         }
     }
 }
