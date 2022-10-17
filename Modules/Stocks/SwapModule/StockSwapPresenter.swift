@@ -56,7 +56,6 @@ class StockSwapPresenter: ObservableObject {
         let stock2 = self.selected(stockSymbol: stock2)
         let amount = (Double(stock2.lastsale.dropFirst()) ?? 1) * stockstobuy
         interactor.setStockstoSell(amount: amount / (Double(stock1.lastsale.dropFirst()) ?? 1))
-
     }
 
     func setBuyAmount() {
@@ -73,8 +72,6 @@ class StockSwapPresenter: ObservableObject {
 
     func swap() {
         interactor.swap(stockToSell: stock1, sellamount: stockstosell, stockToBuy: stock2, buyamount: stockstobuy)
-        stockstosell = 0.0
-        stockstobuy = 0.0
     }
 
     func setStockstobuy(amount: Double) {
