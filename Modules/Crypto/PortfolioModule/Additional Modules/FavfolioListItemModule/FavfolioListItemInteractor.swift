@@ -2,15 +2,15 @@ import Foundation
 
 class FavfolioListItemInteractor {
     private let coin: CoinModel
-    private let model: DataModel
+    private let userService: UserService
 
-    init(coin: CoinModel, model: DataModel) {
+    init(coin: CoinModel, service: UserService) {
         self.coin = coin
-        self.model = model
+        self.userService = service
     }
 
     func addFavCoin() {
-        model.addFavCoin(coinid: coin.id)
+        userService.updateFavs(coin.id)
     }
     
     func getcoin() -> CoinModel {
@@ -18,6 +18,6 @@ class FavfolioListItemInteractor {
     }
 
     func isFav() -> Bool {
-        return !(model.favcoins.filter({ $0.coinid == self.coin.id }).isEmpty)
+        return !(userService.cryptoFavs.filter({ $0.coinid == self.coin.id }).isEmpty)
     }
 }

@@ -1,10 +1,3 @@
-//
-//  FavfolioListItemView.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 03. 19..
-//
-
 import SwiftUI
 
 struct FavfolioListItemView: View {

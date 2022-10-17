@@ -2,8 +2,8 @@ import Foundation
 import SwiftUI
 
 class PortfolioRouter {
-    func makeCoinDetailView(coin: CoinModel, model: DataModel) -> some View {
-        let presenter = CoinDetailPresenter(interactor: CoinDetailInteractor(coin: coin, model: model))
+    func makeCoinDetailView(interactor: CoinDetailInteractor) -> some View {
+        let presenter = CoinDetailPresenter(interactor: interactor)
         return CoinDetailView(presenter: presenter)
     }
 

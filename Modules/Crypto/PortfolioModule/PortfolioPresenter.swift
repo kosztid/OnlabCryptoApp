@@ -22,12 +22,12 @@ class PortfolioPresenter: ObservableObject {
             .assign(to: \.signedin, on: self)
             .store(in: &cancellables)
 
-        interactor.model.$coins
-            .assign(to: \.coins, on: self)
-            .store(in: &cancellables)
-
-        interactor.model.$favcoins
+        interactor.getFavs()
             .assign(to: \.favcoins, on: self)
+            .store(in: &cancellables)
+        
+        interactor.getCoins()
+            .assign(to: \.coins, on: self)
             .store(in: &cancellables)
     }
 
@@ -39,7 +39,7 @@ class PortfolioPresenter: ObservableObject {
         for coin: CoinModel,
         @ViewBuilder content: () -> Content
     ) -> some View {
-        NavigationLink(destination: router.makeCoinDetailView(coin: coin, model: interactor.model)) {
+        NavigationLink(destination: router.makeCoinDetailView(interactor: interactor.makeDetailInteractor(coin: coin))) {
             }.buttonStyle(PlainButtonStyle())
             .opacity(0)
     }
@@ -83,6 +83,11 @@ class PortfolioPresenter: ObservableObject {
     func favfoliochange() -> Double {
         return interactor.favfoliochange()
     }
+
+    func reloadData() {
+        interactor.reloadData()
+    }
+
     func makeList(selected: String) -> AnyView {
         if selected == "portfolio" {
         return AnyView(
@@ -112,7 +117,7 @@ class PortfolioPresenter: ObservableObject {
                         ZStack {
                             Color.theme.backgroundcolor
                                     .ignoresSafeArea()
-                            FavfolioListItemView(presenter: FavfolioListItemPresenter(interactor: FavfolioListItemInteractor(coin: coin, model: self.interactor.getmodel())))
+                            FavfolioListItemView(presenter: FavfolioListItemPresenter(interactor: FavfolioListItemInteractor(coin: coin, service: self.interactor.getservice())))
                                 .frame(height: 80)
                             self.linkBuilder(for: coin) {
                                 EmptyView()

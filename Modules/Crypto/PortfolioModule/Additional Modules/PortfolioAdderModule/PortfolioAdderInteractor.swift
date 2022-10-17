@@ -13,7 +13,7 @@ class PortfolioAdderInteractor {
         return coin
     }
 
-    func addCoin(count: Double){
+    func addCoin(count: Double) {
         model.addHolding(coinid: coin.id, coincount: count, currprice: coin.currentPrice)
     }
 }

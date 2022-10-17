@@ -1,15 +1,40 @@
 import Foundation
+import Combine
 
 class PortfolioInteractor {
     let model: DataModel
+    private var userService: UserService
+    var coinService: CoinService
 
     init(model: DataModel) {
         self.model = model
+        coinService = CoinService()
+        userService = UserService()
+        userService.userReload()
+    }
+
+    func makeDetailInteractor(coin: CoinModel) -> CoinDetailInteractor {
+        CoinDetailInteractor(coin: coin, model: model, service: userService)
+    }
+
+    func getCoins() -> Published<[CoinModel]>.Publisher {
+        return coinService.$coins
+    }
+
+    func getFavs() -> Published<[CryptoServerModel]>.Publisher {
+        return userService.$cryptoFavs
+    }
+    func getservice() -> UserService {
+        return userService
+    }
+
+    func reloadData() {
+        userService.loadUser()
     }
 
     func heldcoins() -> [String] {
         var arr: [String] = []
-        for coin in model.heldcoins {
+        for coin in userService.cryptoPortfolio {
             arr.append(coin.coinid)
         }
         return arr
@@ -17,7 +42,7 @@ class PortfolioInteractor {
 
     func heldfavcoins() -> [String] {
         var arr: [String] = []
-        for coin in model.favcoins {
+        for coin in userService.cryptoFavs {
             arr.append(coin.coinid)
         }
         return arr
@@ -25,7 +50,7 @@ class PortfolioInteractor {
 
     func ownedcoins() -> [String] {
         var arr: [String] = []
-        for coin in model.ownedcoins {
+        for coin in userService.cryptoWallet {
             arr.append(coin.coinid)
         }
         return arr
@@ -36,56 +61,56 @@ class PortfolioInteractor {
     }
 
     func removeCoin(_ index: IndexSet) {
-        model.removeCoin(cointoremove: model.coins[index.first!])
+        userService.updatePortfolio(coinService.coins[index.first!].id, 0.0, 0.0)
     }
 
     func getholdingcount(coin: CoinModel) -> Double {
-        if let index = model.heldcoins.firstIndex(where: { $0.coinid == coin.id }) {
-            return model.heldcoins[index].count
+        if let index = userService.cryptoPortfolio.firstIndex(where: { $0.coinid == coin.id }) {
+            return userService.cryptoPortfolio[index].count
         } else {
             return 0.0
         }
     }
 
     func getownedcount(coin: CoinModel) -> Double {
-        if let index = model.ownedcoins.firstIndex(where: { $0.coinid == coin.id }) {
-            return model.ownedcoins[index].count
+        if let index = userService.cryptoWallet.firstIndex(where: { $0.coinid == coin.id }) {
+            return userService.cryptoWallet[index].count
         } else {
             return 0.0
         }
     }
 
     func portfoliototal() -> Double {
-        if model.heldcoins.count == 0 {
+        if userService.cryptoPortfolio.count == 0 {
             return 0
         }
         var total: Double = 0
-        for ind in 0...(model.heldcoins.count - 1) {
-            let currentprice = model.coins.first(where: {$0.id == model.heldcoins[ind].coinid})?.currentPrice ?? 0.0
-            total += (model.heldcoins[ind].count * currentprice)
+        for ind in 0...(userService.cryptoPortfolio.count - 1) {
+            let currentprice = coinService.coins.first(where: {$0.id == userService.cryptoPortfolio[ind].coinid})?.currentPrice ?? 0.0
+            total += (userService.cryptoPortfolio[ind].count * currentprice)
         }
         return total
     }
 
     func portfoliobuytotal() -> Double {
-        if model.heldcoins.count == 0 {
+        if userService.cryptoPortfolio.count == 0 {
             return 0
         }
         var total: Double = 0
-        for ind in 0...(model.heldcoins.count-1) {
-            total += (model.heldcoins[ind].buytotal ?? 0)
+        for ind in 0...(userService.cryptoPortfolio.count-1) {
+            total += (userService.cryptoPortfolio[ind].count * (userService.cryptoPortfolio[ind].buytotal ?? 0))
         }
         return total
     }
 
     func wallettotal() -> Double {
-        if model.ownedcoins.count == 0 {
+        if userService.cryptoWallet.count == 0 {
             return 0
         }
         var total: Double = 0
-        for ind in 0...(model.ownedcoins.count - 1) {
-            let coindx = model.coins.firstIndex(where: { $0.id == model.ownedcoins[ind].coinid })
-            total += model.ownedcoins[ind].count * model.coins[coindx!].currentPrice
+        for ind in 0...(userService.cryptoWallet.count - 1) {
+            let coindx = coinService.coins.firstIndex(where: { $0.id == userService.cryptoWallet[ind].coinid })
+            total += userService.cryptoWallet[ind].count * model.coins[coindx!].currentPrice
         }
         return total
     }
@@ -93,27 +118,27 @@ class PortfolioInteractor {
         return (self.wallettotal()-self.walletchange())
     }
     func walletchange() -> Double {
-        if model.ownedcoins.count == 0 {
+        if userService.cryptoWallet.count == 0 {
             return 0
         }
         var total: Double = 0
-        for ind in 0...(model.ownedcoins.count-1) {
-            let idx = model.coins.firstIndex(where: { $0.id == model.ownedcoins[ind].coinid })
-            let change = model.coins[idx!].priceChange24H ?? 0
-            let changecounted = model.ownedcoins[ind].count * change
+        for ind in 0...(userService.cryptoWallet.count-1) {
+            let idx = coinService.coins.firstIndex(where: { $0.id == userService.cryptoWallet[ind].coinid })
+            let change = coinService.coins[idx!].priceChange24H ?? 0
+            let changecounted = userService.cryptoWallet[ind].count * change
             total += changecounted
         }
         return total
     }
 
     func favfoliochange() -> Double {
-        if model.favcoins.count == 0 {
+        if userService.cryptoFavs.count == 0 {
             return 0
         }
         var total: Double = 0
-        for ind in 0...(model.favcoins.count-1) {
-            let idx = model.coins.firstIndex(where: { $0.id == model.favcoins[ind].coinid })
-            total += model.coins[idx!].priceChangePercentage24H ?? 0
+        for ind in 0...(userService.cryptoFavs.count-1) {
+            let idx = coinService.coins.firstIndex(where: { $0.id == userService.cryptoFavs[ind].coinid })
+            total += coinService.coins[idx!].priceChangePercentage24H ?? 0
         }
         total /= Double(model.favcoins.count)
         return total

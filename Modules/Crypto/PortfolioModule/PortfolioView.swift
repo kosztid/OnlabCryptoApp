@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct PortfolioView: View {
-    @ObservedObject var presenter: PortfolioPresenter
+    @StateObject var presenter: PortfolioPresenter
 
     var body: some View {
         ZStack {
@@ -10,19 +10,7 @@ struct PortfolioView: View {
             VStack {
                 presenter.makeFolioData(selected: presenter.selection)
                     .padding(5)
-                VStack {
-                    HStack {
-                        Spacer()
-                        presenter.makeButtonforPortfolioList()
-                        presenter.makeButtonforFavfolioList()
-                            .accessibilityIdentifier("FavfolioButton")
-                        presenter.makeButtonforWalletList()                            
-                            .accessibilityIdentifier("WalletButton")
-                        Spacer()
-                    }
-                }
-                .padding(.horizontal, 5)
-                .frame(height: 100, alignment: .leading)
+                buttonList
                 presenter.makeList(selected: presenter.selection)
                     .background(Color.theme.backgroundcolor)
                     .scrollContentBackground(.hidden)
@@ -40,6 +28,24 @@ struct PortfolioView: View {
                     .listStyle(PlainListStyle())
             }
         }
+        .onAppear(perform: presenter.reloadData)
+        .onChange(of: presenter.favcoins.count) { _ in
+            print("favcoins megvaltozott")
+        }
+    }
+
+    var buttonList: some View {
+        HStack {
+            Spacer()
+            presenter.makeButtonforPortfolioList()
+            presenter.makeButtonforFavfolioList()
+                .accessibilityIdentifier("FavfolioButton")
+            presenter.makeButtonforWalletList()
+                .accessibilityIdentifier("WalletButton")
+            Spacer()
+        }
+        .padding(.horizontal, 5)
+        .frame(height: 100, alignment: .leading)
     }
 }
 
