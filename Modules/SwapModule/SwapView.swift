@@ -1,11 +1,8 @@
 import SwiftUI
 
-
 struct SwapView: View {
     @ObservedObject var presenter: SwapPresenter
     @State private var showingAlert = false
-    // @State var coinstobuy : Double = 0
-    // @State var coinstosell : Double = 0
     let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -14,7 +11,6 @@ struct SwapView: View {
     var body: some View {
         ZStack {
             Color.theme.backgroundcolor
-            
             VStack {
                 HStack {
                     Spacer()
@@ -41,11 +37,12 @@ struct SwapView: View {
                         VStack {
                             Text("Owned:")
                             Text("\(presenter.ownedamount(coin: presenter.coin1)) \(presenter.selected(coin: presenter.coin1).symbol) ")
-                        }.font(.system(size: 12))
+                        }
+                        .font(.system(size: 12))
                         TextField("Amount to sell", value: .init(
                             get: { self.presenter.coinstosell },
                             set: { self.presenter.setCoinstosell(amount:Double($0)) }
-                        ), formatter: formatter, onEditingChanged: { (changed) in
+                        ), formatter: formatter, onEditingChanged: { changed in
                             // presenter.self.coinstosell = self.coinstosell
                             if changed {
                                 presenter.setBuyorSell(boolean: "sell")
@@ -92,8 +89,8 @@ struct SwapView: View {
                         VStack {
                             Text("Owned:")
                             Text("\(presenter.ownedamount(coin: presenter.coin2)) \(presenter.selected(coin: presenter.coin2).symbol) ")
-                        }.font(.system(size: 12))
-                        
+                        }
+                        .font(.system(size: 12))
                         TextField("Amount to buy", value: .init(
                             get: { self.presenter.coinstobuy },
                             set: { self.presenter.setCoinstobuy(amount: Double($0)) }

@@ -1,14 +1,7 @@
-//
-//  SwapInteractor.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 02. 25..
-//
-
 import Foundation
 import SwiftUI
 
-class SwapInteractor{
+class SwapInteractor {
     let model: DataModel
 
     init(model: DataModel) {
@@ -24,12 +17,6 @@ class SwapInteractor{
         let ownedamountfromsell: Double = model.ownedcoins[model.ownedcoins.firstIndex(where: { $0.coinid == cointosell })!].count
         if ownedamountfromsell < sellamount {
         } else {
-//            let index = model.ownedcoins.firstIndex(where: { $0.coinid == cointobuy })
-//            if model.ownedcoins.filter({ $0.coinid == cointobuy }).isEmpty == false {
-//                ownedamountfrombuy = model.ownedcoins[index!].count
-//            } else {
-//                ownedamountfrombuy = 0
-//            }
             model.modifywallet(cointosell, cointobuy, sellamount, buyamount)
             sendTradeHistory(id: "1", cointosell: cointosell, sellamount: sellamount, cointobuy: cointobuy, buyamount: buyamount)
         }
