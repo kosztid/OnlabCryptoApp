@@ -1,10 +1,3 @@
-//
-//  ListOfCoinsListItem.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 02. 26..
-//
-
 import SwiftUI
 
 struct ListOfCoinsListItem: View {

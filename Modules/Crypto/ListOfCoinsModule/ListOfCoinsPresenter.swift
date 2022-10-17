@@ -1,10 +1,3 @@
-//
-//  ListOfCoinsPresenter.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 02. 25..
-//
-
 import Foundation
 import SwiftUI
 import Combine
@@ -19,7 +12,7 @@ class ListOfCoinsPresenter: ObservableObject {
 
     init(interactor: ListOfCoinsInteractor) {
         self.interactor = interactor
-        interactor.model.$coins
+        interactor.getPublisher()
             .assign(to: \.coins, on: self)
             .store(in: &cancellables)
 
@@ -37,7 +30,7 @@ class ListOfCoinsPresenter: ObservableObject {
         for coin: CoinModel,
         @ViewBuilder content: () -> Content
     ) -> some View {
-        NavigationLink(destination: router.makeCoinDetailView(coin: coin, model: interactor.model)) {
+        NavigationLink(destination: router.makeCoinDetailView(interactor: interactor.makeDetailInteractor(coin: coin))) {
             }.buttonStyle(PlainButtonStyle())
             .opacity(0)
     }

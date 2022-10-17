@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ListOfCoinsView: View {
-    @ObservedObject var presenter: ListOfCoinsPresenter
+    @StateObject var presenter: ListOfCoinsPresenter
     var body: some View {
         List {
             ForEach(presenter.coins) { coin in
