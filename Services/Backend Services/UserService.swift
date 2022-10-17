@@ -9,9 +9,13 @@ struct Favfolio: Codable {
     let buytotal: Double?
 }
 
-class UserService {
+final class UserService: ObservableObject {
     let port = "8090"
-    @Published var cryptoFavs: [CryptoServerModel] = []
+    @Published var cryptoFavs: [CryptoServerModel] = [] {
+        didSet {
+            print("cryptofavs changed")
+        }
+    }
     @Published var cryptoPortfolio: [CryptoServerModel] = []
     @Published var cryptoWallet: [CryptoServerModel] = []
     @Published var stockFavs: [StockServerModel] = []
@@ -35,6 +39,7 @@ class UserService {
             self.isSignedIn = false
         }
     }
+
     func signin(_ email: String, _ password: String) {
         auth.signIn(withEmail: email, password: password) { result, error in
             guard result != nil, error == nil else {
@@ -51,7 +56,7 @@ class UserService {
                     self.isSignedIn = true
                     print(self.auth.currentUser!.uid)
                     print(self.auth.currentUser!.email ?? "")
-                    self.loadUser(apikey: idToken ?? "error", userID: self.auth.currentUser!.uid)
+                    self.loadUser()
                     //   self.communityService.loadCommunities(apikey: idToken ?? "error")
                 }
             }
@@ -81,7 +86,6 @@ class UserService {
         }
     }
 
-
     func userReload() {
         auth.currentUser?.reload(completion: { (error) in
             if let error = error {
@@ -98,7 +102,7 @@ class UserService {
                         print(self.auth.currentUser!.uid)
                         print(self.auth.currentUser!.email ?? "")
                         print(idToken)
-                        self.loadUser(apikey: idToken ?? "error", userID: self.auth.currentUser!.uid)
+                        self.loadUser()
                         //    self.communityService.loadCommunities(apikey: idToken ?? "error")
                     }
                 }
@@ -107,45 +111,51 @@ class UserService {
     }
 
     // MARK: - User data, account
-    func loadUser(apikey: String, userID: String) {
-        print("lefutott")
-        guard let url = URL(string: "http://localhost:\(port)/api/v1/users/\(userID)")
-        else {
-            return
+    func loadUser() {
+        self.auth.currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            let apikey = idToken ?? "error"
+            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(self.auth.currentUser!.uid)")
+            else {
+                return
+            }
+
+            var request = URLRequest(url: url)
+            request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+            self.userSub = URLSession.shared.dataTaskPublisher(for: request)
+                .subscribe(on: DispatchQueue.global(qos: .default))
+                .tryMap { (output) -> Data in
+                    guard let response = output.response as? HTTPURLResponse,
+                          response.statusCode >= 200 && response.statusCode < 300 else {
+
+                        throw URLError(.badServerResponse)
+                    }
+                    return output.data
+                }
+                .receive(on: DispatchQueue.main)
+                .decode(type: UserModel.self, decoder: JSONDecoder())
+                .sink {(completion) in
+                    switch completion {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                    }
+                } receiveValue: { [weak self] (returnedUser) in
+                    self?.cryptoFavs = returnedUser.favfolio
+                    self?.cryptoPortfolio = returnedUser.portfolio
+                    self?.cryptoWallet = returnedUser.wallet
+                    self?.stockFavs = returnedUser.stockfavfolio
+                    self?.stockPortfolio = returnedUser.stockportfolio
+                    self?.stockWallet = returnedUser.stockwallet
+                    self?.userSub?.cancel()
+                }
         }
-
-        var request = URLRequest(url: url)
-        request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        userSub = URLSession.shared.dataTaskPublisher(for: request)
-            .subscribe(on: DispatchQueue.global(qos: .default))
-            .tryMap { (output) -> Data in
-                guard let response = output.response as? HTTPURLResponse,
-                      response.statusCode >= 200 && response.statusCode < 300 else {
-
-                    throw URLError(.badServerResponse)
-                }
-                return output.data
-            }
-            .receive(on: DispatchQueue.main)
-            .decode(type: UserModel.self, decoder: JSONDecoder())
-            .sink {(completion) in
-                switch completion {
-                case .finished:
-                    break
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            } receiveValue: { [weak self] (returnedUser) in
-                self?.cryptoFavs = returnedUser.favfolio
-                self?.cryptoPortfolio = returnedUser.portfolio
-                self?.cryptoWallet = returnedUser.wallet
-                self?.stockFavs = returnedUser.stockfavfolio
-                self?.stockPortfolio = returnedUser.stockportfolio
-                self?.stockWallet = returnedUser.stockwallet
-                self?.userSub?.cancel()
-            }
     }
 
     func registerUser(_ apikey: String, _ userId: String, _ email: String) {
@@ -166,7 +176,7 @@ class UserService {
             guard error == nil else {
                 return
             }
-            self.loadUser(apikey: apikey, userID: userId)
+            self.loadUser()
         }
         task.resume()
     }
@@ -192,55 +202,70 @@ class UserService {
             guard error == nil else {
                 return
             }
-            self.loadUser(apikey: apikey, userID: userId)
+            self.loadUser()
         }
         task.resume()
     }
 
-    func updatePortfolio(_ apikey: String, _ userId: String, _ coinId: String, _ count: Double, _ buytotal: Double) {
-        guard let url = URL(string: "http://localhost:\(port)/api/v1/users/\(userId)/portfolio/") else {
-            return
-        }
-
-        var request = URLRequest(url: url) /* 1 */
-        request.httpMethod = "PUT" /* 2 */
-        request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization") /* 3 */
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type") /* 4 */
-        let body: [String: AnyHashable] = [
-            "id": "\(coinId)",
-            "count": count,
-            "buytotal": buytotal
-        ]
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
-        let task = URLSession.shared.dataTask(with: request) { _, _, error in /* 5 */
-            guard error == nil else {
+    func updatePortfolio(_ coinId: String, _ count: Double, _ buytotal: Double) {
+        self.auth.currentUser?.getIDTokenForcingRefresh(true) { apikey, error in
+            if let error = error {
+                print(error.localizedDescription)
                 return
             }
-            self.loadUser(apikey: apikey, userID: userId) /* 6 */
+            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(self.auth.currentUser!.uid)/portfolio/") else {
+                return
+            }
+
+            var request = URLRequest(url: url) /* 1 */
+            request.httpMethod = "PUT" /* 2 */
+            request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization") /* 3 */
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type") /* 4 */
+            let body: [String: AnyHashable] = [
+                "id": "\(coinId)",
+                "count": count,
+                "buytotal": buytotal
+            ]
+            request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
+            let task = URLSession.shared.dataTask(with: request) { _, _, error in /* 5 */
+                guard error == nil else {
+                    return
+                }
+                self.loadUser() /* 6 */
+            }
+            task.resume()
         }
-        task.resume()
     }
 
-    func updateFavs(_ apikey: String, _ userId: String, _ coinId: String) {
-        guard let url = URL(string: "http://localhost:\(port)/api/v1/users/\(userId)/favfolio/") else {
-            return
-        }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
-        let body: [String: AnyHashable] = [
-            "id": "\(coinId)"
-        ]
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
-        let task = URLSession.shared.dataTask(with: request) { _, _, error in
-            guard error == nil else {
+    func updateFavs(_ coinId: String) {
+        self.auth.currentUser?.getIDTokenForcingRefresh(true) { apikey, error in
+            if let error = error {
+                print(error.localizedDescription)
                 return
             }
-            self.loadUser(apikey: apikey, userID: userId)
+            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(self.auth.currentUser!.uid)/favfolio/") else {
+                return
+            }
+            let token = apikey ?? "error"
+            print("token:\(token)")
+
+            var request = URLRequest(url: url)
+            request.httpMethod = "PUT"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            let body: [String: AnyHashable] = [
+                "id": "\(coinId)"
+            ]
+            request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
+            let task = URLSession.shared.dataTask(with: request) { _, _, error in
+                guard error == nil else {
+                    return
+                }
+                self.loadUser()
+            }
+            task.resume()
         }
-        task.resume()
+
     }
 
     // MARK: - Stocks portfolio
@@ -265,7 +290,7 @@ class UserService {
             guard error == nil else {
                 return
             }
-            self.loadUser(apikey: apikey, userID: userId)
+            self.loadUser()
         }
         task.resume()
     }
@@ -289,7 +314,7 @@ class UserService {
             guard error == nil else {
                 return
             }
-            self.loadUser(apikey: apikey, userID: userId)
+            self.loadUser()
         }
         task.resume()
     }
@@ -311,7 +336,7 @@ class UserService {
             guard error == nil else {
                 return
             }
-            self.loadUser(apikey: apikey, userID: userId)
+            self.loadUser()
         }
         task.resume()
     }
