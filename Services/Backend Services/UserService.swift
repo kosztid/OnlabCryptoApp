@@ -11,11 +11,7 @@ struct Favfolio: Codable {
 
 final class UserService: ObservableObject {
     let port = "8090"
-    @Published var cryptoFavs: [CryptoServerModel] = [] {
-        didSet {
-            print("cryptofavs changed")
-        }
-    }
+    @Published var cryptoFavs: [CryptoServerModel] = []
     @Published var cryptoPortfolio: [CryptoServerModel] = []
     @Published var cryptoWallet: [CryptoServerModel] = []
     @Published var stockFavs: [StockServerModel] = []
@@ -35,9 +31,7 @@ final class UserService: ObservableObject {
 
     func signOut() {
         try?auth.signOut()
-        DispatchQueue.main.async {
-            self.isSignedIn = false
-        }
+        userReload()
     }
 
     func signin(_ email: String, _ password: String) {
@@ -87,27 +81,48 @@ final class UserService: ObservableObject {
     }
 
     func userReload() {
-        auth.currentUser?.reload(completion: { (error) in
-            if let error = error {
-                print(String(describing: error))
-            } else {
-                let currentUser = self.auth.currentUser
-                currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
-                    if let error = error {
-                        print(error.localizedDescription)
-                        return
-                    }
-                    DispatchQueue.main.async {
-                        self.isSignedIn = true
-                        print(self.auth.currentUser!.uid)
-                        print(self.auth.currentUser!.email ?? "")
-                        print(idToken)
-                        self.loadUser()
-                        //    self.communityService.loadCommunities(apikey: idToken ?? "error")
+        if Auth.auth().currentUser?.uid != nil {
+            auth.currentUser?.reload(completion: { (error) in
+                if let error = error {
+                    print(String(describing: error))
+                } else {
+                    let currentUser = self.auth.currentUser
+                    currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
+                        if let error = error {
+                            print(error.localizedDescription)
+                            return
+                        }
+                        DispatchQueue.main.async {
+                            self.isSignedIn = true
+                            print(self.auth.currentUser!.uid)
+                            print(self.auth.currentUser!.email ?? "")
+                            print(idToken)
+                            self.loadUser()
+                            //    self.communityService.loadCommunities(apikey: idToken ?? "error")
+                        }
                     }
                 }
+            })
+        } else {
+            print("else ág")
+            DispatchQueue.main.async {
+                self.isSignedIn = false
+                self.cryptoFavs = []
+                self.cryptoPortfolio = []
+                self.cryptoWallet = []
+                self.stockFavs = []
+                self.stockPortfolio = []
+                self.stockWallet = []
             }
-        })
+        }
+    }
+
+    func getUserId() -> String {
+        return auth.currentUser?.uid ?? "nouser"
+    }
+
+    func getUserEmail() -> String {
+        return auth.currentUser?.email ?? "nomail"
     }
 
     // MARK: - User data, account
@@ -182,29 +197,37 @@ final class UserService: ObservableObject {
     }
 
     // MARK: - Crypto portfolio
-    func updateWallet(_ apikey: String, _ userId: String, _ coinToSell: String, _ coinToBuy: String, _ sellAmount: Double, _ buyAmount: Double) {
-        guard let url = URL(string: "http://localhost:\(port)/api/v1/users/\(userId)/wallet/") else {
-            return
-        }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
-        request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        let body: [String: AnyHashable] = [
-            "toSell": "\(coinToSell)",
-            "toBuy": "\(coinToBuy)",
-            "sellAmount": sellAmount,
-            "buyAmount": buyAmount
-        ]
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
-        let task = URLSession.shared.dataTask(with: request) { _, _, error in
-            guard error == nil else {
+    func updateWallet(_ coinToSell: String, _ coinToBuy: String, _ sellAmount: Double, _ buyAmount: Double) {
+        self.auth.currentUser?.getIDTokenForcingRefresh(true) { apikey, error in
+            if let error = error {
+                print(error.localizedDescription)
                 return
             }
-            self.loadUser()
+            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(self.auth.currentUser!.uid)/wallet/") else {
+                return
+            }
+
+            let token = apikey ?? "error"
+
+            var request = URLRequest(url: url)
+            request.httpMethod = "PUT"
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            let body: [String: AnyHashable] = [
+                "toSell": "\(coinToSell)",
+                "toBuy": "\(coinToBuy)",
+                "sellAmount": sellAmount,
+                "buyAmount": buyAmount
+            ]
+            request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
+            let task = URLSession.shared.dataTask(with: request) { _, _, error in
+                guard error == nil else {
+                    return
+                }
+                self.loadUser()
+            }
+            task.resume()
         }
-        task.resume()
     }
 
     func updatePortfolio(_ coinId: String, _ count: Double, _ buytotal: Double) {
@@ -217,9 +240,11 @@ final class UserService: ObservableObject {
                 return
             }
 
+            let token = apikey ?? "error"
+
             var request = URLRequest(url: url) /* 1 */
             request.httpMethod = "PUT" /* 2 */
-            request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization") /* 3 */
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization") /* 3 */
             request.setValue("application/json", forHTTPHeaderField: "Content-Type") /* 4 */
             let body: [String: AnyHashable] = [
                 "id": "\(coinId)",
@@ -247,7 +272,6 @@ final class UserService: ObservableObject {
                 return
             }
             let token = apikey ?? "error"
-            print("token:\(token)")
 
             var request = URLRequest(url: url)
             request.httpMethod = "PUT"
@@ -265,79 +289,102 @@ final class UserService: ObservableObject {
             }
             task.resume()
         }
-
     }
 
     // MARK: - Stocks portfolio
 
-    func updateStockWallet(_ apikey: String, _ userId: String, _ symbolToSell: String, _ symbolToBuy: String, _ sellAmount: Double, _ buyAmount: Double) {
-        guard let url = URL(string: "http://localhost:\(port)/api/v1/users/\(userId)/stockwallet/") else {
-            return
-        }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
-        request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        let body: [String: AnyHashable] = [
-            "toSell": "\(symbolToSell)",
-            "toBuy": "\(symbolToBuy)",
-            "sellAmount": sellAmount,
-            "buyAmount": buyAmount
-        ]
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
-        let task = URLSession.shared.dataTask(with: request) { _, _, error in
-            guard error == nil else {
+    func updateStockWallet(_ symbolToSell: String, _ symbolToBuy: String, _ sellAmount: Double, _ buyAmount: Double) {
+        self.auth.currentUser?.getIDTokenForcingRefresh(true) { apikey, error in
+            if let error = error {
+                print(error.localizedDescription)
                 return
             }
-            self.loadUser()
+            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(self.auth.currentUser!.uid)/stockwallet/") else {
+                return
+            }
+
+            let token = apikey ?? "error"
+
+            var request = URLRequest(url: url)
+            request.httpMethod = "PUT"
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            let body: [String: AnyHashable] = [
+                "toSell": "\(symbolToSell)",
+                "toBuy": "\(symbolToBuy)",
+                "sellAmount": sellAmount,
+                "buyAmount": buyAmount
+            ]
+            request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
+            let task = URLSession.shared.dataTask(with: request) { _, _, error in
+                guard error == nil else {
+                    return
+                }
+                self.loadUser()
+            }
+            task.resume()
         }
-        task.resume()
     }
 
-    func updateStockPortfolio(_ apikey: String, _ userId: String, _ symbol: String, _ count: Double, _ buytotal: Double) {
-        guard let url = URL(string: "http://localhost:\(port)/api/v1/users/\(userId)/stockportfolio/") else {
-            return
-        }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
-        request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        let body: [String: AnyHashable] = [
-            "id": "\(symbol)",
-            "count": count,
-            "buytotal": buytotal
-        ]
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
-        let task = URLSession.shared.dataTask(with: request) { _, _, error in
-            guard error == nil else {
+    func updateStockPortfolio(_ symbol: String, _ count: Double, _ buytotal: Double) {
+        self.auth.currentUser?.getIDTokenForcingRefresh(true) { apikey, error in
+            if let error = error {
+                print(error.localizedDescription)
                 return
             }
-            self.loadUser()
+            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(self.auth.currentUser!.uid)/stockportfolio/") else {
+                return
+            }
+
+            let token = apikey ?? "error"
+
+            var request = URLRequest(url: url)
+            request.httpMethod = "PUT"
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            let body: [String: AnyHashable] = [
+                "id": "\(symbol)",
+                "count": count,
+                "buytotal": buytotal
+            ]
+            request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
+            let task = URLSession.shared.dataTask(with: request) { _, _, error in
+                guard error == nil else {
+                    return
+                }
+                self.loadUser()
+            }
+            task.resume()
         }
-        task.resume()
     }
 
-    func updateStockFavs(_ apikey: String, _ userId: String, _ symbol: String) {
-        guard let url = URL(string: "http://localhost:\(port)/api/v1/users/\(userId)/stockfavfolio/") else {
-            return
-        }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
-        let body: [String: AnyHashable] = [
-            "id": "\(symbol)"
-        ]
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
-        let task = URLSession.shared.dataTask(with: request) { _, _, error in
-            guard error == nil else {
+    func updateStockFavs(_ symbol: String) {
+        self.auth.currentUser?.getIDTokenForcingRefresh(true) { apikey, error in
+            if let error = error {
+                print(error.localizedDescription)
                 return
             }
-            self.loadUser()
+            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(self.auth.currentUser!.uid)/stockfavfolio/") else {
+                return
+            }
+
+            let token = apikey ?? "error"
+
+            var request = URLRequest(url: url)
+            request.httpMethod = "PUT"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            let body: [String: AnyHashable] = [
+                "id": "\(symbol)"
+            ]
+            request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
+            let task = URLSession.shared.dataTask(with: request) { _, _, error in
+                guard error == nil else {
+                    return
+                }
+                self.loadUser()
+            }
+            task.resume()
         }
-        task.resume()
     }
 }

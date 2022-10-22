@@ -11,12 +11,12 @@ class CommunitiesRouter {
         return CommunityAdderView(presenter: CommunityAdderPresenter(interactor: CommunityAdderInteractor(model: model)))
     }
 
-    func makeAccountView(model: DataModel) -> some View {
-        return AccountView(presenter: AccountPresenter(interactor: AccountInteractor(model: model)))
+    func makeAccountView() -> some View {
+        return AccountView(presenter: AccountPresenter(interactor: AccountInteractor()))
     }
     
-    func makeLoginView(model: DataModel) -> some View {
-        let presenter = LoginScreenPresenter(interactor: LoginScreenInteractor(model: model))
+    func makeLoginView() -> some View {
+        let presenter = LoginScreenPresenter(interactor: LoginScreenInteractor())
         return LoginScreenView(presenter: presenter)
     }
 }

@@ -48,13 +48,3 @@ struct PortfolioView: View {
         .frame(height: 100, alignment: .leading)
     }
 }
-
-struct PortfolioView_Previews: PreviewProvider {
-    static var previews: some View {
-        let model = DataModel()
-        let interactor = PortfolioInteractor(model: model)
-        let presenter = PortfolioPresenter(interactor: interactor)
-        PortfolioView(presenter: presenter)
-            .environmentObject(DataModel())
-    }
-}

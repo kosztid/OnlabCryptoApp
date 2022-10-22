@@ -2,19 +2,17 @@ import Foundation
 import Combine
 
 class PortfolioInteractor {
-    let model: DataModel
     private var userService: UserService
     var coinService: CoinService
 
-    init(model: DataModel) {
-        self.model = model
+    init() {
         coinService = CoinService()
         userService = UserService()
         userService.userReload()
     }
 
     func makeDetailInteractor(coin: CoinModel) -> CoinDetailInteractor {
-        CoinDetailInteractor(coin: coin, model: model, service: userService)
+        CoinDetailInteractor(coin: coin, service: userService)
     }
 
     func getCoins() -> Published<[CoinModel]>.Publisher {
@@ -29,7 +27,7 @@ class PortfolioInteractor {
     }
 
     func reloadData() {
-        userService.loadUser()
+        userService.userReload()
     }
 
     func heldcoins() -> [String] {
@@ -55,11 +53,7 @@ class PortfolioInteractor {
         }
         return arr
     }
-
-    func getmodel() -> DataModel {
-        return model
-    }
-
+    
     func removeCoin(_ index: IndexSet) {
         userService.updatePortfolio(coinService.coins[index.first!].id, 0.0, 0.0)
     }
@@ -110,7 +104,7 @@ class PortfolioInteractor {
         var total: Double = 0
         for ind in 0...(userService.cryptoWallet.count - 1) {
             let coindx = coinService.coins.firstIndex(where: { $0.id == userService.cryptoWallet[ind].coinid })
-            total += userService.cryptoWallet[ind].count * model.coins[coindx!].currentPrice
+            total += userService.cryptoWallet[ind].count * coinService.coins[coindx!].currentPrice
         }
         return total
     }
@@ -140,11 +134,15 @@ class PortfolioInteractor {
             let idx = coinService.coins.firstIndex(where: { $0.id == userService.cryptoFavs[ind].coinid })
             total += coinService.coins[idx!].priceChangePercentage24H ?? 0
         }
-        total /= Double(model.favcoins.count)
+        total /= Double(userService.cryptoFavs.count)
         return total
     }
 
+    func getSignInStatus() -> Published<Bool>.Publisher {
+        return userService.$isSignedIn
+    }
+
     func changeViewTo(viewname: String) {
-        model.selection = viewname
+//        model.selection = viewname
     }
 }

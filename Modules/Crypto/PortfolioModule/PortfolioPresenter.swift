@@ -3,7 +3,7 @@ import Foundation
 import SwiftUI
 
 class PortfolioPresenter: ObservableObject {
-    @Published var selection: String = "wallet"
+    @Published var selection: String = "portfolio"
     @Published var coins: [CoinModel] = []
     @Published var favcoins: [CryptoServerModel] = []
     @Published var signedin = false
@@ -14,11 +14,7 @@ class PortfolioPresenter: ObservableObject {
     init(interactor: PortfolioInteractor) {
         self.interactor = interactor
 
-        interactor.model.$selection
-            .assign(to: \.selection, on: self)
-            .store(in: &cancellables)
-
-        interactor.model.$isSignedIn
+        interactor.getSignInStatus()
             .assign(to: \.signedin, on: self)
             .store(in: &cancellables)
 
@@ -32,7 +28,8 @@ class PortfolioPresenter: ObservableObject {
     }
 
     func changeViewTo(viewname: String) {
-        interactor.changeViewTo(viewname: viewname)
+        selection = viewname
+//        interactor.changeViewTo(viewname: viewname)
     }
 
     func linkBuilder<Content: View>(
@@ -66,11 +63,11 @@ class PortfolioPresenter: ObservableObject {
     }
 
     func makeButtonForLogin() -> some View {
-        NavigationLink("Account", destination: router.makeLoginView(model: interactor.model))
+        NavigationLink("Account", destination: router.makeLoginView())
     }
 
     func makeButtonForAccount() -> some View {
-        NavigationLink("Account", destination: router.makeAccountView(model: interactor.model))
+        NavigationLink("Account", destination: router.makeAccountView())
     }
 
     func portfoliototal() -> Double {
