@@ -8,6 +8,10 @@ struct SwapView: View {
         formatter.numberStyle = .decimal
         return formatter
     }()
+
+    @State private var isFocused1 = false
+    @State private var isFocused2 = false
+
     var body: some View {
         ZStack {
             Color.theme.backgroundcolor
@@ -20,45 +24,13 @@ struct SwapView: View {
                             .bold()
                         presenter.makeButtonForSelector(coin: "coin1")
                             .accessibilityIdentifier("SwapSellSelectorButton")
-                        HStack {
-                            CachedAsyncImage(url: URL(string: presenter.selected(coin: presenter.coin1).image)){ image in
-                                image
-                                    .resizable()
-                                    .scaledToFit()
-                            } placeholder: {
-                                Circle()
-                                    .frame(width: 30, height: 30)
-                            }
-                            .frame(width: 30, height: 30)
-                            .cornerRadius(20)
-                            Text(presenter.selected(coin: presenter.coin1).name)
-                                .font(.system(size: 20))
-                        }
+                        sellCoinData
                         VStack {
                             Text("Owned:")
-                            Text("\(presenter.ownedamount(coin: presenter.coin1)) \(presenter.selected(coin: presenter.coin1).symbol) ")
+                            Text("\(presenter.ownedamount(coinid: presenter.coinmodel1.id)) \(presenter.coinmodel1.symbol) ")
                         }
                         .font(.system(size: 12))
-                        TextField("Amount to sell", value: .init(
-                            get: { self.presenter.coinstosell },
-                            set: { self.presenter.setCoinstosell(amount:Double($0)) }
-                        ), formatter: formatter, onEditingChanged: { changed in
-                            // presenter.self.coinstosell = self.coinstosell
-                            if changed {
-                                presenter.setBuyorSell(boolean: "sell")
-                            } else {
-                                presenter.setBuyAmount()
-                            }
-                        }).padding(.horizontal)
-                            .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                            .font(.system(size: 20))
-                            .foregroundColor(Color.theme.accentcolor)
-                            .background(Color.theme.backgroundcolor)
-                            .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.theme.accentcolorsecondary, lineWidth: 2))
-                            .cornerRadius(10)
-                            .disableAutocorrection(true)
-                            .keyboardType(.numberPad)
-                            .accessibilityIdentifier("SwapSellTextField")
+                        sellTextfield
                     }
                     .font(.system(size: 24))
                     .foregroundColor(Color.theme.accentcolor)
@@ -72,45 +44,13 @@ struct SwapView: View {
                             .bold()
                         presenter.makeButtonForSelector(coin: "coin2")
                             .accessibilityIdentifier("SwapBuySelectorButton")
-                        HStack {
-                            CachedAsyncImage(url: URL(string: presenter.selected(coin: presenter.coin2).image)) { image in
-                                image
-                                    .resizable()
-                                    .scaledToFit()
-                            } placeholder: {
-                                Circle()
-                                    .frame(width: 30, height: 30)
-                            }
-                            .frame(width: 30, height: 30)
-                            .cornerRadius(20)
-                            Text(presenter.selected(coin: presenter.coin2).name)
-                                .font(.system(size: 20))
-                        }
+                        buyCoinData
                         VStack {
                             Text("Owned:")
-                            Text("\(presenter.ownedamount(coin: presenter.coin2)) \(presenter.selected(coin: presenter.coin2).symbol) ")
+                            Text("\(presenter.ownedamount(coinid: presenter.coinmodel2.id)) \(presenter.coinmodel2.symbol)")
                         }
                         .font(.system(size: 12))
-                        TextField("Amount to buy", value: .init(
-                            get: { self.presenter.coinstobuy },
-                            set: { self.presenter.setCoinstobuy(amount: Double($0)) }
-                        ), formatter: formatter, onEditingChanged: { (changed) in
-                            if changed {
-                                presenter.setBuyorSell(boolean: "buy")
-                            } else {
-                                presenter.setSellAmount()
-                            }
-                        })
-                            .padding(.horizontal)
-                            .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                            .font(.system(size: 20))
-                            .foregroundColor(Color.theme.accentcolor)
-                            .background(Color.theme.backgroundcolor)
-                            .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.theme.accentcolorsecondary, lineWidth: 2))
-                            .cornerRadius(10)
-                            .disableAutocorrection(true)
-                            .keyboardType(.numberPad)
-                            .accessibilityIdentifier("SwapBuyTextField")
+                        buyTextfield
                     }
                     .font(.system(size: 24))
                     .foregroundColor(Color.theme.accentcolor)
@@ -123,7 +63,97 @@ struct SwapView: View {
                 }
             }
         }
+        .onAppear(perform: presenter.loadService)
         .background(Color.theme.backgroundcolor)
+    }
+
+    var testField: some View {
+        TextField("Amount to buy", value: .init(
+            get: { self.presenter.coinstobuy },
+            set: { self.presenter.setCoinstobuy(amount: Double($0)) }
+        ), formatter: formatter, onEditingChanged: { changed in
+            if changed {
+                presenter.setBuyorSell(boolean: "buy")
+            } else {
+                presenter.setSellAmount()
+            }
+        })
+    }
+
+    var buyTextfield: some View {
+        TextField("Amount to buy", value: $presenter.coinstobuy, formatter: formatter, onEditingChanged: { changed in
+            isFocused1 = changed
+        })
+        .onChange(of: presenter.coinstobuy) { _ in
+            if isFocused1 {
+                presenter.setSellAmount()
+            }
+        }
+        .padding(.horizontal)
+        .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+        .font(.system(size: 20))
+        .foregroundColor(Color.theme.accentcolor)
+        .background(Color.theme.backgroundcolor)
+        .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.theme.accentcolorsecondary, lineWidth: 2))
+        .cornerRadius(10)
+        .disableAutocorrection(true)
+        .keyboardType(.numberPad)
+        .accessibilityIdentifier("SwapBuyTextField")
+    }
+
+    var sellTextfield: some View {
+        TextField("Amount to sell", value: $presenter.coinstosell, formatter: formatter, onEditingChanged: { changed in
+            isFocused2 = changed
+        })
+        .onChange(of: presenter.coinstosell) { _ in
+            if isFocused2 {
+                presenter.setBuyAmount()
+            }
+        }
+            .padding(.horizontal)
+            .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+            .font(.system(size: 20))
+            .foregroundColor(Color.theme.accentcolor)
+            .background(Color.theme.backgroundcolor)
+            .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.theme.accentcolorsecondary, lineWidth: 2))
+            .cornerRadius(10)
+            .disableAutocorrection(true)
+            .keyboardType(.numberPad)
+            .accessibilityIdentifier("SwapSellTextField")
+    }
+
+    var sellCoinData: some View {
+        HStack {
+            CachedAsyncImage(url: URL(string: presenter.coinmodel1.image)) { image in
+                image
+                    .resizable()
+                    .scaledToFit()
+            } placeholder: {
+                Circle()
+                    .frame(width: 30, height: 30)
+            }
+            .frame(width: 30, height: 30)
+            .cornerRadius(20)
+            Text(presenter.coinmodel1.name)
+                .font(.system(size: 20))
+        }
+    }
+
+    var buyCoinData: some View {
+        HStack {
+            CachedAsyncImage(url: URL(string: presenter.coinmodel2.image)) { image in
+                image
+                    .resizable()
+                    .scaledToFit()
+            } placeholder: {
+                Circle()
+                    .frame(width: 30, height: 30)
+            }
+            .frame(width: 30, height: 30)
+            .cornerRadius(20)
+            Text(presenter.coinmodel2.name)
+                .font(.system(size: 20))
+        }
     }
 }
 

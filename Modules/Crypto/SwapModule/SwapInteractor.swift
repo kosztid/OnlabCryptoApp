@@ -3,36 +3,47 @@ import SwiftUI
 
 class SwapInteractor {
     let model: DataModel
+    private var userService: UserService
+    var coinService: CoinService
 
     init(model: DataModel) {
         self.model = model
+        coinService = CoinService()
+        userService = UserService()
     }
+
+    func loadService() {
+        userService.userReload()
+    }
+
     func selected(coin: String) -> CoinModel {
         // swiftlint:disable:next line_length
-        return model.coins.first(where: {$0.id == coin}) ?? CoinModel(id: "btc", symbol: "btc", name: "btc", image: "btc", currentPrice: 10, marketCap: 10, marketCapRank: 10, fullyDilutedValuation: 10, totalVolume: 10, high24H: 10, low24H: 10, priceChange24H: 10, priceChangePercentage24H: 10, marketCapChange24H: 10, marketCapChangePercentage24H: 10, circulatingSupply: 10, totalSupply: 10, maxSupply: 10, ath: 10, athChangePercentage: 10, athDate: "btc", atl: 10, atlChangePercentage: 10, atlDate: "btc", lastUpdated: "btc", sparklineIn7D: nil, priceChangePercentage24HInCurrency: 10)
+        return coinService.coins.first(where: {$0.id == coin}) ?? CoinModel(id: "btc", symbol: "btc", name: "btc", image: "btc", currentPrice: 10, marketCap: 10, marketCapRank: 10, fullyDilutedValuation: 10, totalVolume: 10, high24H: 10, low24H: 10, priceChange24H: 10, priceChangePercentage24H: 10, marketCapChange24H: 10, marketCapChangePercentage24H: 10, circulatingSupply: 10, totalSupply: 10, maxSupply: 10, ath: 10, athChangePercentage: 10, athDate: "btc", atl: 10, atlChangePercentage: 10, atlDate: "btc", lastUpdated: "btc", sparklineIn7D: nil, priceChangePercentage24HInCurrency: 10)
+    }
+
+    func getCoins() -> Published<[CoinModel]>.Publisher {
+        return coinService.$coins
     }
 
     func swap(cointosell: String, sellamount: Double, cointobuy: String, buyamount: Double) {
-//        var ownedamountfrombuy: Double
-        let ownedamountfromsell: Double = model.ownedcoins[model.ownedcoins.firstIndex(where: { $0.coinid == cointosell })!].count
-        if ownedamountfromsell < sellamount {
-        } else {
-            model.modifywallet(cointosell, cointobuy, sellamount, buyamount)
+        let ownedamountfromsell: Double = userService.cryptoWallet[userService.cryptoWallet.firstIndex(where: { $0.coinid == cointosell })!].count
+        if ownedamountfromsell > sellamount {
+            userService.updateWallet(cointosell, cointobuy, sellamount, buyamount)
             sendTradeHistory(id: "1", cointosell: cointosell, sellamount: sellamount, cointobuy: cointobuy, buyamount: buyamount)
         }
     }
 
     func ownedamount(coin: CoinModel) -> Double {
-        let idx = model.ownedcoins.firstIndex(where: { $0.coinid == coin.id })
-        if model.ownedcoins.filter({ $0.coinid == coin.id }).isEmpty == false {
-            return model.ownedcoins[idx!].count
+        let idx = userService.cryptoWallet.firstIndex(where: { $0.coinid == coin.id })
+        if userService.cryptoWallet.filter({ $0.coinid == coin.id }).isEmpty == false {
+            return userService.cryptoWallet[idx!].count
         } else {
             return 0.0
         }
     }
 
     func isOwned(coin: CoinModel) -> Bool {
-        if model.ownedcoins.filter({ $0.coinid == coin.id }).isEmpty == false {
+        if userService.cryptoWallet.filter({ $0.coinid == coin.id }).isEmpty == false {
             return true
         } else {
             return false
@@ -55,12 +66,16 @@ class SwapInteractor {
         model.coinstosell = amount
     }
 
+    func getOwnedCoins() -> Published<[CryptoServerModel]>.Publisher {
+        return userService.$cryptoWallet
+    }
+
     func getAccountInfo() -> String {
-        return model.auth.currentUser?.uid ?? "nouser"
+        return userService.getUserId()
     }
 
     func getAccountEmail() -> String {
-        return model.auth.currentUser?.email ?? "nomail"
+        return userService.getUserEmail()
     }
 
     func sendTradeHistory(id: String, cointosell: String, sellamount: Double, cointobuy: String, buyamount: Double) {

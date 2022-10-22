@@ -4,6 +4,12 @@ import SwiftUI
 
 class SwapPresenter: ObservableObject {
     @Published var buyorsell = "none"
+
+    // swiftlint:disable:next line_length
+    @Published var coinmodel1 = CoinModel(id: "btc", symbol: "btc", name: "btc", image: "btc", currentPrice: 10, marketCap: 10, marketCapRank: 10, fullyDilutedValuation: 10, totalVolume: 10, high24H: 10, low24H: 10, priceChange24H: 10, priceChangePercentage24H: 10, marketCapChange24H: 10, marketCapChangePercentage24H: 10, circulatingSupply: 10, totalSupply: 10, maxSupply: 10, ath: 10, athChangePercentage: 10, athDate: "btc", atl: 10, atlChangePercentage: 10, atlDate: "btc", lastUpdated: "btc", sparklineIn7D: nil, priceChangePercentage24HInCurrency: 10)
+
+    // swiftlint:disable:next line_length
+    @Published var coinmodel2 = CoinModel(id: "btc", symbol: "btc", name: "btc", image: "btc", currentPrice: 10, marketCap: 10, marketCapRank: 10, fullyDilutedValuation: 10, totalVolume: 10, high24H: 10, low24H: 10, priceChange24H: 10, priceChangePercentage24H: 10, marketCapChange24H: 10, marketCapChangePercentage24H: 10, circulatingSupply: 10, totalSupply: 10, maxSupply: 10, ath: 10, athChangePercentage: 10, athDate: "btc", atl: 10, atlChangePercentage: 10, atlDate: "btc", lastUpdated: "btc", sparklineIn7D: nil, priceChangePercentage24HInCurrency: 10)
     @Published var coin1 = "ethereum"
     @Published var coin2 = "tether"
     @Published var coinstosell = 0.0
@@ -18,33 +24,17 @@ class SwapPresenter: ObservableObject {
     init(interactor: SwapInteractor) {
         self.interactor = interactor
 
-        interactor.model.$coin1
-            .assign(to: \.coin1, on: self)
-            .store(in: &cancellables)
-
-        interactor.model.$coin2
-            .assign(to: \.coin2, on: self)
-            .store(in: &cancellables)
-
-        interactor.model.$coinstobuy
-            .assign(to: \.coinstobuy, on: self)
-            .store(in: &cancellables)
-
-        interactor.model.$coinstosell
-            .assign(to: \.coinstosell, on: self)
-            .store(in: &cancellables)
-
-        interactor.model.$buyorsell
-            .assign(to: \.buyorsell, on: self)
-            .store(in: &cancellables)
-
-        interactor.model.$coins
+        interactor.getCoins()
             .assign(to: \.coins, on: self)
             .store(in: &cancellables)
 
-        interactor.model.$ownedcoins
+        interactor.getOwnedCoins()
             .assign(to: \.ownedcoins, on: self)
             .store(in: &cancellables)
+
+        coinmodel1 = selected(coin: "ethereum")
+        coinmodel2 = selected(coin: "tether")
+
     }
 
     func makeButtonForSelector(coin: String) -> some View {
@@ -52,29 +42,44 @@ class SwapPresenter: ObservableObject {
     }
 
     func setSellAmount() {
-            let coin1 = self.selected(coin: coin1)
-            let coin2 = self.selected(coin: coin2)
-            let amount = coin2.currentPrice*coinstobuy
-            interactor.setCoinstoSell(amount: amount / coin1.currentPrice)
-
+        let coin1 = coinmodel1
+        print(coin1.currentPrice)
+        let coin2 = coinmodel2
+        print(coin2.currentPrice)
+        let amount = coin2.currentPrice*coinstobuy
+        print(amount)
+        coinstosell = amount / coin1.currentPrice
     }
 
     func setBuyAmount() {
-            let coin1 = self.selected(coin: coin1)
-            let coin2 = self.selected(coin: coin2)
-            let amount = coin1.currentPrice*coinstosell
-            interactor.setCoinstoBuy(amount: amount / coin2.currentPrice )
-
+        let coin1 = coinmodel1
+        print(coin1.currentPrice)
+        let coin2 = coinmodel2
+        print(coin2.currentPrice)
+        let amount = coin1.currentPrice*coinstosell
+        print(amount)
+        coinstobuy = amount / coin2.currentPrice
     }
 
     func selected(coin: String) -> CoinModel {
-        return interactor.selected(coin: coin)
+        // swiftlint:disable:next line_length
+        return coins.first(where: {$0.id == coin}) ?? CoinModel(id: "-", symbol: "-", name: "-", image: "btc", currentPrice: 10, marketCap: 10, marketCapRank: 10, fullyDilutedValuation: 10, totalVolume: 10, high24H: 10, low24H: 10, priceChange24H: 10, priceChangePercentage24H: 10, marketCapChange24H: 10, marketCapChangePercentage24H: 10, circulatingSupply: 10, totalSupply: 10, maxSupply: 10, ath: 10, athChangePercentage: 10, athDate: "btc", atl: 10, atlChangePercentage: 10, atlDate: "btc", lastUpdated: "btc", sparklineIn7D: nil, priceChangePercentage24HInCurrency: 10)
     }
 
     func swap() {
-        interactor.swap(cointosell: coin1, sellamount: coinstosell, cointobuy: coin2, buyamount: coinstobuy)
+        interactor.swap(cointosell: coinmodel1.id, sellamount: coinstosell, cointobuy: coinmodel2.id, buyamount: coinstobuy)
+
         coinstosell = 0.0
         coinstobuy = 0.0
+    }
+
+    func getFormatter() -> NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter
+    }
+    func loadService() {
+        interactor.loadService()
     }
 
     func setCoinstobuy(amount: Double) {
@@ -86,23 +91,26 @@ class SwapPresenter: ObservableObject {
     }
 
     func setCoin1(coin1: String) {
-        interactor.setCoin1(coin1: coin1)
+        coinmodel1 = selected(coin: coin1)
+        setBuyAmount()
     }
 
     func setCoin2(coin2: String) {
-        interactor.setCoin2(coin2: coin2)
+        coinmodel2 = selected(coin: coin2)
+        setSellAmount()
     }
 
     func setBuyorSell(boolean: String) {
         interactor.setBuyorSell(boolean: boolean)
     }
 
-    func returnmodel() -> DataModel {
-        return interactor.model
-    }
-
-    func ownedamount(coin: String) -> Double {
-        return interactor.ownedamount(coin: selected(coin: coin))
+    func ownedamount(coinid: String) -> Double {
+        let idx = ownedcoins.firstIndex(where: { $0.coinid == coinid})
+        if ownedcoins.filter({ $0.coinid == coinid }).isEmpty == false {
+            return ownedcoins[idx!].count
+        } else {
+            return 0.0
+        }
     }
 
     func isOwned(coin: CoinModel) -> Bool {
