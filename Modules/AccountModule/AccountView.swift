@@ -1,13 +1,7 @@
-//
-//  AccountView.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 03. 13..
-//
-
 import SwiftUI
 
 struct AccountView: View {
+    @Environment(\.presentationMode) private var presentationMode
     var presenter: AccountPresenter
     @State var accountPrivate = true
     var body: some View {
@@ -18,8 +12,9 @@ struct AccountView: View {
                 privateToggle
                 Spacer()
 
-                presenter.makeLogoutButton()
+                logoutButton
                     .accessibilityIdentifier("AccountSignOutButton")
+
             }
             .padding(10)
         }
@@ -39,13 +34,20 @@ struct AccountView: View {
         .foregroundColor(Color.theme.accentcolor)
     }
 
-    var privateToggle: some View {
-        Toggle("Account láthatóság privát", isOn: $accountPrivate)
+    var logoutButton: some View {
+        Button {
+            presenter.signOut()
+            self.presentationMode.wrappedValue.dismiss()
+        } label: {
+            Text("Kijelentkezés")
+                .font(.system(size: 20))
+                .frame(height: 30)
+                .cornerRadius(5)
+                .padding(5)
+        }
     }
-}
 
-struct AccountView_Previews: PreviewProvider {
-    static var previews: some View {
-        AccountView(presenter: AccountPresenter(interactor: AccountInteractor(model: DataModel())))
+    var privateToggle: some View {
+        Toggle("Account láthatóság privát TODO", isOn: $accountPrivate)
     }
 }

@@ -92,9 +92,3 @@ struct RegisterScreenView: View {
         .background(Color.theme.backgroundcolor)
     }
 }
-
-struct RegisterScreenView_Previews: PreviewProvider {
-    static var previews: some View {
-        RegisterScreenView(presenter: RegisterScreenPresenter(interactor: RegisterScreenInteractor(model: DataModel())))
-    }
-}

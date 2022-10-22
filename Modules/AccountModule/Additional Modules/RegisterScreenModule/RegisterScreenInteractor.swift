@@ -1,18 +1,27 @@
 import Foundation
 
 class RegisterScreenInteractor {
-    let model: DataModel
+    private let userService: UserService
 
-    init(model: DataModel) {
-        self.model = model
+    init() {
+        userService = UserService()
+        userService.userReload()
     }
     func register(email: String, password: String) {
-        model.register(email: email, password: password)
+        userService.register(email, password)
     }
+
+    func getRegisterError() -> Published<Bool>.Publisher {
+        return userService.$registerError
+    }
+    func getRegistered() -> Published<Bool>.Publisher {
+        return userService.$registered
+    }
+
     func setregistererrorfalse() {
-        model.registererror = false
+        userService.registerError = false
     }
     func setregisteredfalse() {
-        model.registererror = false
+        userService.registered = false
     }
 }

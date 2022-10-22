@@ -2,22 +2,17 @@ import Foundation
 
 class AccountInteractor {
 
-    private let model: DataModel
+    private let userService: UserService
 
-    init(model: DataModel) {
-        self.model = model
+    init() {
+        userService = UserService()
+        userService.userReload()
     }
     func signOut() {
-        try?model.auth.signOut()
-        DispatchQueue.main.async {
-            self.model.isSignedIn = false
-            self.model.heldcoins = []
-            self.model.favcoins = []
-            self.model.ownedcoins = []
-        }
+        userService.signOut()
     }
 
     func currentUserEmail() -> String {
-        return (model.auth.currentUser?.email)!
+        userService.getUserEmail()
     }
 }

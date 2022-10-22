@@ -8,14 +8,25 @@
 import Foundation
 
 class LoginScreenInteractor {
-    let model: DataModel
-    init(model: DataModel) {
-        self.model = model
+    private let userService: UserService
+
+    init() {
+        userService = UserService()
+        userService.userReload()
     }
     func signIn(email: String, password: String) {
-        return model.signIn(email: email, password: password)
+        userService.signin(email, password)
     }
+
+    func getSignInStatus() -> Published<Bool>.Publisher {
+        return userService.$isSignedIn
+    }
+    
+    func getLoginError() -> Published<Bool>.Publisher {
+        return userService.$loginError
+    }
+
     func setlogerrorfalse() {
-        model.loginerror = false
+        userService.loginError = false
     }
 }

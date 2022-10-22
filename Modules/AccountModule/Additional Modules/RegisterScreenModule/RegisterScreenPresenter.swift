@@ -10,12 +10,8 @@ class RegisterScreenPresenter: ObservableObject {
 
     init(interactor: RegisterScreenInteractor) {
         self.interactor = interactor
-        interactor.model.$registererror
+        interactor.getRegisterError()
             .assign(to: \.registererror, on: self)
-            .store(in: &cancellables)
-
-        interactor.model.$registered
-            .assign(to: \.registered, on: self)
             .store(in: &cancellables)
     }
 

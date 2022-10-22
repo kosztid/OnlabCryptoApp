@@ -19,11 +19,11 @@ class LoginScreenPresenter: ObservableObject {
     init(interactor: LoginScreenInteractor) {
         self.interactor = interactor
 
-        interactor.model.$isSignedIn
+        interactor.getSignInStatus()
             .assign(to: \.signedin, on: self)
             .store(in: &cancellables)
 
-        interactor.model.$loginerror
+        interactor.getLoginError()
             .assign(to: \.loginerror, on: self)
             .store(in: &cancellables)
     }
@@ -31,15 +31,12 @@ class LoginScreenPresenter: ObservableObject {
     func signIn(email: String, password: String) {
         return interactor.signIn(email: email, password: password)
     }
-    func twittersignIn() {
-      //  interactor.twittersignIn()
-    }
     func setlogerrorfalse() {
         interactor.setlogerrorfalse()
     }
 
     func toRegisterView() -> some View {
-        NavigationLink("Regisztráció", destination: router.makeRegisterView(model: interactor.model))
+        NavigationLink("Regisztráció", destination: router.makeRegisterView())
     }
 
     func toForgotPasswordView() -> some View {
