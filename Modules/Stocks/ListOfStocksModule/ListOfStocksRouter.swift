@@ -2,8 +2,8 @@ import Foundation
 import SwiftUI
 
 class ListOfStocksRouter {
-    func makeStockDetailView(stock: String, model: DataModel, item: StockListItem) -> some View {
-        let presenter = StockDetailPresenter(interactor: StockDetailInteractor(model: model, symbol: stock, item: item))
+    func makeStockDetailView(interactor: StockDetailInteractor) -> some View {
+        let presenter = StockDetailPresenter(interactor: interactor)
         return StockDetailView(presenter: presenter)
     }
 

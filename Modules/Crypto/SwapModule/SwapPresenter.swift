@@ -43,21 +43,15 @@ class SwapPresenter: ObservableObject {
 
     func setSellAmount() {
         let coin1 = coinmodel1
-        print(coin1.currentPrice)
         let coin2 = coinmodel2
-        print(coin2.currentPrice)
         let amount = coin2.currentPrice*coinstobuy
-        print(amount)
         coinstosell = amount / coin1.currentPrice
     }
 
     func setBuyAmount() {
         let coin1 = coinmodel1
-        print(coin1.currentPrice)
         let coin2 = coinmodel2
-        print(coin2.currentPrice)
         let amount = coin1.currentPrice*coinstosell
-        print(amount)
         coinstobuy = amount / coin2.currentPrice
     }
 
@@ -81,14 +75,14 @@ class SwapPresenter: ObservableObject {
     func loadService() {
         interactor.loadService()
     }
-
-    func setCoinstobuy(amount: Double) {
-        interactor.setCoinstoBuy(amount: amount)
-    }
-
-    func setCoinstosell(amount: Double) {
-        interactor.setCoinstoSell(amount: amount)
-    }
+//
+//    func setCoinstobuy(amount: Double) {
+//        interactor.setCoinstoBuy(amount: amount)
+//    }
+//
+//    func setCoinstosell(amount: Double) {
+//        interactor.setCoinstoSell(amount: amount)
+//    }
 
     func setCoin1(coin1: String) {
         coinmodel1 = selected(coin: coin1)

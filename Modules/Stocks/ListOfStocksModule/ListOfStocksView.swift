@@ -1,10 +1,3 @@
-//
-//  ListOfStocksView.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 09. 28..
-//
-
 import SwiftUI
 
 struct ListOfStocksView: View {
@@ -42,6 +35,7 @@ struct ListOfStocksView: View {
                 }
             }
         }
+        .onAppear(perform: presenter.reloadData)
         .listStyle(PlainListStyle())
     }
 }

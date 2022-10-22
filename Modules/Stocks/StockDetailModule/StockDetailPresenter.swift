@@ -4,8 +4,8 @@ import Combine
 
 class StockDetailPresenter: ObservableObject {
     private let interactor: StockDetailInteractor
-
     @Published var stock = Stock(ticker: "Loading...", queryCount: 1, resultsCount: 1, adjusted: false, results: [], status: "Loading...", requestID: "Loading...", count: 1)
+    @Published var favStocks: [StockServerModel] = []
     @Published var currentPrices: [Double] = [1]
     @Published var currentMin = 0.0
     @Published var currentMax = 0.0
@@ -25,8 +25,12 @@ class StockDetailPresenter: ObservableObject {
             .assign(to: \.stock, on: self)
             .store(in: &cancellables)
 
-        self.getmodel().$isSignedIn
+        self.interactor.getSignInStatus()
             .assign(to: \.signedin, on: self)
+            .store(in: &cancellables)
+
+        interactor.getFavs()
+            .assign(to: \.favStocks, on: self)
             .store(in: &cancellables)
     }
 
@@ -56,7 +60,6 @@ class StockDetailPresenter: ObservableObject {
         Button {
             self.interactor.addFavStock()
         } label: {
-// TODO: interactor.isFav()
             Label("", systemImage: interactor.isFav() ? "star.fill" : "star")
                 .foregroundColor(Color.theme.accentcolor)
                 .font(.system(size: 25))
@@ -76,9 +79,5 @@ class StockDetailPresenter: ObservableObject {
 
     func onAppear() {
         interactor.getStock()
-    }
-
-    func getmodel() -> DataModel {
-        return interactor.getmodel()
     }
 }

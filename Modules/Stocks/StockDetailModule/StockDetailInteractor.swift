@@ -2,21 +2,18 @@ import Foundation
 import SwiftUI
 
 class StockDetailInteractor {
-    private let model: DataModel
     private let stockListItem: StockListItem
+    private var userService: UserService
     private let symbol: String
-    let downloader: SingleStockDownloader
+    private let downloader: SingleStockDownloader
 
-    init(model: DataModel, symbol: String, item: StockListItem) {
-        self.model = model
+    init(symbol: String, item: StockListItem, service: UserService) {
         self.symbol = symbol
+        self.userService = service
         self.downloader = SingleStockDownloader()
         self.stockListItem = item
     }
-
-    func getmodel() -> DataModel {
-        return model
-    }
+    
     func getStockData() -> StockListItem {
         return stockListItem
     }
@@ -25,18 +22,26 @@ class StockDetailInteractor {
         data = values.map { CGFloat($0)}
         return data
     }
+
+    func getFavs() -> Published<[StockServerModel]>.Publisher {
+        return userService.$stockFavs
+    }
+
+    func getSignInStatus() -> Published<Bool>.Publisher {
+        return userService.$isSignedIn
+    }
     func getStock() {
         downloader.loadSingleStock(symbol: symbol)
     }
 
     func addFavStock() {
-        model.addFavStock(symbol: symbol)
+        userService.updateStockFavs(symbol)
     }
     func isFav() -> Bool {
-        return !(model.favStocks.filter({ $0.stockSymbol == self.symbol }).isEmpty)
+        return !(userService.stockFavs.filter({ $0.stockSymbol == self.symbol }).isEmpty)
     }
     func addPortfolio(amount: Double, currentprice: Double) {
-        model.addStockHolding(symbol: self.symbol, count: amount, currprice: currentprice)
+        userService.updateStockPortfolio(self.symbol, amount, currentprice)
     }
     func getDownloader() -> SingleStockDownloader {
         return downloader

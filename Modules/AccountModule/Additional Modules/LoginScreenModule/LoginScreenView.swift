@@ -102,9 +102,3 @@ struct LoginScreenView: View {
         .background(Color.theme.backgroundcolor)
     }
 }
-
-struct LoginScreenView_Previews: PreviewProvider {
-    static var previews: some View {
-        LoginScreenView(presenter: LoginScreenPresenter(interactor: LoginScreenInteractor()))
-    }
-}

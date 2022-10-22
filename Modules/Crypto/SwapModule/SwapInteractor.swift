@@ -4,7 +4,7 @@ import SwiftUI
 class SwapInteractor {
     let model: DataModel
     private var userService: UserService
-    var coinService: CoinService
+    private var coinService: CoinService
 
     init(model: DataModel) {
         self.model = model

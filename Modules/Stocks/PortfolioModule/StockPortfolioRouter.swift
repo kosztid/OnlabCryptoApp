@@ -2,6 +2,10 @@ import Foundation
 import SwiftUI
 
 class StockPortfolioRouter {
+    func makeStockDetailView(interactor: StockDetailInteractor) -> some View {
+        let presenter = StockDetailPresenter(interactor: interactor)
+        return StockDetailView(presenter: presenter)
+    }
 
     func makeAccountView() -> some View {
         return AccountView(presenter: AccountPresenter(interactor: AccountInteractor()))

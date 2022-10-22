@@ -53,7 +53,7 @@ class PortfolioInteractor {
         }
         return arr
     }
-    
+
     func removeCoin(_ index: IndexSet) {
         userService.updatePortfolio(coinService.coins[index.first!].id, 0.0, 0.0)
     }

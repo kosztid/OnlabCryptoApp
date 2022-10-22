@@ -67,8 +67,6 @@ struct SearchView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State var searchText = ""
     @State var searching = false
-    // @Binding var searchText: String
-    // @Binding var searching: Bool
     var coinname: String = "coin1"
     @ObservedObject var presenter: SwapPresenter
 
@@ -103,7 +101,6 @@ struct SearchView: View {
                                     self.presentationMode.wrappedValue.dismiss()
                                 }
                                 SearchListItem(coin: coin)
-
                             }
                         }.listRowSeparatorTint(Color.theme.backgroundsecondary)
                             .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))

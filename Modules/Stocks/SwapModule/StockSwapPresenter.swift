@@ -6,6 +6,8 @@ class StockSwapPresenter: ObservableObject {
     @Published var buyorsell = "none"
     @Published var stock1 = "AAPL"
     @Published var stock2 = "TSLA"
+    @Published var stockmodel1 = StockListItem(symbol: "-", name: "-", lastsale: "-", netchange: "-", pctchange: "-", marketCap: "-", url: "-")
+    @Published var stockmodel2 = StockListItem(symbol: "-", name: "-", lastsale: "-", netchange: "-", pctchange: "-", marketCap: "-", url: "-")
     @Published var stockstosell = 0.0
     @Published var stockstobuy = 0.0
     private let router = StockSwapRouter()
@@ -18,33 +20,26 @@ class StockSwapPresenter: ObservableObject {
     init(interactor: StockSwapInteractor) {
         self.interactor = interactor
 
-        interactor.model.$stock1
-            .assign(to: \.stock1, on: self)
-            .store(in: &cancellables)
-
-        interactor.model.$stock2
-            .assign(to: \.stock2, on: self)
-            .store(in: &cancellables)
-
-        interactor.model.$stocksToBuy
-            .assign(to: \.stockstobuy, on: self)
-            .store(in: &cancellables)
-
-        interactor.model.$stocksToSell
-            .assign(to: \.stockstosell, on: self)
-            .store(in: &cancellables)
-
-        interactor.model.$buyorsell
-            .assign(to: \.buyorsell, on: self)
-            .store(in: &cancellables)
-
-        interactor.model.$stocks
+        interactor.getStocks()
             .assign(to: \.stocks, on: self)
             .store(in: &cancellables)
 
-        interactor.model.$ownedStocks
+        interactor.getOwnedStocks()
             .assign(to: \.ownedStocks, on: self)
             .store(in: &cancellables)
+
+        stockmodel1 = selected(stock: "AAPL")
+        stockmodel2 = selected(stock: "TSLA")
+    }
+
+    func setStock1(stock: String) {
+        stockmodel1 = selected(stock: stock)
+        setBuyAmount()
+    }
+
+    func setStock2(stock: String) {
+        stockmodel2 = selected(stock: stock)
+        setSellAmount()
     }
 
     func makeButtonForSelector(bos: BuyOrSell) -> some View {
@@ -52,54 +47,38 @@ class StockSwapPresenter: ObservableObject {
     }
 
     func setSellAmount() {
-        let stock1 = self.selected(stockSymbol: stock1)
-        let stock2 = self.selected(stockSymbol: stock2)
+        let stock1 = stockmodel1
+        let stock2 = stockmodel2
         let amount = (Double(stock2.lastsale.dropFirst()) ?? 1) * stockstobuy
-        interactor.setStockstoSell(amount: amount / (Double(stock1.lastsale.dropFirst()) ?? 1))
+        stockstosell = amount / (Double(stock1.lastsale.dropFirst()) ?? 1)
     }
 
     func setBuyAmount() {
-        let stock1 = self.selected(stockSymbol: stock1)
-        let stock2 = self.selected(stockSymbol: stock2)
+        let stock1 = stockmodel1
+        let stock2 = stockmodel2
         let amount = (Double(stock1.lastsale.dropFirst()) ?? 1) * stockstosell
-        interactor.setStockstoBuy(amount: amount / (Double(stock2.lastsale.dropFirst()) ?? 1))
-
+        stockstobuy = amount / (Double(stock2.lastsale.dropFirst()) ?? 1)
     }
 
-    func selected(stockSymbol: String) -> StockListItem {
-        return interactor.selected(stock: stockSymbol)
+    func selected(stock: String) -> StockListItem {
+        // swiftlint:disable:next line_length
+        return stocks.first(where: {$0.symbol == stock}) ?? StockListItem(symbol: "-", name: "-", lastsale: "-", netchange: "-", pctchange: "-", marketCap: "-", url: "-")
     }
 
     func swap() {
-        interactor.swap(stockToSell: stock1, sellamount: stockstosell, stockToBuy: stock2, buyamount: stockstobuy)
-    }
-
-    func setStockstobuy(amount: Double) {
-        interactor.setStockstoBuy(amount: amount)
-    }
-
-    func setStockstosell(amount: Double) {
-        interactor.setStockstoSell(amount: amount)
-    }
-
-    func setStock1(stock: String) {
-        interactor.setStock1(stock: stock)
-    }
-
-    func setStock2(stock: String) {
-        interactor.setStock2(stock: stock)
-    }
-
-    func setBuyorSell(boolean: String) {
-        interactor.setBuyorSell(boolean: boolean)
+        interactor.swap(stockToSell: stockmodel1.symbol, sellamount: stockstosell, stockToBuy: stockmodel2.symbol, buyamount: stockstobuy)
     }
 
     func returnmodel() -> DataModel {
         return interactor.model
     }
 
+    func loadService() {
+        interactor.loadService()
+    }
+
     func ownedamount(stockSymbol: String) -> Double {
-        return interactor.ownedamount(stock: selected(stockSymbol: stockSymbol))
+        return interactor.ownedamount(stockSymbol: stockSymbol)
     }
 
     func isOwned(stock: StockListItem) -> Bool {

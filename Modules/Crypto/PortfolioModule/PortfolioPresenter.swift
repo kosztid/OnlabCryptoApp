@@ -21,7 +21,7 @@ class PortfolioPresenter: ObservableObject {
         interactor.getFavs()
             .assign(to: \.favcoins, on: self)
             .store(in: &cancellables)
-        
+
         interactor.getCoins()
             .assign(to: \.coins, on: self)
             .store(in: &cancellables)

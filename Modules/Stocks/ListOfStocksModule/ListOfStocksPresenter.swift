@@ -6,31 +6,29 @@ class ListOfStocksPresenter: ObservableObject {
     @Published var stocks: [StockListItem] = []
     private let interactor: ListOfStocksInteractor
     @Published var signedin = false
-    @Published var isNotificationViewed = false
     private var cancellables = Set<AnyCancellable>()
     private let router = ListOfStocksRouter()
 
     init(interactor: ListOfStocksInteractor) {
         self.interactor = interactor
-        interactor.model.$stocks
+        interactor.getPublisher()
             .assign(to: \.stocks, on: self)
             .store(in: &cancellables)
 
-        interactor.model.$isSignedIn
+        interactor.getSignInStatus()
             .assign(to: \.signedin, on: self)
             .store(in: &cancellables)
+    }
 
-        interactor.model.$isNotificationViewed
-            .assign(to: \.isNotificationViewed, on: self)
-            .store(in: &cancellables)
-
+    func reloadData() {
+        interactor.reloadData()
     }
 
     func linkBuilder<Content: View>(
         for stock: StockListItem,
         @ViewBuilder content: () -> Content
     ) -> some View {
-        NavigationLink(destination: router.makeStockDetailView(stock: stock.symbol, model: interactor.model, item: stock)) {
+        NavigationLink(destination: router.makeStockDetailView(interactor: interactor.makeDetailInteractor(symbol: stock.symbol, item: stock))) {
             }.buttonStyle(PlainButtonStyle())
             .opacity(0)
     }
@@ -41,14 +39,6 @@ class ListOfStocksPresenter: ObservableObject {
     func makeButtonForAccount() -> some View {
         NavigationLink("Account", destination: router.makeAccountView())
     }
-//    func makeButtonForPriceNotification() -> some View {
-//        NavigationLink(destination: router.makePriceNotificationView(model: interactor.model)) {
-//            Image(systemName: isNotificationViewed ? "bell.fill" : "bell.badge.fill")
-//                .font(.system(size: 20))
-//            }
-//        .onAppear {self.interactor.setIsnotificationViewed()}
-//        .foregroundColor(isNotificationViewed ? Color.theme.accentcolor : Color.theme.red)
-//    }
     func makeButtonForViewchange() -> some View {
         Button {
             self.interactor.changeView()
@@ -56,8 +46,5 @@ class ListOfStocksPresenter: ObservableObject {
             Image(systemName: "dollarsign.circle.fill")
                 .font(.system(size: 20))
         }
-    }
-    func setIsnotificationViewed() {
-        interactor.setIsnotificationViewed()
     }
 }

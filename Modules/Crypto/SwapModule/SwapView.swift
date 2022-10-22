@@ -67,18 +67,6 @@ struct SwapView: View {
         .background(Color.theme.backgroundcolor)
     }
 
-    var testField: some View {
-        TextField("Amount to buy", value: .init(
-            get: { self.presenter.coinstobuy },
-            set: { self.presenter.setCoinstobuy(amount: Double($0)) }
-        ), formatter: formatter, onEditingChanged: { changed in
-            if changed {
-                presenter.setBuyorSell(boolean: "buy")
-            } else {
-                presenter.setSellAmount()
-            }
-        })
-    }
 
     var buyTextfield: some View {
         TextField("Amount to buy", value: $presenter.coinstobuy, formatter: formatter, onEditingChanged: { changed in
@@ -110,16 +98,16 @@ struct SwapView: View {
                 presenter.setBuyAmount()
             }
         }
-            .padding(.horizontal)
-            .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-            .font(.system(size: 20))
-            .foregroundColor(Color.theme.accentcolor)
-            .background(Color.theme.backgroundcolor)
-            .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.theme.accentcolorsecondary, lineWidth: 2))
-            .cornerRadius(10)
-            .disableAutocorrection(true)
-            .keyboardType(.numberPad)
-            .accessibilityIdentifier("SwapSellTextField")
+        .padding(.horizontal)
+        .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+        .font(.system(size: 20))
+        .foregroundColor(Color.theme.accentcolor)
+        .background(Color.theme.backgroundcolor)
+        .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.theme.accentcolorsecondary, lineWidth: 2))
+        .cornerRadius(10)
+        .disableAutocorrection(true)
+        .keyboardType(.numberPad)
+        .accessibilityIdentifier("SwapSellTextField")
     }
 
     var sellCoinData: some View {

@@ -4,11 +4,15 @@ struct StockSwapView: View {
     @ObservedObject var presenter: StockSwapPresenter
     @State private var showingAlert = false
     @FocusState private var keyboardIsFocused: Bool
+    @State private var isFocused1 = false
+    @State private var isFocused2 = false
+
     let formatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         return formatter
     }()
+
     var body: some View {
         ZStack {
             Color.theme.backgroundcolor
@@ -22,32 +26,15 @@ struct StockSwapView: View {
                             .bold()
                         presenter.makeButtonForSelector(bos: .toSell)
                             .accessibilityIdentifier("StockSwapSellSelectorButton")
-                        Text(presenter.selected(stockSymbol: presenter.stock1).symbol)
-                                .font(.system(size: 20))
+                        Text(presenter.stockmodel1.symbol)
+                            .font(.system(size: 20))
                         VStack {
                             Text("Owned:")
-                            Text("\(presenter.ownedamount(stockSymbol: presenter.stock1)) \(presenter.selected(stockSymbol: presenter.stock1).symbol) ")
+                            Text("\(presenter.ownedamount(stockSymbol: presenter.stockmodel1.symbol)) \(presenter.stockmodel1.symbol) ")
                         }.font(.system(size: 12))
-                        TextField("Amount to sell", value: .init(
-                            get: { self.presenter.stockstosell },
-                            set: { self.presenter.setStockstosell(amount: Double($0)) }
-                        ), formatter: formatter, onEditingChanged: { (changed) in
-                            // presenter.self.coinstosell = self.coinstosell
-                            if changed {
-                                presenter.setBuyorSell(boolean: "sell")
-                            } else {
-                                presenter.setBuyAmount()
-                            }
-                        }).padding(.horizontal)
-                            .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                            .font(.system(size: 20))
-                            .foregroundColor(Color.theme.accentcolor)
-                            .background(Color.theme.backgroundcolor)
-                            .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.theme.accentcolorsecondary, lineWidth: 2))
-                            .cornerRadius(10)
-                            .disableAutocorrection(true)
-                            .keyboardType(.numberPad)
-                            .accessibilityIdentifier("StockSwapSellTextField")
+
+                        sellTextfield
+
                     }
                     .font(.system(size: 24))
                     .foregroundColor(Color.theme.accentcolor)
@@ -61,33 +48,14 @@ struct StockSwapView: View {
                             .bold()
                         presenter.makeButtonForSelector(bos: .toBuy)
                             .accessibilityIdentifier("StockSwapBuySelectorButton")
-                            Text(presenter.selected(stockSymbol: presenter.stock2).symbol)
-                                .font(.system(size: 20))
+                        Text(presenter.stockmodel2.symbol)
+                            .font(.system(size: 20))
                         VStack {
                             Text("Owned:")
-                            Text("\(presenter.ownedamount(stockSymbol: presenter.stock2)) \(presenter.selected(stockSymbol: presenter.stock2).symbol) ")
+                            Text("\(presenter.ownedamount(stockSymbol: presenter.stockmodel2.symbol)) \(presenter.stockmodel2.symbol) ")
                         }.font(.system(size: 12))
 
-                        TextField("Amount to buy", value: .init(
-                            get: { self.presenter.stockstobuy },
-                            set: { self.presenter.setStockstobuy(amount: Double($0)) }
-                        ), formatter: formatter, onEditingChanged: { (changed) in
-                            if changed {
-                                presenter.setBuyorSell(boolean: "buy")
-                            } else {
-                                presenter.setSellAmount()
-                            }
-                        })
-                            .padding(.horizontal)
-                            .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                            .font(.system(size: 20))
-                            .foregroundColor(Color.theme.accentcolor)
-                            .background(Color.theme.backgroundcolor)
-                            .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.theme.accentcolorsecondary, lineWidth: 2))
-                            .cornerRadius(10)
-                            .disableAutocorrection(true)
-                            .keyboardType(.numberPad)
-                            .accessibilityIdentifier("StockSwapBuyTextField")
+                        buyTextfield
                     }
                     .font(.system(size: 24))
                     .foregroundColor(Color.theme.accentcolor)
@@ -112,6 +80,49 @@ struct StockSwapView: View {
                 }
             }
         }
+        .onAppear(perform: presenter.loadService)
         .background(Color.theme.backgroundcolor)
+    }
+
+    var sellTextfield: some View {
+        TextField("Amount to sell", value: $presenter.stockstosell, formatter: formatter, onEditingChanged: { changed in
+            isFocused2 = changed
+        })
+        .onChange(of: presenter.stockstosell) { _ in
+            if isFocused2 {
+                presenter.setBuyAmount()
+            }
+        }
+        .padding(.horizontal)
+        .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+        .font(.system(size: 20))
+        .foregroundColor(Color.theme.accentcolor)
+        .background(Color.theme.backgroundcolor)
+        .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.theme.accentcolorsecondary, lineWidth: 2))
+        .cornerRadius(10)
+        .disableAutocorrection(true)
+        .keyboardType(.numberPad)
+        .accessibilityIdentifier("StockSwapSellTextField")
+    }
+
+    var buyTextfield: some View {
+        TextField("Amount to buy", value: $presenter.stockstobuy, formatter: formatter, onEditingChanged: { changed in
+            isFocused1 = changed
+        })
+        .onChange(of: presenter.stockstobuy) { _ in
+            if isFocused1 {
+                presenter.setSellAmount()
+            }
+        }
+        .padding(.horizontal)
+        .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+        .font(.system(size: 20))
+        .foregroundColor(Color.theme.accentcolor)
+        .background(Color.theme.backgroundcolor)
+        .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.theme.accentcolorsecondary, lineWidth: 2))
+        .cornerRadius(10)
+        .disableAutocorrection(true)
+        .keyboardType(.numberPad)
+        .accessibilityIdentifier("StockSwapBuyTextField")
     }
 }
