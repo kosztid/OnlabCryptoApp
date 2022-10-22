@@ -16,7 +16,7 @@ class ListOfCoinsPresenter: ObservableObject {
             .assign(to: \.coins, on: self)
             .store(in: &cancellables)
 
-        interactor.model.$isSignedIn
+        interactor.getSignInStatus()
             .assign(to: \.signedin, on: self)
             .store(in: &cancellables)
 
@@ -24,6 +24,10 @@ class ListOfCoinsPresenter: ObservableObject {
             .assign(to: \.isNotificationViewed, on: self)
             .store(in: &cancellables)
 
+    }
+
+    func reloadData() {
+        interactor.reloadData()
     }
 
     func linkBuilder<Content: View>(
@@ -35,11 +39,11 @@ class ListOfCoinsPresenter: ObservableObject {
             .opacity(0)
     }
     func makeButtonForLogin() -> some View {
-        NavigationLink("Account", destination: router.makeLoginView(model: interactor.model))
+        NavigationLink("Account", destination: router.makeLoginView())
     }
 
     func makeButtonForAccount() -> some View {
-        NavigationLink("Account", destination: router.makeAccountView(model: interactor.model))
+        NavigationLink("Account", destination: router.makeAccountView())
     }
     func makeButtonForPriceNotification() -> some View {
         NavigationLink(destination: router.makePriceNotificationView(model: interactor.model)) {

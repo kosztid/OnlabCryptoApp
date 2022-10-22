@@ -18,11 +18,19 @@ class ListOfCoinsInteractor {
     }
 
     func makeDetailInteractor(coin: CoinModel) -> CoinDetailInteractor {
-        CoinDetailInteractor(coin: coin, model: model, service: userService)
+        CoinDetailInteractor(coin: coin, service: userService)
+    }
+
+    func getSignInStatus() -> Published<Bool>.Publisher {
+        return userService.$isSignedIn
     }
 
     func getPublisher() -> Published<[CoinModel]>.Publisher {
         return coinService.$coins
+    }
+
+    func reloadData() {
+        userService.userReload()
     }
 
     func changeView() {

@@ -14,7 +14,7 @@ class CoinDetailPresenter: ObservableObject {
     init(interactor: CoinDetailInteractor) {
         self.interactor = interactor
 
-        self.getmodel().$isSignedIn
+        interactor.getSignInStatus()
             .assign(to: \.signedin, on: self)
             .store(in: &cancellables)
 
@@ -29,17 +29,8 @@ class CoinDetailPresenter: ObservableObject {
     func getcoin() -> CoinModel {
         return interactor.getcoin()
     }
-    func getmodel() -> DataModel {
-        return interactor.getmodel()
-    }
-    func makeButtonForPortfolioAdderView() -> some View {
-        var buttontext: String
-        if interactor.held() {
-            buttontext = "Edit"
-        } else {
-            buttontext = "Add"
-        }
-        return NavigationLink(buttontext, destination: router.makeAdderView(coincount: interactor.getCoinCount(), coin: interactor.getcoin(), model: interactor.getmodel()))
+    func addHolding(_ count: Double) {
+        interactor.addHolding(count: count)
     }
 
     func makeFavButton() -> some View {
@@ -57,14 +48,6 @@ class CoinDetailPresenter: ObservableObject {
             return String(interactor.getCoinCount())
         } else {
             return "Mennyiség"
-        }
-    }
-    func makeAddButton() -> some View {
-        Button("Add") {
-            self.showalert = true
-        }
-        .alert(isPresented: $showalert) {
-            Alert(title: Text("Add"), message: Text("Type in the amount"), primaryButton: .destructive(Text("Add")) {}, secondaryButton: .cancel())
         }
     }
 }

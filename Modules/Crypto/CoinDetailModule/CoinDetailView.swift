@@ -35,7 +35,7 @@ struct CoinDetailView: View {
             .navigationBarItems(trailing: Button("Add") {
                 // swiftlint:disable:next line_length
                 alertWithTfNumpad(title: presenter.getcoin().symbol.uppercased(), message: "Adja meg a mennyiséget", hintText: presenter.hintText(), primaryTitle: "Változtatás", secTitle: "Vissza") { text in
-                    print("added \(text)")
+                    presenter.addHolding(Double(text) ?? 0)
                 } secondaryAction: {
                     print("cancelled")
                 }

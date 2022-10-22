@@ -35,6 +35,7 @@ struct ListOfCoinsView: View {
                 }
             }
         }
+        .onAppear(perform: presenter.reloadData)
         .listStyle(PlainListStyle())
     }
 }

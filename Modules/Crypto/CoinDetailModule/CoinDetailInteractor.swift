@@ -3,12 +3,10 @@ import SwiftUI
 
 class CoinDetailInteractor {
     private let coin: CoinModel
-    private let model: DataModel
-    @ObservedObject private var userService: UserService
+    private var userService: UserService
 
-    init(coin: CoinModel, model: DataModel, service: UserService) {
+    init(coin: CoinModel, service: UserService) {
         self.coin = coin
-        self.model = model
         self.userService = service
     }
 
@@ -22,12 +20,12 @@ class CoinDetailInteractor {
         return coin
     }
 
-    func getmodel() -> DataModel {
-        return model
-    }
-
     func getFavs() -> Published<[CryptoServerModel]>.Publisher {
         return userService.$cryptoFavs
+    }
+
+    func getSignInStatus() -> Published<Bool>.Publisher {
+        return userService.$isSignedIn
     }
 
     func held() -> Bool {
@@ -40,6 +38,9 @@ class CoinDetailInteractor {
         } else {
             return 0.0
         }
+    }
+    func addHolding(count: Double) {
+        userService.updatePortfolio(coin.id, count, coin.currentPrice)
     }
     func addFavCoin() {
         userService.updateFavs(coin.id)
