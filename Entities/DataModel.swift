@@ -148,15 +148,7 @@ final class DataModel: ObservableObject {
             .store(in: &cancellables)
     }
     func addFavCoin(coinid: String) {
-        let currentUser = self.auth.currentUser
-        currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
-            if let error = error {
-                print(error.localizedDescription)
-                return
-            }
-            self.userService.updateFavs(coinid)
-        }
-//        favcoinPullFromDB()
+        self.userService.updateFavs(coinid)
     }
     func addFavStock(symbol: String) {
         let currentUser = self.auth.currentUser
@@ -166,7 +158,7 @@ final class DataModel: ObservableObject {
                 return
             }
             DispatchQueue.main.async {
-                self.userService.updateStockFavs(idToken ?? "error", self.auth.currentUser!.uid, symbol)
+                self.userService.updateStockFavs(symbol)
             }
         }
         favcoinPullFromDB()
@@ -186,7 +178,7 @@ final class DataModel: ObservableObject {
                 return
             }
             print("token:\(idToken ?? "error")")
-            self.userService.updateStockPortfolio(idToken ?? "error", self.auth.currentUser!.uid, symbol, 0.0, 0.0)
+            self.userService.updateStockPortfolio(symbol, 0.0, 0.0)
         }
 
     }
@@ -210,7 +202,7 @@ final class DataModel: ObservableObject {
                 return
             }
             print("token:\(idToken ?? "error")")
-            self.userService.updateStockPortfolio(idToken ?? "error", self.auth.currentUser!.uid, symbol, count, currprice)
+            self.userService.updateStockPortfolio(symbol, count, currprice)
         }
     }
 
@@ -221,17 +213,17 @@ final class DataModel: ObservableObject {
                 print(error.localizedDescription)
                 return
             }
-        self.userService.updateWallet(idToken ?? "error", self.auth.currentUser!.uid, coinToSell, coinToBuy, sellAmount, buyAmount)
+        self.userService.updateWallet(coinToSell, coinToBuy, sellAmount, buyAmount)
         }
     }
-    func modifyStockwallet( _ stockToSell: String,_ stockToBuy: String, _ sellAmount: Double, _ buyAmount: Double) {
+    func modifyStockwallet(_ stockToSell: String,_ stockToBuy: String, _ sellAmount: Double, _ buyAmount: Double) {
         let currentUser = self.auth.currentUser
         currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
             if let error = error {
                 print(error.localizedDescription)
                 return
             }
-        self.userService.updateStockWallet(idToken ?? "error", self.auth.currentUser!.uid, stockToSell, stockToBuy, sellAmount, buyAmount)
+        self.userService.updateStockWallet(stockToSell, stockToBuy, sellAmount, buyAmount)
         }
     }
     func walletPullFromDB() {

@@ -97,7 +97,7 @@ struct ContentView: View {
                 // Portfolio tab
                 NavigationView {
                     VStack(spacing: 10) {
-                        PortfolioView(presenter: PortfolioPresenter(interactor: PortfolioInteractor(model: model)))
+                        PortfolioView(presenter: PortfolioPresenter(interactor: PortfolioInteractor()))
                     }
                 }
                 .tabItem { Label("Portfolio", systemImage: "star") }
