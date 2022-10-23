@@ -14,11 +14,11 @@ class CommunitiesPresenter: ObservableObject {
 
     init(interactor: CommunitiesInteractor) {
         self.interactor = interactor
-        interactor.model.$communities
+        interactor.getCommunities()
             .assign(to: \.communities, on: self)
             .store(in: &cancellables)
 
-        interactor.model.$isSignedIn
+        interactor.getSignInStatus()
             .assign(to: \.signedin, on: self)
             .store(in: &cancellables)
     }
@@ -27,15 +27,16 @@ class CommunitiesPresenter: ObservableObject {
         for community: CommunityModel,
         @ViewBuilder content: () -> Content
     ) -> some View {
-        NavigationLink(destination: router.gotoChat(model: interactor.model, community: community)) {
+        NavigationLink(destination: router.gotoChat(interactor: interactor.makeMessagerInteractor(), community: community)) {
             }.buttonStyle(PlainButtonStyle())
             .opacity(0)
     }
     func addCommunity(_ name: String) {
-        interactor.model.addCommunity(name: name)
+        interactor.addCommunity(name)
     }
-    func makeButtonForAdd() -> some View {
-        NavigationLink("Add Community", destination: router.makeCommunityAdderView(model: interactor.model))
+
+    func reload() {
+        interactor.reload()
     }
     func makeButtonForLogin() -> some View {
         NavigationLink("Account", destination: router.makeLoginView())

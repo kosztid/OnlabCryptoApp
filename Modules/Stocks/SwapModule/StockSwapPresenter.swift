@@ -67,6 +67,8 @@ class StockSwapPresenter: ObservableObject {
 
     func swap() {
         interactor.swap(stockToSell: stockmodel1.symbol, sellamount: stockstosell, stockToBuy: stockmodel2.symbol, buyamount: stockstobuy)
+        stockstobuy = 0.0
+        stockstosell = 0.0
     }
 
     func returnmodel() -> DataModel {

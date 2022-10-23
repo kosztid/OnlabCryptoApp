@@ -5,11 +5,13 @@ class StockSwapInteractor {
     let model: DataModel
     private var userService: UserService
     private var stockService: StockService
+    private var communityService: CommunityService
 
     init(model: DataModel) {
         self.model = model
         stockService = StockService()
         userService = UserService()
+        communityService = CommunityService()
     }
 
     func loadService() {
@@ -19,7 +21,7 @@ class StockSwapInteractor {
     func getStocks() -> Published<[StockListItem]>.Publisher {
         return stockService.$stocks
     }
-    
+
     func getOwnedStocks() -> Published<[StockServerModel]>.Publisher {
         return userService.$stockWallet
     }
@@ -70,6 +72,7 @@ class StockSwapInteractor {
         let stocktosellprice = Double(self.selected(stock: stockToSell).lastsale) ?? 1
         let stocktobuyprice = Double(self.selected(stock: stockToBuy).lastsale) ?? 1
         let messagestring = "\(email) Bought \(buyamount) \(stockToBuy) (current price \(stocktobuyprice)) for \(sellamount) \(stockToSell) (current price \(stocktosellprice)) "
-        model.sendMessage(id: historyId, message: MessageModel(id: 1, sender: self.getAccountInfo(), senderemail: self.getAccountEmail(), message: messagestring, time: stringdate, image: false))
+        let message = MessageModel(id: 1, sender: self.getAccountInfo(), senderemail: self.getAccountEmail(), message: messagestring, time: stringdate, image: false)
+        communityService.sendMessage(historyId, message)
     }
 }

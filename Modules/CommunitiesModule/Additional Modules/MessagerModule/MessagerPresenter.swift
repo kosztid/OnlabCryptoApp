@@ -31,7 +31,8 @@ class MessagerPresenter: ObservableObject {
         return community.members
     }
     func makeButtonForUsers() -> some View {
-        NavigationLink("Members", destination: router.makeMembersView(model: interactor.getmodel(), community: self.community))
+        Button {} label: { Text("Members no use")}
+//        NavigationLink("Members", destination: router.makeMembersView(model: interactor.getmodel(), community: self.community))
     }
     func sendPhoto(image: UIImage) {
         let dateFormatter = DateFormatter()

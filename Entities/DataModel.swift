@@ -275,7 +275,7 @@ final class DataModel: ObservableObject {
                 print(error.localizedDescription)
                 return
             }
-            self.communityService.addCommunity(idToken ?? "error", name)
+            self.communityService.addCommunity(name)
         }
     }
     func sendMessage(id: String, message: MessageModel) {
@@ -287,7 +287,7 @@ final class DataModel: ObservableObject {
                 return
             }
             print("message1")
-            self.communityService.sendMessage(idToken ?? "error", id, variedMessage)
+            self.communityService.sendMessage(id, variedMessage)
         }
 
     }

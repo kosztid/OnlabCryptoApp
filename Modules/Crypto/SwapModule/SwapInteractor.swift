@@ -5,11 +5,13 @@ class SwapInteractor {
     let model: DataModel
     private var userService: UserService
     private var coinService: CoinService
+    private var communityService: CommunityService
 
     init(model: DataModel) {
         self.model = model
         coinService = CoinService()
         userService = UserService()
+        communityService = CommunityService()
     }
 
     func loadService() {
@@ -87,6 +89,7 @@ class SwapInteractor {
         let cointosellprice = self.selected(coin: cointosell).currentPrice
         let cointobuyprice = self.selected(coin: cointobuy).currentPrice
         let messagestring = "\(email) Bought \(buyamount) \(cointobuy) (current price \(cointobuyprice)) for \(sellamount) \(cointosell) (current price \(cointosellprice)) "
-        model.sendMessage(id: historyId, message: MessageModel(id: 1, sender: self.getAccountInfo(), senderemail: self.getAccountEmail(), message: messagestring, time: stringdate, image: false))
+        let message = MessageModel(id: 1, sender: self.getAccountInfo(), senderemail: self.getAccountEmail(), message: messagestring, time: stringdate, image: false)
+        communityService.sendMessage(historyId, message)
     }
 }

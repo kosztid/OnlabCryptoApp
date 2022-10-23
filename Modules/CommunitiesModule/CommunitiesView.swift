@@ -12,6 +12,7 @@ struct CommunitiesView: View {
                 subsList
             }
         }
+        .onAppear(perform: presenter.reload)
         .background(Color.theme.backgroundcolor)
     }
 
@@ -80,7 +81,7 @@ struct CommunitiesView: View {
 struct CommunitiesView_Previews: PreviewProvider {
     static var previews: some View {
         let model = DataModel()
-        let interactor = CommunitiesInteractor(model: model)
+        let interactor = CommunitiesInteractor()
         let presenter = CommunitiesPresenter(interactor: interactor)
         CommunitiesView(presenter: presenter)
             .environmentObject(DataModel())

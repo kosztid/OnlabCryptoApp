@@ -69,7 +69,7 @@ struct ContentView: View {
                 // Communities tab
                 NavigationView {
                     VStack(spacing: 10) {
-                        CommunitiesView(presenter: CommunitiesPresenter(interactor: CommunitiesInteractor(model: model)))
+                        CommunitiesView(presenter: CommunitiesPresenter(interactor: CommunitiesInteractor()))
                     }
                 }
                 .tabItem { Label("Communities", systemImage: "message") }
@@ -124,7 +124,7 @@ struct ContentView: View {
                 // Communities tab
                 NavigationView {
                     VStack(spacing: 10) {
-                        CommunitiesView(presenter: CommunitiesPresenter(interactor: CommunitiesInteractor(model: model)))
+                        CommunitiesView(presenter: CommunitiesPresenter(interactor: CommunitiesInteractor()))
                     }
                 }
                 .tabItem { Label("Communities", systemImage: "message") }
