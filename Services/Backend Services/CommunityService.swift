@@ -99,8 +99,6 @@ class CommunityService {
                     self?.communitySub?.cancel()
                 }
         }
-
-
     }
 
     func addCommunity(_ communityName: String) {
@@ -132,6 +130,5 @@ class CommunityService {
             }
             task.resume()
         }
-
     }
 }

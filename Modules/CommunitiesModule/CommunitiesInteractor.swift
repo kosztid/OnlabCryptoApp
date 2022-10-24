@@ -9,6 +9,7 @@ class CommunitiesInteractor {
         communityService = CommunityService()
 
         userService.loadUser()
+        userService.loadUsers()
     }
 
     func getCommunities() -> Published<[CommunityModel]>.Publisher {
@@ -19,6 +20,19 @@ class CommunitiesInteractor {
         communityService.addCommunity(name)
     }
 
+    func getSubLogs() -> Published<[UserLog]>.Publisher {
+        return userService.$subsLogList
+    }
+
+    func getUsersList() -> [UserModel] {
+        return userService.userList
+    }
+    func getSubsList() -> [String] {
+        return userService.subscriptions
+    }
+    func subscribe(subId: String) {
+        userService.subscribe(subId)
+    }
     func reload() {
         communityService.loadCommunities()
     }

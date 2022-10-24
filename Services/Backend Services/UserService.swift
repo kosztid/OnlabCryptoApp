@@ -17,6 +17,9 @@ final class UserService: ObservableObject {
     @Published var stockFavs: [StockServerModel] = []
     @Published var stockPortfolio: [StockServerModel] = []
     @Published var stockWallet: [StockServerModel] = []
+    @Published var subscriptions: [String] = []
+    @Published var userList: [UserModel] = []
+    @Published var subsLogList: [UserLog] = []
     @Published var isSignedIn = false
     @Published var loginError = false
     @Published var registerError = false
@@ -24,6 +27,9 @@ final class UserService: ObservableObject {
     let auth: Auth
 
     var userSub: AnyCancellable?
+    var usersSub: AnyCancellable?
+    var userLogsSub: AnyCancellable?
+
 
     init() {
         self.auth = Auth.auth()
@@ -51,6 +57,8 @@ final class UserService: ObservableObject {
                     print(self.auth.currentUser!.uid)
                     print(self.auth.currentUser!.email ?? "")
                     self.loadUser()
+                    self.loadUserActionLogs()
+                    self.loadUsers()
                     //   self.communityService.loadCommunities(apikey: idToken ?? "error")
                 }
             }
@@ -94,10 +102,9 @@ final class UserService: ObservableObject {
                         }
                         DispatchQueue.main.async {
                             self.isSignedIn = true
-                            print(self.auth.currentUser!.uid)
-                            print(self.auth.currentUser!.email ?? "")
                             print(idToken)
                             self.loadUser()
+                            self.loadUserActionLogs()
                             //    self.communityService.loadCommunities(apikey: idToken ?? "error")
                         }
                     }
@@ -107,6 +114,8 @@ final class UserService: ObservableObject {
             print("else ág")
             DispatchQueue.main.async {
                 self.isSignedIn = false
+                self.subsLogList = []
+                self.subscriptions = []
                 self.cryptoFavs = []
                 self.cryptoPortfolio = []
                 self.cryptoWallet = []
@@ -162,6 +171,7 @@ final class UserService: ObservableObject {
                         print(error.localizedDescription)
                     }
                 } receiveValue: { [weak self] (returnedUser) in
+                    self?.subscriptions = returnedUser.subscriptions
                     self?.cryptoFavs = returnedUser.favfolio
                     self?.cryptoPortfolio = returnedUser.portfolio
                     self?.cryptoWallet = returnedUser.wallet
@@ -385,6 +395,129 @@ final class UserService: ObservableObject {
                 self.loadUser()
             }
             task.resume()
+        }
+    }
+
+    func subscribe(_ subId: String) {
+        self.auth.currentUser?.getIDTokenForcingRefresh(true) { apikey, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(self.auth.currentUser!.uid)/subscribe/\(subId)") else {
+                return
+            }
+
+            let token = apikey ?? "error"
+
+            var request = URLRequest(url: url)
+            request.httpMethod = "PUT"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+            let task = URLSession.shared.dataTask(with: request) { _, _, error in
+                guard error == nil else {
+                    return
+                }
+                if self.subscriptions.contains(subId) {
+                    self.subscriptions.removeAll(where: {$0 == subId})
+                } else {
+                    self.subscriptions.append(subId)
+                }
+                self.loadUser()
+                self.loadUserActionLogs()
+            }
+            task.resume()
+        }
+    }
+    func loadUsers() {
+        self.auth.currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            let apikey = idToken ?? "error"
+            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users")
+            else {
+                return
+            }
+
+            var request = URLRequest(url: url)
+            request.setValue("Bearer \(apikey)", forHTTPHeaderField: "Authorization")
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+            self.usersSub = URLSession.shared.dataTaskPublisher(for: request)
+                .subscribe(on: DispatchQueue.global(qos: .default))
+                .tryMap { (output) -> Data in
+                    guard let response = output.response as? HTTPURLResponse,
+                          response.statusCode >= 200 && response.statusCode < 300 else {
+
+                        throw URLError(.badServerResponse)
+                    }
+                    return output.data
+                }
+                .receive(on: DispatchQueue.main)
+                .decode(type: [UserModel].self, decoder: JSONDecoder())
+                .sink {(completion) in
+                    switch completion {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                    }
+                } receiveValue: { [weak self] (returnedUsers) in
+                    var list = returnedUsers
+                    self?.userList = list.filter({$0.id != self?.auth.currentUser!.uid})
+                    self?.usersSub?.cancel()
+                }
+        }
+    }
+}
+
+extension UserService {
+    func loadUserActionLogs() {
+        self.auth.currentUser?.getIDTokenForcingRefresh(true) { apikey, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            let token = apikey ?? ""
+            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(self.auth.currentUser!.uid)/actionsList")
+            else {
+                return
+            }
+            var request = URLRequest(url: url)
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+            self.userLogsSub = URLSession.shared.dataTaskPublisher(for: request)
+                .subscribe(on: DispatchQueue.global(qos: .default))
+                .tryMap { (output) -> Data in
+                    guard let response = output.response as? HTTPURLResponse,
+                          response.statusCode >= 200 && response.statusCode < 300 else {
+
+                        throw URLError(.badServerResponse)
+                    }
+                    return output.data
+                }
+                .receive(on: DispatchQueue.main)
+                .decode(type: [UserLog].self, decoder: JSONDecoder())
+                .sink {(completion) in
+                    switch completion {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        print(error.localizedDescription)
+                    }
+                } receiveValue: { [weak self] (logs) in
+                    self?.subsLogList = logs
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                    self?.subsLogList.sort {
+                        dateFormatter.date(from: $0.time)! < dateFormatter.date(from: $1.time)!
+                    }
+                    self?.userLogsSub?.cancel()
+                }
         }
     }
 }

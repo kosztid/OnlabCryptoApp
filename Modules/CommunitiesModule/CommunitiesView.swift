@@ -2,6 +2,7 @@ import SwiftUI
 
 struct CommunitiesView: View {
     @ObservedObject var presenter: CommunitiesPresenter
+    var list = ["favremove", "favadd", "portfolio"]
     var body: some View {
         VStack {
             topBarMenu
@@ -17,7 +18,18 @@ struct CommunitiesView: View {
     }
 
     var subsList: some View {
-        Text("Subs")
+        ZStack {
+            Color.theme.backgroundcolor
+                .ignoresSafeArea()
+            List {
+                ForEach(presenter.subLogs) { log in
+                    Text(log.actionType)
+                }
+            }
+            .background(Color.theme.backgroundcolor)
+            .scrollContentBackground(.hidden)
+        }
+        .navigationBarItems(trailing: presenter.navigateToSubs())
     }
 
     var communitiesList: some View {
@@ -80,7 +92,6 @@ struct CommunitiesView: View {
 
 struct CommunitiesView_Previews: PreviewProvider {
     static var previews: some View {
-        let model = DataModel()
         let interactor = CommunitiesInteractor()
         let presenter = CommunitiesPresenter(interactor: interactor)
         CommunitiesView(presenter: presenter)

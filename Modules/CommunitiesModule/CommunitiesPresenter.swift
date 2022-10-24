@@ -9,6 +9,7 @@ class CommunitiesPresenter: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     @Published var communities: [CommunityModel] = []
+    @Published var subLogs: [UserLog] = []
     @Published var signedin: Bool = false
     @Published var viewType = CommunityTabViews.communities
 
@@ -21,20 +22,27 @@ class CommunitiesPresenter: ObservableObject {
         interactor.getSignInStatus()
             .assign(to: \.signedin, on: self)
             .store(in: &cancellables)
+
+        interactor.getSubLogs()
+            .assign(to: \.subLogs, on: self)
+            .store(in: &cancellables)
     }
 
     func linkBuilder<Content: View>(
         for community: CommunityModel,
-        @ViewBuilder content: () -> Content
-    ) -> some View {
-        NavigationLink(destination: router.gotoChat(interactor: interactor.makeMessagerInteractor(), community: community)) {
-            }.buttonStyle(PlainButtonStyle())
+        @ViewBuilder content: () -> Content) -> some View {
+            NavigationLink(destination: router.gotoChat(interactor: interactor.makeMessagerInteractor(), community: community)) {
+            }
+            .buttonStyle(PlainButtonStyle())
             .opacity(0)
-    }
+        }
     func addCommunity(_ name: String) {
         interactor.addCommunity(name)
     }
 
+    func navigateToSubs() -> some View {
+        NavigationLink { router.makeSubscriptionView(userList: interactor.getUsersList(), subList: interactor.getSubsList(), action: interactor.subscribe) } label: { Image(systemName: "plus")}
+    }
     func reload() {
         interactor.reload()
     }
