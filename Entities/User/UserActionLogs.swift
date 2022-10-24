@@ -1,8 +1,8 @@
-//
-//  UserActionLogs.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 10. 24..
-//
-
 import Foundation
+
+struct UserLog: Codable, Identifiable {
+    let id: Int
+    let actionType, time: String
+    let count, count2: Double
+    let itemId, itemId2: String
+}
