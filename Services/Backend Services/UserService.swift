@@ -9,6 +9,7 @@ struct Favfolio: Codable {
     let buytotal: Double?
 }
 
+//  swiftlint:disable:next type_body_length
 final class UserService: ObservableObject {
     let port = "8090"
     @Published var cryptoFavs: [CryptoServerModel] = []
@@ -21,6 +22,7 @@ final class UserService: ObservableObject {
     @Published var userList: [UserModel] = []
     @Published var subsLogList: [UserLog] = []
     @Published var isSignedIn = false
+    @Published var accountVisible = false
     @Published var loginError = false
     @Published var registerError = false
     @Published var registered = false
@@ -171,6 +173,7 @@ final class UserService: ObservableObject {
                         print(error.localizedDescription)
                     }
                 } receiveValue: { [weak self] (returnedUser) in
+                    self?.accountVisible = returnedUser.visibility
                     self?.subscriptions = returnedUser.subscriptions
                     self?.cryptoFavs = returnedUser.favfolio
                     self?.cryptoPortfolio = returnedUser.portfolio
@@ -430,6 +433,34 @@ final class UserService: ObservableObject {
             task.resume()
         }
     }
+
+    func changeVisibility() {
+        self.auth.currentUser?.getIDTokenForcingRefresh(true) { apikey, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(self.auth.currentUser!.uid)/changeVisibility") else {
+                return
+            }
+
+            let token = apikey ?? "error"
+
+            var request = URLRequest(url: url)
+            request.httpMethod = "PUT"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+            let task = URLSession.shared.dataTask(with: request) { _, _, error in
+                guard error == nil else {
+                    return
+                }
+                self.accountVisible.toggle()
+                self.loadUser()
+            }
+            task.resume()
+        }
+    }
     func loadUsers() {
         self.auth.currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
             if let error = error {
@@ -466,15 +497,12 @@ final class UserService: ObservableObject {
                         print(error.localizedDescription)
                     }
                 } receiveValue: { [weak self] (returnedUsers) in
-                    var list = returnedUsers
+                    let list = returnedUsers.filter({$0.visibility})
                     self?.userList = list.filter({$0.id != self?.auth.currentUser!.uid})
                     self?.usersSub?.cancel()
                 }
         }
     }
-}
-
-extension UserService {
     func loadUserActionLogs() {
         self.auth.currentUser?.getIDTokenForcingRefresh(true) { apikey, error in
             if let error = error {

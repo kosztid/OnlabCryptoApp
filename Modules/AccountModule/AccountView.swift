@@ -3,7 +3,7 @@ import SwiftUI
 struct AccountView: View {
     @Environment(\.presentationMode) private var presentationMode
     var presenter: AccountPresenter
-    @State var accountPrivate = true
+    @State var accountVisibility = true
     var body: some View {
         ZStack {
             Color.theme.backgroundcolor
@@ -18,9 +18,12 @@ struct AccountView: View {
             }
             .padding(10)
         }
-        .onChange(of: accountPrivate) { _ in
-            presenter.accountPrivate = self.accountPrivate
-            print(presenter.accountPrivate)
+        .onAppear {
+            accountVisibility = presenter.accountVisibility
+        }
+        .onChange(of: accountVisibility) { _ in
+            presenter.changeVisibility()
+            print(presenter.accountVisibility)
         }
         .background(Color.theme.backgroundcolor)
     }
@@ -48,6 +51,6 @@ struct AccountView: View {
     }
 
     var privateToggle: some View {
-        Toggle("Account láthatóság privát TODO", isOn: $accountPrivate)
+        Toggle("Account láthatóság privát TODO", isOn: $accountVisibility)
     }
 }

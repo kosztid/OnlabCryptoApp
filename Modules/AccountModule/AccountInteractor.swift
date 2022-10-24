@@ -12,7 +12,14 @@ class AccountInteractor {
         userService.signOut()
     }
 
+    func getVisibility() -> Published<Bool>.Publisher {
+        return userService.$accountVisible
+    }
     func currentUserEmail() -> String {
         userService.getUserEmail()
+    }
+
+    func changeVisibility() {
+        userService.changeVisibility()
     }
 }
