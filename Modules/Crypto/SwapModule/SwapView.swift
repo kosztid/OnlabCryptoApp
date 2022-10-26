@@ -147,6 +147,6 @@ struct SwapView: View {
 
 struct SwapView_Previews: PreviewProvider {
     static var previews: some View {
-        SwapView(presenter: SwapPresenter(interactor: SwapInteractor(model: DataModel())))
+        SwapView(presenter: SwapPresenter(interactor: SwapInteractor()))
     }
 }

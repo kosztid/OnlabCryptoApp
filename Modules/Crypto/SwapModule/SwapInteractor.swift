@@ -2,20 +2,18 @@ import Foundation
 import SwiftUI
 
 class SwapInteractor {
-    let model: DataModel
     private var userService: UserService
     private var coinService: CoinService
     private var communityService: CommunityService
 
-    init(model: DataModel) {
-        self.model = model
+    init() {
         coinService = CoinService()
         userService = UserService()
         communityService = CommunityService()
     }
 
     func loadService() {
-        userService.userReload()
+        userService.userReload("swapmodule")
     }
 
     func selected(coin: String) -> CoinModel {
@@ -52,21 +50,6 @@ class SwapInteractor {
         }
     }
 
-    func setCoin1(coin1: String) {
-        model.coin1 = coin1
-    }
-    func setCoin2(coin2: String) {
-        model.coin2 = coin2
-    }
-    func setBuyorSell(boolean: String) {
-        model.buyorsell = boolean
-    }
-    func setCoinstoBuy(amount: Double) {
-        model.coinstobuy = amount
-    }
-    func setCoinstoSell(amount: Double) {
-        model.coinstosell = amount
-    }
 
     func getOwnedCoins() -> Published<[CryptoServerModel]>.Publisher {
         return userService.$cryptoWallet
@@ -83,7 +66,7 @@ class SwapInteractor {
     func sendTradeHistory(id: String, cointosell: String, sellamount: Double, cointobuy: String, buyamount: Double) {
         let dateFormatter = DateFormatter()
         let historyId = "AB78B2E3-4CE1-401C-9187-824387846365"
-        let email = model.auth.currentUser?.email ?? "nouser"
+        let email = userService.getUserEmail() 
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let stringdate = dateFormatter.string(from: Date())
         let cointosellprice = self.selected(coin: cointosell).currentPrice

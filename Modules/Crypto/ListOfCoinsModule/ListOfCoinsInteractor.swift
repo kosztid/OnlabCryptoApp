@@ -1,20 +1,17 @@
 import Foundation
 
 class ListOfCoinsInteractor {
-    let model: DataModel
     let coinService: CoinService
     let userService: UserService
 
-    init(model: DataModel) {
-        self.model = model
+    init() {
         coinService = CoinService()
         userService = UserService()
-        userService.userReload()
+        userService.userReload("listofcoins")
         print("interactor")
     }
 
     func setIsnotificationViewed() {
-        model.isNotificationViewed = true
     }
 
     func makeDetailInteractor(coin: CoinModel) -> CoinDetailInteractor {
@@ -30,10 +27,10 @@ class ListOfCoinsInteractor {
     }
 
     func reloadData() {
-        userService.userReload()
+        userService.userReload("listofcoins")
     }
 
     func changeView() {
-        model.currencyType = .stocks
+//       TODO: model.currencyType = .stocks
     }
 }

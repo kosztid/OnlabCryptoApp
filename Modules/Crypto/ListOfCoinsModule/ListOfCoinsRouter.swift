@@ -16,8 +16,8 @@ class ListOfCoinsRouter {
         return LoginScreenView(presenter: presenter)
     }
 
-    func makePriceNotificationView(model: DataModel) -> some View {
-        let presenter = PriceNotificationPresenter(interactor: PriceNotificationInteractor(model: model))
+    func makePriceNotificationView() -> some View {
+        let presenter = PriceNotificationPresenter(interactor: PriceNotificationInteractor())
         return PriceNotificationView(presenter: presenter)
     }
 }

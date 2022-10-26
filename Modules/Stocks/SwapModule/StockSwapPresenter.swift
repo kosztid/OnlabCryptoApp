@@ -71,10 +71,6 @@ class StockSwapPresenter: ObservableObject {
         stockstosell = 0.0
     }
 
-    func returnmodel() -> DataModel {
-        return interactor.model
-    }
-
     func loadService() {
         interactor.loadService()
     }

@@ -2,20 +2,18 @@ import Foundation
 import SwiftUI
 
 class StockSwapInteractor {
-    let model: DataModel
     private var userService: UserService
     private var stockService: StockService
     private var communityService: CommunityService
 
-    init(model: DataModel) {
-        self.model = model
+    init() {
         stockService = StockService()
         userService = UserService()
         communityService = CommunityService()
     }
 
     func loadService() {
-        userService.userReload()
+        userService.userReload("stockswapinteractor")
     }
 
     func getStocks() -> Published<[StockListItem]>.Publisher {
@@ -36,7 +34,7 @@ class StockSwapInteractor {
 
     func selected(stock: String) -> StockListItem {
         // swiftlint:disable:next line_length
-        return model.stocks.first(where: {$0.symbol == stock}) ?? StockListItem(symbol: "err", name: "err", lastsale: "err", netchange: "err", pctchange: "err", marketCap: "err", url: "err")
+        return stockService.stocks.first(where: {$0.symbol == stock}) ?? StockListItem(symbol: "err", name: "err", lastsale: "err", netchange: "err", pctchange: "err", marketCap: "err", url: "err")
     }
     func ownedamount(stockSymbol: String) -> Double {
         let idx = userService.stockWallet.firstIndex(where: { $0.stockSymbol == stockSymbol })
@@ -66,7 +64,7 @@ class StockSwapInteractor {
     func sendTradeHistory(id: String, stockToSell: String, sellamount: Double, stockToBuy: String, buyamount: Double) {
         let dateFormatter = DateFormatter()
         let historyId = "AB78B2E3-4CE1-401C-9187-824387846365"
-        let email = model.auth.currentUser?.email ?? "nouser"
+        let email = userService.getUserEmail()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         let stringdate = dateFormatter.string(from: Date())
         let stocktosellprice = Double(self.selected(stock: stockToSell).lastsale) ?? 1

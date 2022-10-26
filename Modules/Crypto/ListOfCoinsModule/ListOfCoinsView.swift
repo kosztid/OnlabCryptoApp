@@ -42,10 +42,8 @@ struct ListOfCoinsView: View {
 
 struct ListOfCoinsView_Previews: PreviewProvider {
     static var previews: some View {
-        let model = DataModel()
-        let interactor = ListOfCoinsInteractor(model: model)
+        let interactor = ListOfCoinsInteractor()
         let presenter = ListOfCoinsPresenter(interactor: interactor)
         ListOfCoinsView(presenter: presenter)
-            .environmentObject(DataModel())
     }
 }

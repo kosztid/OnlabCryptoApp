@@ -98,6 +98,7 @@ struct LoginScreenView: View {
         .onChange(of: presenter.signedin) { _ in
             self.presentationMode.wrappedValue.dismiss()
         }
+        .onAppear(perform: presenter.load)
         .navigationBarHidden(true)
         .background(Color.theme.backgroundcolor)
     }

@@ -28,12 +28,14 @@ class CommunitiesInteractor {
         return userService.userList
     }
     func getSubsList() -> [String] {
+        print(userService.subscriptions.count)
         return userService.subscriptions
     }
     func subscribe(subId: String) {
         userService.subscribe(subId)
     }
     func reload() {
+        userService.userReload("communitiesreload")
         communityService.loadCommunities()
     }
     func makeMessagerInteractor() -> MessagerInteractor {

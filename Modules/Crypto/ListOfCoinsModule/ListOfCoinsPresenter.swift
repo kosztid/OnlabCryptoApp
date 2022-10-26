@@ -20,10 +20,6 @@ class ListOfCoinsPresenter: ObservableObject {
             .assign(to: \.signedin, on: self)
             .store(in: &cancellables)
 
-        interactor.model.$isNotificationViewed
-            .assign(to: \.isNotificationViewed, on: self)
-            .store(in: &cancellables)
-
     }
 
     func reloadData() {
@@ -45,14 +41,14 @@ class ListOfCoinsPresenter: ObservableObject {
     func makeButtonForAccount() -> some View {
         NavigationLink("Account", destination: router.makeAccountView())
     }
-    func makeButtonForPriceNotification() -> some View {
-        NavigationLink(destination: router.makePriceNotificationView(model: interactor.model)) {
-            Image(systemName: isNotificationViewed ? "bell.fill" : "bell.badge.fill")
-                .font(.system(size: 20))
-            }
-        .onAppear {self.interactor.setIsnotificationViewed()}
-        .foregroundColor(isNotificationViewed ? Color.theme.accentcolor : Color.theme.red)
-    }
+//    func makeButtonForPriceNotification() -> some View {
+//        NavigationLink(destination: router.makePriceNotificationView(model: interactor.model)) {
+//            Image(systemName: isNotificationViewed ? "bell.fill" : "bell.badge.fill")
+//                .font(.system(size: 20))
+//            }
+//        .onAppear {self.interactor.setIsnotificationViewed()}
+//        .foregroundColor(isNotificationViewed ? Color.theme.accentcolor : Color.theme.red)
+//    }
     func makeButtonForViewchange() -> some View {
         Button {
             self.interactor.changeView()

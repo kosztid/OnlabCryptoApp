@@ -20,9 +20,7 @@ class MessagerInteractor {
     func getAccountEmail() -> String {
         return userService.getUserEmail()
     }
-    func addUser(id: String, user: String) {
-      // TODO:  model.addCommunityMember(id: id, member: user)
-    }
+    
     func issignedin() -> Bool {
         return userService.isSignedIn
     }

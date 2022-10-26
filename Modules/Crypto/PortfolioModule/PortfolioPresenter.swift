@@ -114,7 +114,7 @@ class PortfolioPresenter: ObservableObject {
                         ZStack {
                             Color.theme.backgroundcolor
                                     .ignoresSafeArea()
-                            FavfolioListItemView(presenter: FavfolioListItemPresenter(interactor: FavfolioListItemInteractor(coin: coin, service: self.interactor.getservice())))
+                            FavfolioListItemView(presenter: FavfolioListItemPresenter(interactor: FavfolioListItemInteractor(coin: coin, self.interactor.updateFav, self.interactor.isFav)))
                                 .frame(height: 80)
                             self.linkBuilder(for: coin) {
                                 EmptyView()

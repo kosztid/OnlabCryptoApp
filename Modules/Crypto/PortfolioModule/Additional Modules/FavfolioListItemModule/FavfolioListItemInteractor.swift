@@ -2,22 +2,23 @@ import Foundation
 
 class FavfolioListItemInteractor {
     private let coin: CoinModel
-    private let userService: UserService
+    let updateFav: (String) -> Void
+    let isFavorite: (String) -> Bool
 
-    init(coin: CoinModel, service: UserService) {
+    init(coin: CoinModel, _ updateFav : @escaping (String) -> Void = { _ in }, _ isFavorite : @escaping (String) -> Bool = { _ in return true }) {
         self.coin = coin
-        self.userService = service
+        self.updateFav = updateFav
+        self.isFavorite = isFavorite
     }
 
     func addFavCoin() {
-        userService.updateFavs(coin.id)
+        updateFav(coin.id)
     }
-    
     func getcoin() -> CoinModel {
         return coin
     }
 
     func isFav() -> Bool {
-        return !(userService.cryptoFavs.filter({ $0.coinid == self.coin.id }).isEmpty)
+        return isFavorite(coin.id)
     }
 }

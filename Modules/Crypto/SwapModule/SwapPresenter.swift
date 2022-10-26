@@ -95,7 +95,7 @@ class SwapPresenter: ObservableObject {
     }
 
     func setBuyorSell(boolean: String) {
-        interactor.setBuyorSell(boolean: boolean)
+//        interactor.setBuyorSell(boolean: boolean)
     }
 
     func ownedamount(coinid: String) -> Double {

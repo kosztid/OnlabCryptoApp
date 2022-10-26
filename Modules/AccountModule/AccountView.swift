@@ -19,10 +19,10 @@ struct AccountView: View {
             .padding(10)
         }
         .onAppear {
+            presenter.load()
             accountVisibility = presenter.accountVisibility
         }
         .onChange(of: accountVisibility) { _ in
-            presenter.changeVisibility()
             print(presenter.accountVisibility)
         }
         .background(Color.theme.backgroundcolor)

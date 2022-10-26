@@ -26,6 +26,11 @@ class RegisterScreenPresenter: ObservableObject {
     func setregistererrorfalse() {
         interactor.setregistererrorfalse()
     }
+
+    func load() {
+        interactor.load()
+    }
+    
     func setregisteredfalse() {
         interactor.setregisteredfalse()
     }

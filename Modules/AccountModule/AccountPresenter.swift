@@ -24,6 +24,10 @@ class AccountPresenter {
         interactor.changeVisibility()
     }
 
+    func load() {
+        interactor.load()
+    }
+
     func signOut() {
         interactor.signOut()
     }

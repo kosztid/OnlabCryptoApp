@@ -23,7 +23,7 @@ struct CommunitiesView: View {
                 .ignoresSafeArea()
             List {
                 ForEach(presenter.subLogs) { log in
-                    Text(log.actionType)
+                    SubscriptionLogListItem(log)
                 }
             }
             .background(Color.theme.backgroundcolor)
@@ -95,6 +95,5 @@ struct CommunitiesView_Previews: PreviewProvider {
         let interactor = CommunitiesInteractor()
         let presenter = CommunitiesPresenter(interactor: interactor)
         CommunitiesView(presenter: presenter)
-            .environmentObject(DataModel())
     }
 }

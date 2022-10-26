@@ -1,27 +1,25 @@
 import Foundation
 
 class StockPortfolioInteractor {
-    let model: DataModel
     let downloader: SingleStockDownloader
     private var userService: UserService
     var stockService: StockService
 
-    init(model: DataModel) {
+    init() {
         self.downloader = SingleStockDownloader()
-        self.model = model
         stockService = StockService()
         userService = UserService()
-        userService.userReload()
+        userService.userReload("stockportfoliointeracotr")
     }
 
     func changeViewTo(viewname: String) {
-        model.selection = viewname
+//        model.selection = viewname
     }
 
     func getCoins() -> Published<[StockListItem]>.Publisher {
         return stockService.$stocks
     }
-    
+
     func getSignInStatus() -> Published<Bool>.Publisher {
         return userService.$isSignedIn
     }
@@ -111,9 +109,9 @@ class StockPortfolioInteractor {
     }
 
     func reloadData() {
-        userService.userReload()
+        userService.userReload("stockprotffunc")
     }
-    
+
     func setFav(_ symbol: String) {
         userService.updateStockFavs(symbol)
     }

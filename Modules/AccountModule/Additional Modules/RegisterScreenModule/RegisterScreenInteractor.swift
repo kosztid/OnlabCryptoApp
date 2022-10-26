@@ -5,7 +5,6 @@ class RegisterScreenInteractor {
 
     init() {
         userService = UserService()
-        userService.userReload()
     }
     func register(email: String, password: String) {
         userService.register(email, password)
@@ -18,6 +17,9 @@ class RegisterScreenInteractor {
         return userService.$registered
     }
 
+    func load() {
+        userService.userReload("register")
+    }
     func setregistererrorfalse() {
         userService.registerError = false
     }

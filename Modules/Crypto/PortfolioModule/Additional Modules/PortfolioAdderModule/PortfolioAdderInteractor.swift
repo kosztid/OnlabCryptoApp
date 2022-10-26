@@ -2,11 +2,9 @@ import Foundation
 
 class PortfolioAdderInteractor {
     let coin: CoinModel
-    let model: DataModel
 
-    init(coin: CoinModel, model: DataModel) {
+    init(coin: CoinModel) {
         self.coin = coin
-        self.model = model
     }
 
     func coindata() -> CoinModel {
@@ -14,6 +12,5 @@ class PortfolioAdderInteractor {
     }
 
     func addCoin(count: Double) {
-        model.addHolding(coinid: coin.id, coincount: count, currprice: coin.currentPrice)
     }
 }

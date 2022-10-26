@@ -52,7 +52,7 @@ struct StockSearchView: View {
     var searchBarBlock: some View {
         ZStack {
             Rectangle()
-                .foregroundColor(Color("LightGray"))
+                .foregroundColor(Color(UIColor.systemGray5))
             HStack {
                 Image(systemName: "magnifyingglass")
                 TextField("Search ..", text: $searchText) { startedEditing in

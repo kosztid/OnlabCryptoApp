@@ -16,7 +16,6 @@ class MessagerPresenter: ObservableObject {
         let stringdate = dateFormatter.string(from: Date())
         let email = interactor.getAccountEmail()
         self.interactor.sendMessage(id: community.id, message: MessageModel(id: 1, sender: interactor.getAccountInfo(), senderemail: email, message: message, time: stringdate, image: false))
-        self.interactor.addUser(id: self.community.id, user: email)
     }
     func messagesGet() -> [MessageModel] {
         return community.messages

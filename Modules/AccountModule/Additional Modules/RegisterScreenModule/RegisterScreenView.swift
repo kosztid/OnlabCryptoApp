@@ -88,6 +88,7 @@ struct RegisterScreenView: View {
             self.presentationMode.wrappedValue.dismiss()
             presenter.setregisteredfalse()
         }
+        .onAppear(perform: presenter.load)
         .navigationTitle("Regisztráció")
         .background(Color.theme.backgroundcolor)
     }

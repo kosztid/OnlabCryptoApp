@@ -9,16 +9,15 @@ class PriceNotificationPresenter: ObservableObject {
     init(interactor: PriceNotificationInteractor) {
         self.interactor = interactor
 
-        interactor.model.$events
-            .assign(to: \.events, on: self)
-            .store(in: &cancellables)
     }
 
     func currentPrice(coinid: String) -> Double {
-        return interactor.currentPrice(coinid: coinid)
+//        return interactor.currentPrice(coinid: coinid)
+        return 0.0
     }
     func coinname(coinid: String) -> String {
-        return interactor.coinname(coinid: coinid)
+//        return interactor.coinname(coinid: coinid)
+        return ""
     }
 
 }

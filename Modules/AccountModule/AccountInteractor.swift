@@ -6,10 +6,13 @@ class AccountInteractor {
 
     init() {
         userService = UserService()
-        userService.userReload()
     }
     func signOut() {
         userService.signOut()
+    }
+
+    func load() {
+        userService.userReload("account")
     }
 
     func getVisibility() -> Published<Bool>.Publisher {

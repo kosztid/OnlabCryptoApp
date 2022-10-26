@@ -20,11 +20,11 @@ class NewsPresenter: ObservableObject {
         self.interactor = interactor
         self.newsTypes = newsType
         if newsType == .crypto {
-            interactor.model.$cryptoNews
+            interactor.getCryptoNews()
                 .assign(to: \.news, on: self)
                 .store(in: &cancellables)
         } else {
-            interactor.model.$stockNews
+            interactor.getStockNews()
                 .assign(to: \.news, on: self)
                 .store(in: &cancellables)
         }

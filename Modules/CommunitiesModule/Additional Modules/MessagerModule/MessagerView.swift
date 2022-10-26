@@ -18,7 +18,7 @@ struct MessagerView: View {
                             ZStack {
                                 Color.theme.backgroundcolor
                                         .ignoresSafeArea()
-                                MessageBubble(message: message,sender: presenter.getAccountInfo())
+                                MessageBubble(message: message, sender: presenter.getAccountInfo())
                             }
                         }
                     }
@@ -49,7 +49,7 @@ struct MessagerView: View {
                         .disabled(presenter.issignedin() == false)
                         .accessibilityIdentifier("MessageTextfield")
                     if self.image == nil {
-                        Button{
+                        Button {
                             showImagePicker.toggle()
                         } label: {
                             Image(systemName: "photo")

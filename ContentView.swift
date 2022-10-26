@@ -3,7 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var selection: Tab = .listofcoins
     @Environment(\.scenePhase) var scenePhase
-    @EnvironmentObject var model: DataModel
+    var currencyType = CurrencyTypes.crypto
     init() {
         UITabBar.appearance().barTintColor = UIColor(Color.theme.backgroundcolor)
         UINavigationBar.appearance().barTintColor = UIColor(Color.theme.backgroundcolor)
@@ -15,9 +15,9 @@ struct ContentView: View {
         case portfolio
         case news
     }
-    
+
     var body: some View {
-        if model.currencyType == .crypto {
+        if currencyType == .crypto {
             cryptoView
         } else {
             stocksView
@@ -33,7 +33,7 @@ struct ContentView: View {
             TabView(selection: $selection) {
                 // CoinList view
                 NavigationView {
-                    ListOfStocksView(presenter: ListOfStocksPresenter(interactor: ListOfStocksInteractor(model: model)))
+                    ListOfStocksView(presenter: ListOfStocksPresenter(interactor: ListOfStocksInteractor()))
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .ignoresSafeArea()
@@ -44,7 +44,7 @@ struct ContentView: View {
                 // Portfolio tab
                 NavigationView {
                     VStack {
-                        StockPortfolioView(presenter: StockPortfolioPresenter(interactor: StockPortfolioInteractor(model: model)))
+                        StockPortfolioView(presenter: StockPortfolioPresenter(interactor: StockPortfolioInteractor()))
                     }
                 }
                 .tabItem { Label("Portfolio", systemImage: "star") }
@@ -53,14 +53,14 @@ struct ContentView: View {
 
                 // swap tab
                 NavigationView {
-                    StockSwapView(presenter: StockSwapPresenter(interactor: StockSwapInteractor(model: model)))
+                    StockSwapView(presenter: StockSwapPresenter(interactor: StockSwapInteractor()))
                 }
                 .tabItem { Label("Swap", systemImage: "arrow.left.arrow.right") }
                 .accessibilityIdentifier("SwapViewButton")
                 .tag(Tab.swap)
                 // News tab
                 NavigationView {
-                    NewsView(presenter: NewsPresenter(interactor: NewsInteractor(model: model), newsType: .stock))
+                    NewsView(presenter: NewsPresenter(interactor: NewsInteractor(), newsType: .stock))
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .tabItem { Label("News", systemImage: "newspaper") }
@@ -86,7 +86,7 @@ struct ContentView: View {
             TabView(selection: $selection) {
                 // CoinList view
                 NavigationView {
-                    ListOfCoinsView(presenter: ListOfCoinsPresenter(interactor: ListOfCoinsInteractor(model: model)))
+                    ListOfCoinsView(presenter: ListOfCoinsPresenter(interactor: ListOfCoinsInteractor()))
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .ignoresSafeArea()
@@ -107,7 +107,7 @@ struct ContentView: View {
                 // swap tab
                 NavigationView {
                     VStack(spacing: 10) {
-                        SwapView(presenter: SwapPresenter(interactor: SwapInteractor(model: model)))
+                        SwapView(presenter: SwapPresenter(interactor: SwapInteractor()))
                     }
                 }
                 .tabItem { Label("Swap", systemImage: "arrow.left.arrow.right") }
@@ -115,7 +115,7 @@ struct ContentView: View {
                 .tag(Tab.swap)
                 // News tab
                 NavigationView {
-                    NewsView(presenter: NewsPresenter(interactor: NewsInteractor(model: model), newsType: .crypto))
+                    NewsView(presenter: NewsPresenter(interactor: NewsInteractor(), newsType: .crypto))
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .tabItem { Label("News", systemImage: "newspaper") }
@@ -131,25 +131,24 @@ struct ContentView: View {
                 .tag(Tab.communities)
             }
         }
-        .onChange(of: scenePhase) { newPhase in
-            if newPhase == .active {
-                print("Active")
-                model.loadNotification()
-            } else if newPhase == .inactive {
-                print("inactive")
-            } else if newPhase == .background {
-                print("background")
-                model.saveNotification()
-                model.isNotificationViewed = false
-            }
-        }
+//        .onChange(of: scenePhase) { newPhase in
+//            if newPhase == .active {
+//                print("Active")
+//                model.loadNotification()
+//            } else if newPhase == .inactive {
+//                print("inactive")
+//            } else if newPhase == .background {
+//                print("background")
+//                model.saveNotification()
+//                model.isNotificationViewed = false
+//            }
+//        }
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-            .environmentObject(DataModel())
             .preferredColorScheme(.light)
     }
 }

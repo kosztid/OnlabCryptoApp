@@ -32,7 +32,6 @@ final class UserService: ObservableObject {
     var usersSub: AnyCancellable?
     var userLogsSub: AnyCancellable?
 
-
     init() {
         self.auth = Auth.auth()
     }
@@ -90,7 +89,7 @@ final class UserService: ObservableObject {
         }
     }
 
-    func userReload() {
+    func userReload(_ origin: String = "Basic") {
         if Auth.auth().currentUser?.uid != nil {
             auth.currentUser?.reload(completion: { (error) in
                 if let error = error {
@@ -104,6 +103,7 @@ final class UserService: ObservableObject {
                         }
                         DispatchQueue.main.async {
                             self.isSignedIn = true
+                            print(origin)
                             print(idToken)
                             self.loadUser()
                             self.loadUserActionLogs()
@@ -144,7 +144,8 @@ final class UserService: ObservableObject {
                 return
             }
             let apikey = idToken ?? "error"
-            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(self.auth.currentUser!.uid)")
+            let userId = self.auth.currentUser?.uid ?? ""
+            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(userId)")
             else {
                 return
             }
@@ -216,7 +217,8 @@ final class UserService: ObservableObject {
                 print(error.localizedDescription)
                 return
             }
-            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(self.auth.currentUser!.uid)/wallet/") else {
+            let userId = self.auth.currentUser?.uid ?? ""
+            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(userId)/wallet/") else {
                 return
             }
 
@@ -249,7 +251,8 @@ final class UserService: ObservableObject {
                 print(error.localizedDescription)
                 return
             }
-            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(self.auth.currentUser!.uid)/portfolio/") else {
+            let userId = self.auth.currentUser?.uid ?? ""
+            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(userId)/portfolio/") else {
                 return
             }
 
@@ -281,7 +284,8 @@ final class UserService: ObservableObject {
                 print(error.localizedDescription)
                 return
             }
-            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(self.auth.currentUser!.uid)/favfolio/") else {
+            let userId = self.auth.currentUser?.uid ?? ""
+            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(userId)/favfolio/") else {
                 return
             }
             let token = apikey ?? "error"
@@ -312,7 +316,8 @@ final class UserService: ObservableObject {
                 print(error.localizedDescription)
                 return
             }
-            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(self.auth.currentUser!.uid)/stockwallet/") else {
+            let userId = self.auth.currentUser?.uid ?? ""
+            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(userId)/stockwallet/") else {
                 return
             }
 
@@ -345,7 +350,8 @@ final class UserService: ObservableObject {
                 print(error.localizedDescription)
                 return
             }
-            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(self.auth.currentUser!.uid)/stockportfolio/") else {
+            let userId = self.auth.currentUser?.uid ?? ""
+            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(userId)/stockportfolio/") else {
                 return
             }
 
@@ -377,7 +383,8 @@ final class UserService: ObservableObject {
                 print(error.localizedDescription)
                 return
             }
-            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(self.auth.currentUser!.uid)/stockfavfolio/") else {
+            let userId = self.auth.currentUser?.uid ?? ""
+            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(userId)/stockfavfolio/") else {
                 return
             }
 
@@ -407,7 +414,8 @@ final class UserService: ObservableObject {
                 print(error.localizedDescription)
                 return
             }
-            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(self.auth.currentUser!.uid)/subscribe/\(subId)") else {
+            let userId = self.auth.currentUser?.uid ?? ""
+            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(userId)/subscribe/\(subId)") else {
                 return
             }
 
@@ -440,7 +448,8 @@ final class UserService: ObservableObject {
                 print(error.localizedDescription)
                 return
             }
-            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(self.auth.currentUser!.uid)/changeVisibility") else {
+            let userId = self.auth.currentUser?.uid ?? ""
+            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(userId)/changeVisibility") else {
                 return
             }
 
@@ -510,7 +519,8 @@ final class UserService: ObservableObject {
                 return
             }
             let token = apikey ?? ""
-            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(self.auth.currentUser!.uid)/actionsList")
+            let userId = self.auth.currentUser?.uid ?? ""
+            guard let url = URL(string: "http://localhost:\(self.port)/api/v1/users/\(userId)/actionsList")
             else {
                 return
             }
@@ -542,7 +552,7 @@ final class UserService: ObservableObject {
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                     self?.subsLogList.sort {
-                        dateFormatter.date(from: $0.time)! < dateFormatter.date(from: $1.time)!
+                        dateFormatter.date(from: $0.time)! > dateFormatter.date(from: $1.time)!
                     }
                     self?.userLogsSub?.cancel()
                 }

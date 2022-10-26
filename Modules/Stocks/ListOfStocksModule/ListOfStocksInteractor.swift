@@ -1,15 +1,13 @@
 import Combine
 
 class ListOfStocksInteractor {
-    let model: DataModel
     let stockService: StockService
     let userService: UserService
 
-    init(model: DataModel) {
-        self.model = model
+    init() {
         stockService = StockService()
         userService = UserService()
-        userService.userReload()
+        userService.userReload("listofstocks")
     }
 
     func getSignInStatus() -> Published<Bool>.Publisher {
@@ -25,10 +23,10 @@ class ListOfStocksInteractor {
     }
 
     func reloadData() {
-        userService.userReload()
+        userService.userReload("listofstocks")
     }
 
     func changeView() {
-        model.currencyType = .crypto
+//     TODO:   model.currencyType = .crypto
     }
 }

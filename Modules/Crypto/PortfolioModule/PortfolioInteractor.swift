@@ -8,7 +8,7 @@ class PortfolioInteractor {
     init() {
         coinService = CoinService()
         userService = UserService()
-        userService.userReload()
+        userService.userReload("portfolio")
     }
 
     func makeDetailInteractor(coin: CoinModel) -> CoinDetailInteractor {
@@ -27,7 +27,7 @@ class PortfolioInteractor {
     }
 
     func reloadData() {
-        userService.userReload()
+        userService.userReload("portfolioreloadfunc")
     }
 
     func heldcoins() -> [String] {
@@ -144,5 +144,13 @@ class PortfolioInteractor {
 
     func changeViewTo(viewname: String) {
 //        model.selection = viewname
+    }
+
+    func updateFav(_ id: String) {
+        userService.updateFavs(id)
+    }
+
+    func isFav(_ id: String) -> Bool {
+        return !(userService.cryptoFavs.filter({ $0.coinid == id }).isEmpty)
     }
 }
