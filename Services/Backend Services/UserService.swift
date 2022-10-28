@@ -10,30 +10,18 @@ struct Favfolio: Codable {
 }
 
 //  swiftlint:disable:next type_body_length
-final class UserService: ObservableObject {
+final class SpringUserService: BaseUserService, UserService, ObservableObject {
     let port = "8090"
-    @Published var cryptoFavs: [CryptoServerModel] = []
-    @Published var cryptoPortfolio: [CryptoServerModel] = []
-    @Published var cryptoWallet: [CryptoServerModel] = []
-    @Published var stockFavs: [StockServerModel] = []
-    @Published var stockPortfolio: [StockServerModel] = []
-    @Published var stockWallet: [StockServerModel] = []
-    @Published var subscriptions: [String] = []
-    @Published var userList: [UserModel] = []
-    @Published var subsLogList: [UserLog] = []
-    @Published var isSignedIn = false
-    @Published var accountVisible = false
-    @Published var loginError = false
-    @Published var registerError = false
-    @Published var registered = false
+
     let auth: Auth
 
     var userSub: AnyCancellable?
     var usersSub: AnyCancellable?
     var userLogsSub: AnyCancellable?
 
-    init() {
+    override init() {
         self.auth = Auth.auth()
+        super.init()
     }
 
     func signOut() {

@@ -2,18 +2,17 @@ import Foundation
 import Combine
 import FirebaseAuth
 
-
-class CommunityService {
+class SpringCommunityService: BaseCommunityService, CommunityService {
     let port = "8090"
-    @Published var communities: [CommunityModel] = []
     let auth: Auth
     var communitySub: AnyCancellable?
 
-    init() {
+    override init() {
         self.auth = Auth.auth()
+        super.init()
         loadCommunities()
     }
-    
+
     func sendMessage(_ communityID: String, _ message: MessageModel) {
         self.auth.currentUser?.getIDTokenForcingRefresh(true) { apikey, error in
             if let error = error {
