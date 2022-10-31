@@ -12,4 +12,3 @@ struct UserModel: Codable, Identifiable {
     let subscriptions: [String]
     let userLogs: [UserLog]
 }
-

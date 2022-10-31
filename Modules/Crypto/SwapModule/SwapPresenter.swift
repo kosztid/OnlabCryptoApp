@@ -44,14 +44,14 @@ class SwapPresenter: ObservableObject {
     func setSellAmount() {
         let coin1 = coinmodel1
         let coin2 = coinmodel2
-        let amount = coin2.currentPrice*coinstobuy
+        let amount = coin2.currentPrice * coinstobuy
         coinstosell = amount / coin1.currentPrice
     }
 
     func setBuyAmount() {
         let coin1 = coinmodel1
         let coin2 = coinmodel2
-        let amount = coin1.currentPrice*coinstosell
+        let amount = coin1.currentPrice * coinstosell
         coinstobuy = amount / coin2.currentPrice
     }
 
@@ -61,8 +61,7 @@ class SwapPresenter: ObservableObject {
     }
 
     func swap() {
-        interactor.swap(cointosell: coinmodel1.id, sellamount: coinstosell, cointobuy: coinmodel2.id, buyamount: coinstobuy)
-
+        interactor.swap(coinmodel1.id, coinstosell, coinmodel2.id, coinstobuy)
         coinstosell = 0.0
         coinstobuy = 0.0
     }

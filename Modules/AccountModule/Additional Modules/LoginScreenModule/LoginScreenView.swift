@@ -5,7 +5,7 @@ struct LoginScreenView: View {
     @ObservedObject var presenter: LoginScreenPresenter
     @State var email = ""
     @State var password = ""
-    @State private var isSecured: Bool = true
+    @State private var isSecured = true
     @State private var showingAlert = false
 
     var body: some View {
@@ -31,31 +31,31 @@ struct LoginScreenView: View {
                         .accessibilityIdentifier("LoginEmailTextField")
 
                     ZStack(alignment: .trailing) {
-                                if isSecured {
-                                    SecureField("Password", text: $password)
-                                        .padding(.horizontal)
-                                        .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                                        .font(.system(size: 20))
-                                        .background(Color.theme.backgroundsecondary)
-                                        .cornerRadius(10)
-                                        .disableAutocorrection(true)
-                                        .accessibilityIdentifier("LoginPasswordTextField")
-                                } else {
-                                    TextField("Password", text: $password)
-                                        .padding(.horizontal)
-                                        .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                                        .font(.system(size: 20))
-                                        .background(Color.theme.backgroundsecondary)
-                                        .cornerRadius(10)
-                                        .disableAutocorrection(true)
-                                }
-                                Button(action: {
-                                    isSecured.toggle()
-                                }) {
-                                    Image(systemName: self.isSecured ? "eye.slash" : "eye")
-                                        .accentColor(.gray)
-                                }.offset(x: -20)
-                            }
+                        if isSecured {
+                            SecureField("Password", text: $password)
+                                .padding(.horizontal)
+                                .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                                .font(.system(size: 20))
+                                .background(Color.theme.backgroundsecondary)
+                                .cornerRadius(10)
+                                .disableAutocorrection(true)
+                                .accessibilityIdentifier("LoginPasswordTextField")
+                        } else {
+                            TextField("Password", text: $password)
+                                .padding(.horizontal)
+                                .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                                .font(.system(size: 20))
+                                .background(Color.theme.backgroundsecondary)
+                                .cornerRadius(10)
+                                .disableAutocorrection(true)
+                        }
+                        Button(action: {
+                            isSecured.toggle()
+                        }) {
+                            Image(systemName: self.isSecured ? "eye.slash" : "eye")
+                                .accentColor(.gray)
+                        }.offset(x: -20)
+                    }
 
                     Button {
                         guard presenter.isValidEmail(email: self.email), !self.password.isEmpty else {
@@ -74,7 +74,7 @@ struct LoginScreenView: View {
                     }
                     .alert("Wrong email-password", isPresented: $showingAlert) {
                         Button("OK", role: .cancel) {presenter.setlogerrorfalse() }
-                            }
+                    }
                     .accessibilityIdentifier("LoginButton")
                     HStack {
                         Spacer()

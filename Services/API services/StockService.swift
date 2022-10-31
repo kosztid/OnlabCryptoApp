@@ -17,7 +17,7 @@ class StockService {
             return
         }
         stocksSub = URLSession.shared.dataTaskPublisher(for: url)
-            .tryMap { (output) -> Data in
+            .tryMap { output -> Data in
                 guard let response = output.response as? HTTPURLResponse,
                 response.statusCode >= 200 && response.statusCode < 300 else {
                     throw URLError(.badServerResponse)
@@ -26,14 +26,14 @@ class StockService {
             }
             .receive(on: DispatchQueue.main)
             .decode(type: StockData.self, decoder: JSONDecoder())
-            .sink {(completion) in
+            .sink {completion in
                 switch completion {
                 case .finished:
                     break
                 case .failure(let error):
                     print(error.localizedDescription)
                 }
-            } receiveValue: { [weak self] (returned) in
+            } receiveValue: { [weak self] returned in
                 self?.stocks = returned.data.table.rows
                 self?.stocks.append(StockListItem(symbol: "USD", name: "US DOLLAR", lastsale: "$1", netchange: "0", pctchange: "0%", marketCap: "0", url: "0"))
                 self?.stocksSub?.cancel()

@@ -14,9 +14,9 @@ struct StockSearchView: View {
                 searchBarBlock
                 List {
                     if buyOrSell == .toSell {
-                        ForEach(presenter.stocks.filter({ (stock) -> Bool in
+                        ForEach(presenter.stocks.filter({ stock -> Bool in
                             // swiftlint:disable:next line_length
-                            return presenter.ownedStocks.filter({ $0.stockSymbol == stock.symbol }).isEmpty == false && (stock.symbol.lowercased().contains(searchText.lowercased()) || (searchText == ""))
+                            return presenter.ownedStocks.filter({ $0.stockSymbol == stock.symbol }).isEmpty == false && (stock.symbol.lowercased().contains(searchText.lowercased()) || (searchText.isEmpty))
                         })) { stock in
                             ZStack {
                                 Button("") {
@@ -28,12 +28,12 @@ struct StockSearchView: View {
                         }.listRowSeparatorTint(Color.theme.backgroundsecondary)
                             .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                     } else {
-                        ForEach(presenter.stocks.filter({ (stock) -> Bool in
-                            return stock.symbol.lowercased().contains(searchText.lowercased()) || (searchText == "")
+                        ForEach(presenter.stocks.filter({ stock -> Bool in
+                            return stock.symbol.lowercased().contains(searchText.lowercased()) || (searchText.isEmpty)
                         })) { stock in
                             ZStack {
                                 Button("") {
-                                        presenter.setStock2(stock: stock.symbol)
+                                    presenter.setStock2(stock: stock.symbol)
                                     self.presentationMode.wrappedValue.dismiss()
                                 }
                                     StockSearchListItem(stock: stock)

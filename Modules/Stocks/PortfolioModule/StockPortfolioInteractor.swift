@@ -62,7 +62,7 @@ class StockPortfolioInteractor {
             return 0
         }
         var total: Double = 0
-        for ind in 0...(userService.stockPortfolio.count-1) {
+        for ind in 0...(userService.stockPortfolio.count - 1) {
             total += (userService.stockPortfolio[ind].buytotal ?? 0)
         }
         return total
@@ -73,7 +73,7 @@ class StockPortfolioInteractor {
             return 0
         }
         var total: Double = 0
-        for ind in 0...(userService.stockFavs.count-1) {
+        for ind in 0...(userService.stockFavs.count - 1) {
             let idx = stockService.stocks.firstIndex(where: { $0.symbol == stockService.stocks[ind].symbol })
             total += Double(stockService.stocks[idx!].pctchange.dropFirst()) ?? 0
         }
@@ -93,14 +93,14 @@ class StockPortfolioInteractor {
         return total
     }
     func walletyesterday() -> Double {
-        return (self.wallettotal()-self.walletchange())
+        return (self.wallettotal() - self.walletchange())
     }
     func walletchange() -> Double {
         if userService.cryptoWallet.count == 0 {
             return 0
         }
         var total: Double = 0
-        for ind in 0...(userService.stockWallet.count-1) {
+        for ind in 0...(userService.stockWallet.count - 1) {
             let idx = stockService.stocks.firstIndex(where: { $0.symbol == userService.stockWallet[ind].stockSymbol })
             let change = Double(stockService.stocks[idx!].pctchange.dropLast(1)) ?? 0
             let changecounted = userService.stockWallet[ind].count * change

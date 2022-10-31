@@ -28,7 +28,7 @@ class PortfolioInteractor {
     }
 
     func reloadData() {
-        userService.userReload("portfolioreloadfunc")
+        userService.userReload("portfolioreload")
     }
 
     func heldcoins() -> [String] {
@@ -92,7 +92,7 @@ class PortfolioInteractor {
             return 0
         }
         var total: Double = 0
-        for ind in 0...(userService.cryptoPortfolio.count-1) {
+        for ind in 0...(userService.cryptoPortfolio.count - 1) {
             total += (userService.cryptoPortfolio[ind].count * (userService.cryptoPortfolio[ind].buytotal ?? 0))
         }
         return total
@@ -110,14 +110,14 @@ class PortfolioInteractor {
         return total
     }
     func walletyesterday() -> Double {
-        return (self.wallettotal()-self.walletchange())
+        return (self.wallettotal() - self.walletchange())
     }
     func walletchange() -> Double {
         if userService.cryptoWallet.count == 0 {
             return 0
         }
         var total: Double = 0
-        for ind in 0...(userService.cryptoWallet.count-1) {
+        for ind in 0...(userService.cryptoWallet.count - 1) {
             let idx = coinService.coins.firstIndex(where: { $0.id == userService.cryptoWallet[ind].coinid })
             let change = coinService.coins[idx!].priceChange24H ?? 0
             let changecounted = userService.cryptoWallet[ind].count * change
@@ -131,7 +131,7 @@ class PortfolioInteractor {
             return 0
         }
         var total: Double = 0
-        for ind in 0...(userService.cryptoFavs.count-1) {
+        for ind in 0...(userService.cryptoFavs.count - 1) {
             let idx = coinService.coins.firstIndex(where: { $0.id == userService.cryptoFavs[ind].coinid })
             total += coinService.coins[idx!].priceChangePercentage24H ?? 0
         }
@@ -140,7 +140,7 @@ class PortfolioInteractor {
     }
 
     func getSignInStatus() -> Published<Bool>.Publisher {
-        return userService.$isSignedIn
+        userService.$isSignedIn
     }
 
     func changeViewTo(viewname: String) {
@@ -152,6 +152,10 @@ class PortfolioInteractor {
     }
 
     func isFav(_ id: String) -> Bool {
-        return !(userService.cryptoFavs.filter({ $0.coinid == id }).isEmpty)
+        !(userService.cryptoFavs.filter({ $0.coinid == id }).isEmpty)
+    }
+
+    func warningTest() -> Double {
+        return 1 + 2 + 3
     }
 }

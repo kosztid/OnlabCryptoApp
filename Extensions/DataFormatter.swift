@@ -1,7 +1,6 @@
 import Foundation
 
 extension Double {
-
     private var formattercurrency6digits: NumberFormatter {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
@@ -9,11 +8,6 @@ extension Double {
         formatter.minimumFractionDigits = 2
         formatter.maximumFractionDigits = 6
         return formatter
-    }
-    func formatcurrency6digits() -> String {
-        let number = NSNumber(value: self)
-        return formattercurrency6digits.string(from: number) ?? "$0.00"
-
     }
 
     private var formattercurrency4digits: NumberFormatter {
@@ -24,10 +18,6 @@ extension Double {
         formatter.maximumFractionDigits = 4
         return formatter
     }
-    func formatcurrency4digits() -> String {
-        let number = NSNumber(value: self)
-        return formattercurrency4digits.string(from: number) ?? "$0.00"
-    }
 
     private var formattercurrency0digits: NumberFormatter {
         let formatter = NumberFormatter()
@@ -37,6 +27,14 @@ extension Double {
         formatter.maximumFractionDigits = 0
         return formatter
     }
+
+    private var formatter2digits: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
+        return formatter
+    }
+
     func formatcurrency0digits() -> String {
         let number = NSNumber(value: self)
         return formattercurrency0digits.string(from: number) ?? "$0"
@@ -50,15 +48,18 @@ extension Double {
         return (String(format: "%.2f", self) + "%")
     }
 
-    private var formatter2digits: NumberFormatter {
-        let formatter = NumberFormatter()
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 2
-        return formatter
+    func formatcurrency4digits() -> String {
+        let number = NSNumber(value: self)
+        return formattercurrency4digits.string(from: number) ?? "$0.00"
     }
+
     func format2digits() -> String {
         let number = NSNumber(value: self)
         return formatter2digits.string(from: number) ?? "0.00"
     }
 
+    func formatcurrency6digits() -> String {
+        let number = NSNumber(value: self)
+        return formattercurrency6digits.string(from: number) ?? "$0.00"
+    }
 }

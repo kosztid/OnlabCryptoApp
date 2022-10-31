@@ -43,6 +43,7 @@ class JSONNull: Codable, Hashable {
         return true
     }
 
+    // swiftlint:disable:next legacy_hashing
     public var hashValue: Int {
         return 0
     }

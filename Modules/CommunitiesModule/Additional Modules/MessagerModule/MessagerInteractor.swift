@@ -15,14 +15,13 @@ class MessagerInteractor {
         }
     }
     func getAccountInfo() -> String {
-        return userService.getUserId()
+        userService.getUserId()
     }
     func getAccountEmail() -> String {
-        return userService.getUserEmail()
+        userService.getUserEmail()
     }
-    
     func issignedin() -> Bool {
-        return userService.isSignedIn
+        userService.isSignedIn
     }
     func sendPhoto(image: UIImage, message: MessageModel, id: String) {
      // TODO:   model.sendPhoto(image: image, message: message, communityid: id)

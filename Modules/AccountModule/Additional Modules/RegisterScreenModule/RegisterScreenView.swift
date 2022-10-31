@@ -34,30 +34,30 @@ struct RegisterScreenView: View {
                     .autocapitalization(.none)
 
                 ZStack(alignment: .trailing) {
-                            if isSecured {
-                                SecureField("Password", text: $password)
-                                    .padding(.horizontal)
-                                    .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                                    .font(.system(size: 20))
-                                    .background(Color.theme.backgroundsecondary)
-                                    .cornerRadius(10)
-                                    .disableAutocorrection(true)
-                            } else {
-                                TextField("Password", text: $password)
-                                    .padding(.horizontal)
-                                    .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                                    .font(.system(size: 20))
-                                    .background(Color.theme.backgroundsecondary)
-                                    .cornerRadius(10)
-                                    .disableAutocorrection(true)
-                            }
-                            Button(action: {
-                                isSecured.toggle()
-                            }) {
-                                Image(systemName: self.isSecured ? "eye.slash" : "eye")
-                                    .accentColor(.gray)
-                            }.offset(x: -20)
-                        }
+                    if isSecured {
+                        SecureField("Password", text: $password)
+                            .padding(.horizontal)
+                            .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            .font(.system(size: 20))
+                            .background(Color.theme.backgroundsecondary)
+                            .cornerRadius(10)
+                            .disableAutocorrection(true)
+                    } else {
+                        TextField("Password", text: $password)
+                            .padding(.horizontal)
+                            .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                            .font(.system(size: 20))
+                            .background(Color.theme.backgroundsecondary)
+                            .cornerRadius(10)
+                            .disableAutocorrection(true)
+                    }
+                    Button(action: {
+                        isSecured.toggle()
+                    }) {
+                        Image(systemName: self.isSecured ? "eye.slash" : "eye")
+                            .accentColor(.gray)
+                    }.offset(x: -20)
+                }
 
                 Button {
                     guard presenter.isValidEmail(email: self.email), self.password.count > 5 else {
@@ -75,7 +75,7 @@ struct RegisterScreenView: View {
                 }
                 .alert("Email already registered/password shorter than 6 characters", isPresented: $showingAlert) {
                     Button("OK", role: .cancel) {presenter.setregistererrorfalse() }
-                        }
+                }
             }
             .padding(10)
         }

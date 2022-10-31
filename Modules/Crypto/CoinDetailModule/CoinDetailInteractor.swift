@@ -10,26 +10,19 @@ class CoinDetailInteractor {
         self.userService = service
     }
 
-    func getvalues() -> [CGFloat] {
+    func getValues() -> [CGFloat] {
         var newData: [CGFloat]
         let olddata = coin.sparklineIn7D?.price ?? []
         newData = olddata.map { CGFloat($0)}
         return newData
     }
-    func getcoin() -> CoinModel {
-        return coin
-    }
 
-    func getFavs() -> Published<[CryptoServerModel]>.Publisher {
-        return userService.$cryptoFavs
+    func getCoin() -> CoinModel {
+        coin
     }
 
     func getSignInStatus() -> Published<Bool>.Publisher {
-        return userService.$isSignedIn
-    }
-
-    func held() -> Bool {
-        return !(userService.cryptoPortfolio.filter({ $0.coinid == self.coin.id }).isEmpty)
+        userService.$isSignedIn
     }
 
     func getCoinCount() -> Double {
@@ -39,13 +32,16 @@ class CoinDetailInteractor {
             return 0.0
         }
     }
+
+    func isFav() -> Bool {
+        !(userService.cryptoFavs.filter({ $0.coinid == self.coin.id }).isEmpty)
+    }
+
     func addHolding(count: Double) {
         userService.updatePortfolio(coin.id, count, coin.currentPrice)
     }
+
     func addFavCoin() {
         userService.updateFavs(coin.id)
-    }
-    func isFav() -> Bool {
-        return !(userService.cryptoFavs.filter({ $0.coinid == self.coin.id }).isEmpty)
     }
 }

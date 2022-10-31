@@ -32,7 +32,7 @@ struct CommunityAdderView: View {
                         .accessibilityIdentifier("CommunityadderTextField")
                 }
                 Button {
-                    if communityname != ""{
+                    if communityname.isEmpty {
                         presenter.addCommunity(name: communityname)
                         self.presentationMode.wrappedValue.dismiss()
                     }

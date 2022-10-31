@@ -18,10 +18,9 @@ struct LineGraph: Shape {
     let screenwidth = UIScreen.main.bounds.width
 
     func path(in rect: CGRect) -> Path {
-
         func point(at idx: Int) -> CGPoint {
             let point = values[idx]
-            let xcoord = rect.width * CGFloat(idx) / CGFloat(values.count-1)
+            let xcoord = rect.width * CGFloat(idx) / CGFloat(values.count - 1)
             let ycoord = (1 - point) * rect.height
 
             return CGPoint(x: xcoord, y: ycoord)
@@ -42,7 +41,7 @@ extension Array where Element == CGFloat {
     var normalized: [CGFloat] {
         if let min = self.min(), let max = self.max() {
             return self.map {
-                ($0-min) / (max-min)
+                ($0 - min) / (max - min)
             }
         }
         return []

@@ -17,7 +17,7 @@ struct MessagerView: View {
                         ForEach(presenter.community.messages) { message in
                             ZStack {
                                 Color.theme.backgroundcolor
-                                        .ignoresSafeArea()
+                                    .ignoresSafeArea()
                                 MessageBubble(message: message, sender: presenter.getAccountInfo())
                             }
                         }
@@ -55,7 +55,7 @@ struct MessagerView: View {
                             Image(systemName: "photo")
                                 .accentColor(Color.theme.accentcolorsecondary)
                                 .font(.system(size: 18))
-                        }.offset(x: -(UIScreen.main.bounds.width*0.15))
+                        }.offset(x: -(UIScreen.main.bounds.width * 0.15))
                     } else {
                         Button {
                             showImagePicker.toggle()
@@ -63,7 +63,7 @@ struct MessagerView: View {
                             Image(systemName: "photo.fill")
                                 .accentColor(Color.theme.accentcolorsecondary)
                                 .font(.system(size: 18))
-                        }.offset(x: -(UIScreen.main.bounds.width*0.15))
+                        }.offset(x: -(UIScreen.main.bounds.width * 0.15))
                     }
                     Button(action: {
                         if presenter.issignedin() == true {
@@ -71,7 +71,7 @@ struct MessagerView: View {
                                 presenter.sendPhoto(image: self.image!)
                                 self.image = nil
                             }
-                            if newmessage != "" {
+                            if newmessage.isEmpty {
                                 presenter.sendmessage(message: newmessage)
                             }
                             newmessage = ""
@@ -80,7 +80,7 @@ struct MessagerView: View {
                         Image(systemName: "paperplane")
                             .accentColor(Color.theme.accentcolorsecondary)
                             .font(.system(size: 18))
-                    }.offset(x: -(UIScreen.main.bounds.width*0.05))
+                    }.offset(x: -(UIScreen.main.bounds.width * 0.05))
                         .accessibilityIdentifier("MessageSendButton")
                 }.frame(height: 40)
                     .cornerRadius(20)
@@ -88,7 +88,7 @@ struct MessagerView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                        presenter.makeButtonForUsers()
+                    presenter.makeButtonForUsers()
                         .accessibilityIdentifier("MessageMembersButton")
                 }
             }

@@ -16,22 +16,21 @@ class CoinService {
         }
         cancellable = URLSession.shared.dataTaskPublisher(for: url)
             .tryMap { output -> Data in
-                guard let response = output.response as? HTTPURLResponse,
-                      response.statusCode >= 200 && response.statusCode < 300 else {
+                guard let response = output.response as? HTTPURLResponse, response.statusCode >= 200 && response.statusCode < 300 else {
                     throw URLError(.badServerResponse)
                 }
                 return output.data
             }
             .receive(on: DispatchQueue.main)
             .decode(type: [CoinModel].self, decoder: JSONDecoder())
-            .sink {(completion) in
+            .sink { completion in
                 switch completion {
                 case .finished:
                     break
                 case .failure(let error):
                     print(error.localizedDescription)
                 }
-            } receiveValue: { [weak self] (returnedCoins) in
+            } receiveValue: { [weak self] returnedCoins in
                 self?.coins = returnedCoins
                 self?.cancellable?.cancel()
             }

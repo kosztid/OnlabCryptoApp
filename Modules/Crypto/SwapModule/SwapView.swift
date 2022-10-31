@@ -67,7 +67,6 @@ struct SwapView: View {
         .background(Color.theme.backgroundcolor)
     }
 
-
     var buyTextfield: some View {
         TextField("Amount to buy", value: $presenter.coinstobuy, formatter: formatter, onEditingChanged: { changed in
             isFocused1 = changed

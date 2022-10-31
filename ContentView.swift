@@ -22,7 +22,6 @@ struct ContentView: View {
         } else {
             stocksView
         }
-
     }
 
     var stocksView: some View {

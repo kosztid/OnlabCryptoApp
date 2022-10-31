@@ -55,10 +55,9 @@ struct PortfolioListItem: View {
                         .font(.system(size: 14))
                 }
                 .foregroundColor(Color.theme.accentcolor)
-                .frame(width: UIScreen.main.bounds.width/2.5, alignment: .trailing)
+                .frame(width: UIScreen.main.bounds.width / 2.5, alignment: .trailing)
             }
             .padding(.horizontal, 10.0)
         }
-
     }
 }

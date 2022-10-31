@@ -1,6 +1,7 @@
 import SwiftUI
 
 extension View {
+    // swiflint:disable:this line_length, function_parameter_count
     func alertWithTf(title: String, message: String, hintText: String, primaryTitle: String, secondaryTitle: String, primaryAction: @escaping (String) -> Void, secondaryAction: @escaping () -> Void) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addTextField { field in

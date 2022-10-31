@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import Combine
 
@@ -30,7 +31,7 @@ class RegisterScreenPresenter: ObservableObject {
     func load() {
         interactor.load()
     }
-    
+
     func setregisteredfalse() {
         interactor.setregisteredfalse()
     }

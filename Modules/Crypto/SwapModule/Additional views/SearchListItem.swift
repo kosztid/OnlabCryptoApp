@@ -39,7 +39,7 @@ struct SearchListItem: View {
                     .font(.system(size: 18))
                     .frame(alignment: .leading)
             }
-            .frame(width: UIScreen.main.bounds.width/4, alignment: .trailing)
+            .frame(width: UIScreen.main.bounds.width / 4, alignment: .trailing)
         }
         .padding(.all, 5)
         }}

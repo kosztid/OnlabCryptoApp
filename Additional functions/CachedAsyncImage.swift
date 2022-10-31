@@ -1,7 +1,7 @@
 //
 //  Created by Lorenzo Fiamingo on 04/11/20.
 //https://github.com/lorenzofiamingo/swiftui-cached-async-image
-
+// swiftlint:disable all
 import SwiftUI
 
 /// A view that asynchronously loads, cache and displays an image.
@@ -400,3 +400,4 @@ private extension URLSession {
         return (data, response, controller.metrics!)
     }
 }
+// swiftlint:enable all

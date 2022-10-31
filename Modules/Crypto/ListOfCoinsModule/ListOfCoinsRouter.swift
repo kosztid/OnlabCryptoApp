@@ -15,9 +15,4 @@ class ListOfCoinsRouter {
         let presenter = LoginScreenPresenter(interactor: LoginScreenInteractor())
         return LoginScreenView(presenter: presenter)
     }
-
-    func makePriceNotificationView() -> some View {
-        let presenter = PriceNotificationPresenter(interactor: PriceNotificationInteractor())
-        return PriceNotificationView(presenter: presenter)
-    }
 }

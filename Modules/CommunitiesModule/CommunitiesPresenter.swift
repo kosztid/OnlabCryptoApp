@@ -1,6 +1,6 @@
+import Combine
 import Foundation
 import SwiftUI
-import Combine
 
 class CommunitiesPresenter: ObservableObject {
     private let router = CommunitiesRouter()
@@ -10,7 +10,7 @@ class CommunitiesPresenter: ObservableObject {
 
     @Published var communities: [CommunityModel] = []
     @Published var subLogs: [UserLog] = []
-    @Published var signedin: Bool = false
+    @Published var signedin = false
     @Published var viewType = CommunityTabViews.communities
 
     init(interactor: CommunitiesInteractor) {

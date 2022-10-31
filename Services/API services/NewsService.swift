@@ -16,14 +16,14 @@ class NewsService {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyyMMdd"
         let stringdate = dateFormatter.string(from: Date())
-        guard let url = URL(string: "https://newsapi.org/v2/everything?q=crypto&from="+stringdate+"&sortBy=publishedAt&apiKey=2755ba3f91f94ff890427a7629def7f6")
+        guard let url = URL(string: "https://newsapi.org/v2/everything?q=crypto&from=" + stringdate + "&sortBy=publishedAt&apiKey=2755ba3f91f94ff890427a7629def7f6")
         else {
             return
         }
         let stringdateLastWeek = dateFormatter.string(from: Date.now.addingTimeInterval(-604800))
         print(stringdateLastWeek)
         newssub = URLSession.shared.dataTaskPublisher(for: url)
-            .tryMap { (output) -> Data in
+            .tryMap { output -> Data in
                 guard let response = output.response as? HTTPURLResponse,
                 response.statusCode >= 200 && response.statusCode < 300 else {
                     throw URLError(.badServerResponse)
@@ -32,14 +32,14 @@ class NewsService {
             }
             .receive(on: DispatchQueue.main)
             .decode(type: News.self, decoder: JSONDecoder())
-            .sink {(completion) in
+            .sink {completion in
                 switch completion {
                 case .finished:
                     break
                 case .failure(let error):
                     print(String(describing: error))
                 }
-            } receiveValue: { [weak self] (returnednews) in
+            } receiveValue: { [weak self] returnednews in
                 self?.news = returnednews
                 self?.newssub?.cancel()
             }
@@ -49,7 +49,7 @@ class NewsService {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyyMMdd"
         let stringdate = dateFormatter.string(from: Date())
-        guard let url = URL(string: "https://newsapi.org/v2/everything?q=stocks&from="+stringdate+"&sortBy=publishedAt&apiKey=2755ba3f91f94ff890427a7629def7f6")
+        guard let url = URL(string: "https://newsapi.org/v2/everything?q=stocks&from=" + stringdate + "&sortBy=publishedAt&apiKey=2755ba3f91f94ff890427a7629def7f6")
         else {
             return
         }
@@ -57,7 +57,7 @@ class NewsService {
         print(stringdateLastWeek)
         stockNewssub = URLSession.shared.dataTaskPublisher(for: url)
             .subscribe(on: DispatchQueue.global(qos: .default))
-            .tryMap { (output) -> Data in
+            .tryMap { output -> Data in
                 guard let response = output.response as? HTTPURLResponse,
                 response.statusCode >= 200 && response.statusCode < 300 else {
                     throw URLError(.badServerResponse)
@@ -66,14 +66,14 @@ class NewsService {
             }
             .receive(on: DispatchQueue.main)
             .decode(type: News.self, decoder: JSONDecoder())
-            .sink {(completion) in
+            .sink {completion in
                 switch completion {
                 case .finished:
                     break
                 case .failure(let error):
                     print(String(describing: error))
                 }
-            } receiveValue: { [weak self] (returnednews) in
+            } receiveValue: { [weak self] returnednews in
                 self?.stockNews = returnednews
                 self?.stockNewssub?.cancel()
             }

@@ -26,7 +26,7 @@ struct ListOfStocksListItem: View {
                     .foregroundColor(Color.theme.accentcolorsecondary)
                     .font(.system(size: 10))
             }
-            .frame(width: UIScreen.main.bounds.width/3, alignment: .trailing)
+            .frame(width: UIScreen.main.bounds.width / 3, alignment: .trailing)
         }
         .padding(5)
         .padding(.leading, 10)

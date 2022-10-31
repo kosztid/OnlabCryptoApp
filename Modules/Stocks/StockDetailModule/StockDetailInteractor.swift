@@ -13,7 +13,7 @@ class StockDetailInteractor {
         self.downloader = SingleStockDownloader()
         self.stockListItem = item
     }
-    
+
     func getStockData() -> StockListItem {
         return stockListItem
     }

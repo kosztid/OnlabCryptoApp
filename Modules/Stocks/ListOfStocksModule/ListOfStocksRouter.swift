@@ -8,16 +8,11 @@ class ListOfStocksRouter {
     }
 
     func makeAccountView() -> some View {
-        return AccountView(presenter: AccountPresenter(interactor: AccountInteractor()))
+        AccountView(presenter: AccountPresenter(interactor: AccountInteractor()))
     }
 
     func makeLoginView() -> some View {
         let presenter = LoginScreenPresenter(interactor: LoginScreenInteractor())
         return LoginScreenView(presenter: presenter)
     }
-
-////    func makePriceNotificationView(model: DataModel) -> some View {
-////        let presenter = PriceNotificationPresenter(interactor: PriceNotificationInteractor(model: model))
-////        return PriceNotificationView(presenter: presenter)
-////    }
 }

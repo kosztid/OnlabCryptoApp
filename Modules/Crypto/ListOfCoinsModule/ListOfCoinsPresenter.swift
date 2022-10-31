@@ -41,14 +41,6 @@ class ListOfCoinsPresenter: ObservableObject {
     func makeButtonForAccount() -> some View {
         NavigationLink("Account", destination: router.makeAccountView())
     }
-//    func makeButtonForPriceNotification() -> some View {
-//        NavigationLink(destination: router.makePriceNotificationView(model: interactor.model)) {
-//            Image(systemName: isNotificationViewed ? "bell.fill" : "bell.badge.fill")
-//                .font(.system(size: 20))
-//            }
-//        .onAppear {self.interactor.setIsnotificationViewed()}
-//        .foregroundColor(isNotificationViewed ? Color.theme.accentcolor : Color.theme.red)
-//    }
     func makeButtonForViewchange() -> some View {
         Button {
             self.interactor.changeView()
@@ -56,8 +48,5 @@ class ListOfCoinsPresenter: ObservableObject {
             Image(systemName: "dollarsign.circle.fill")
                 .font(.system(size: 20))
         }
-    }
-    func setIsnotificationViewed() {
-        interactor.setIsnotificationViewed()
     }
 }

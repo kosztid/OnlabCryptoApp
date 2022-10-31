@@ -55,7 +55,7 @@ class StockPortfolioPresenter: ObservableObject {
         @ViewBuilder content: () -> Content
     ) -> some View {
         NavigationLink(destination: router.makeStockDetailView(interactor: interactor.makeDetailInteractor(symbol: stock.symbol, item: stock))) {
-            }.buttonStyle(PlainButtonStyle())
+        }.buttonStyle(PlainButtonStyle())
             .opacity(0)
     }
 
@@ -158,96 +158,96 @@ class StockPortfolioPresenter: ObservableObject {
     }
 
     func makeportfolioData()-> some View {
-            VStack {
-                HStack {
-                    VStack(alignment: .leading) {
-                        HStack {
-                            Text("Portfolio Total:")
-                                .font(.system(size: 19))
-                            Spacer()
-                            Text("\(self.portfoliototal().formatcurrency4digits())")
-                                .font(.system(size: 19))
-                                .frame(alignment: .leading)
-                        }
-                        HStack {
-                            Text("Portfolio invested:")
-                                .font(.system(size: 17))
-                            Spacer()
-                            Text("\(self.portfoliobuytotal().formatcurrency4digits())")
-                                .foregroundColor(Color.theme.accentcolorsecondary)
-                                .font(.system(size: 17))
-                                .frame(alignment: .leading)
-                        }
-                    }.frame(width: UIScreen.main.bounds.width * 0.7)
-                    Spacer()
-                    Text("\(self.winlosepercent().formatpercent())")
-                        .foregroundColor((self.winlosepercent() >= 0) ? Color.theme.green : Color.theme.red )
-                        .frame(alignment: .leading)
-                    Spacer()
-                }
+        VStack {
+            HStack {
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text("Portfolio Total:")
+                            .font(.system(size: 19))
+                        Spacer()
+                        Text("\(self.portfoliototal().formatcurrency4digits())")
+                            .font(.system(size: 19))
+                            .frame(alignment: .leading)
+                    }
+                    HStack {
+                        Text("Portfolio invested:")
+                            .font(.system(size: 17))
+                        Spacer()
+                        Text("\(self.portfoliobuytotal().formatcurrency4digits())")
+                            .foregroundColor(Color.theme.accentcolorsecondary)
+                            .font(.system(size: 17))
+                            .frame(alignment: .leading)
+                    }
+                }.frame(width: UIScreen.main.bounds.width * 0.7)
+                Spacer()
+                Text("\(self.winlosepercent().formatpercent())")
+                    .foregroundColor((self.winlosepercent() >= 0) ? Color.theme.green : Color.theme.red )
+                    .frame(alignment: .leading)
+                Spacer()
             }
-            .frame(width: UIScreen.main.bounds.width * 0.95, height: UIScreen.main.bounds.height * 0.03)
+        }
+        .frame(width: UIScreen.main.bounds.width * 0.95, height: UIScreen.main.bounds.height * 0.03)
     }
 
     func winlosepercent() -> Double {
-            return (1-(self.portfoliobuytotal()/self.portfoliototal()))*100
+        return (1 - (self.portfoliobuytotal() / self.portfoliototal())) * 100
     }
 
     func makefavfolioData() -> some View {
-            VStack(alignment: .leading) {
-                HStack {
-                    VStack {
-                        HStack {
-                            Text("Your favorites price")
-                                .font(.system(size: 20))
-                            Spacer()
-                        }
-                        HStack {
-                            Text("change in the last 24 hours")
-                                .font(.system(size: 18))
-                            Spacer()
-                        }
+        VStack(alignment: .leading) {
+            HStack {
+                VStack {
+                    HStack {
+                        Text("Your favorites price")
+                            .font(.system(size: 20))
+                        Spacer()
                     }
-                    Spacer()
-                    Text("\(self.favfoliochange().formatpercent())")
-                        .foregroundColor((self.favfoliochange() >= 0) ? Color.theme.green : Color.theme.red )
-                        .font(.system(size: 20))
-                        .frame(alignment: .leading)
-                    Spacer()
+                    HStack {
+                        Text("change in the last 24 hours")
+                            .font(.system(size: 18))
+                        Spacer()
+                    }
                 }
+                Spacer()
+                Text("\(self.favfoliochange().formatpercent())")
+                    .foregroundColor((self.favfoliochange() >= 0) ? Color.theme.green : Color.theme.red )
+                    .font(.system(size: 20))
+                    .frame(alignment: .leading)
+                Spacer()
             }
-            .frame(width: UIScreen.main.bounds.width * 0.95, height: UIScreen.main.bounds.height * 0.03)
+        }
+        .frame(width: UIScreen.main.bounds.width * 0.95, height: UIScreen.main.bounds.height * 0.03)
     }
 
     func makewalletData()-> some View {
-            VStack {
-                HStack {
-                    VStack(alignment: .leading) {
-                        HStack {
-                            Text("Wallet Total:")
-                                .font(.system(size: 19))
-                            Spacer()
-                            Text("\(self.interactor.wallettotal().formatcurrency4digits())")
-                                .font(.system(size: 19))
-                                .frame(alignment: .leading)
-                        }
-                        HStack {
-                            Text("Wallet yesterday:")
-                                .font(.system(size: 17))
-                            Spacer()
-                            Text("\(self.interactor.walletyesterday().formatcurrency4digits())")
-                                .foregroundColor(Color.theme.accentcolorsecondary)
-                                .font(.system(size: 17))
-                                .frame(alignment: .leading)
-                        }
-                    }.frame(width: UIScreen.main.bounds.width * 0.7)
-                    Spacer()
-                    Text("\((self.interactor.wallettotal()/self.interactor.walletyesterday()).formatpercent())")
-                        .foregroundColor(((self.interactor.wallettotal()/self.interactor.walletyesterday()) >= 0) ? Color.theme.green : Color.theme.red )
-                        .frame(alignment: .leading)
-                    Spacer()
-                }
+        VStack {
+            HStack {
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text("Wallet Total:")
+                            .font(.system(size: 19))
+                        Spacer()
+                        Text("\(self.interactor.wallettotal().formatcurrency4digits())")
+                            .font(.system(size: 19))
+                            .frame(alignment: .leading)
+                    }
+                    HStack {
+                        Text("Wallet yesterday:")
+                            .font(.system(size: 17))
+                        Spacer()
+                        Text("\(self.interactor.walletyesterday().formatcurrency4digits())")
+                            .foregroundColor(Color.theme.accentcolorsecondary)
+                            .font(.system(size: 17))
+                            .frame(alignment: .leading)
+                    }
+                }.frame(width: UIScreen.main.bounds.width * 0.7)
+                Spacer()
+                Text("\((self.interactor.wallettotal() / self.interactor.walletyesterday()).formatpercent())")
+                    .foregroundColor(((self.interactor.wallettotal() / self.interactor.walletyesterday()) >= 0) ? Color.theme.green : Color.theme.red )
+                    .frame(alignment: .leading)
+                Spacer()
             }
-            .frame(width: UIScreen.main.bounds.width*0.95, height: UIScreen.main.bounds.height*0.03)
+        }
+        .frame(width: UIScreen.main.bounds.width * 0.95, height: UIScreen.main.bounds.height * 0.03)
     }
 }

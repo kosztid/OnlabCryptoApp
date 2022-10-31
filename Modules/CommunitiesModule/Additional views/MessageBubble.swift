@@ -13,9 +13,9 @@ struct MessageBubble: View {
                             .scaledToFit()
                     } placeholder: {
                         Circle()
-                            .frame(width: UIScreen.main.bounds.width*0.95)
+                            .frame(width: UIScreen.main.bounds.width * 0.95)
                     }
-                    .frame(width: UIScreen.main.bounds.width*0.8)
+                    .frame(width: UIScreen.main.bounds.width * 0.8)
                     .cornerRadius(10)
                 }
                 .frame(maxWidth: UIScreen.main.bounds.width * 0.95, alignment: (message.sender == sender) ? .trailing : .leading)
