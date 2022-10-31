@@ -1,17 +1,9 @@
-//
-//  NewsView.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 03. 18..
-//
-
 import SwiftUI
 
 struct NewsView: View {
     @ObservedObject var presenter: NewsPresenter
     var body: some View {
         List {
-            // Array(Set(presenter.news.articles!))
             ForEach(presenter.news.articles!, id: \.self) { article in
                 ZStack {
                     Color.theme.backgroundcolor
@@ -26,7 +18,6 @@ struct NewsView: View {
             .listRowSeparatorTint(Color.theme.backgroundsecondary)
             .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
         }
-
         .background(Color.theme.backgroundcolor)
         .scrollContentBackground(.hidden)
         .navigationBarTitleDisplayMode(.inline)

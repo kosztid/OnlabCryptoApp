@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct NewsDetailView: View {
+    @State var showSafari = false
     var article: Article
     var body: some View {
         ZStack {
@@ -43,9 +44,9 @@ struct NewsDetailView: View {
                             .scaledToFit()
                     } placeholder: {
                         Circle()
-                            .frame(width: UIScreen.main.bounds.width*0.95)
+                            .frame(width: UIScreen.main.bounds.width * 0.95)
                     }
-                    .frame(width: UIScreen.main.bounds.width*0.95)
+                    .frame(width: UIScreen.main.bounds.width * 0.95)
                     .cornerRadius(20)
                 }
                 .padding(.bottom, 10)
@@ -55,11 +56,16 @@ struct NewsDetailView: View {
                         .foregroundColor(Color.theme.accentcolor)
                         .multilineTextAlignment(.leading)
 
-                    Link("Continue reading", destination: URL(string: article.url!)!)
+                    Button("Continue reading") {
+                        self.showSafari = true
+                    }
                         .foregroundColor(Color.theme.accentcolorsecondary)
                 }
             }
             .padding(10)
-        }   
+        }
+        .sheet(isPresented: $showSafari) {
+            SafariView(url: URL(string: article.url!)!)
+        }
     }
 }

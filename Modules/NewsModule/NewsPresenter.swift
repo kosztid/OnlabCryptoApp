@@ -1,10 +1,3 @@
-//
-//  NewsPresenter.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 03. 18..
-//
-
 import Foundation
 import Combine
 import SwiftUI
