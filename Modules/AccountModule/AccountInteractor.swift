@@ -1,11 +1,12 @@
 import Foundation
+import Resolver
 
 class AccountInteractor {
 
     private let userService: UserService
 
     init() {
-        userService = UserService()
+        userService = Resolver.resolve()
     }
     func signOut() {
         userService.signOut()
