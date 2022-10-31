@@ -10,10 +10,3 @@ struct CryptoServerModel: Codable, Equatable {
         return lhs.count == rhs.count
     }
 }
-
-struct StockServerModel: Identifiable, Codable {
-    var id: Int
-    var stockSymbol: String
-    var count: Double
-    var buytotal: Double?
-}
