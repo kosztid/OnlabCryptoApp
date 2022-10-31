@@ -1,4 +1,5 @@
 import Foundation
+import Resolver
 
 class StockPortfolioInteractor {
     let downloader: SingleStockDownloader
@@ -8,7 +9,7 @@ class StockPortfolioInteractor {
     init() {
         self.downloader = SingleStockDownloader()
         stockService = StockService()
-        userService = UserService()
+        userService = Resolver.resolve()
         userService.userReload("stockportfoliointeracotr")
     }
 

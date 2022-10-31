@@ -1,4 +1,5 @@
 import Foundation
+import Resolver
 
 class ListOfCoinsInteractor {
     let coinService: CoinService
@@ -6,9 +7,8 @@ class ListOfCoinsInteractor {
 
     init() {
         coinService = CoinService()
-        userService = UserService()
+        userService = Resolver.resolve()
         userService.userReload("listofcoins")
-        print("interactor")
     }
 
     func setIsnotificationViewed() {

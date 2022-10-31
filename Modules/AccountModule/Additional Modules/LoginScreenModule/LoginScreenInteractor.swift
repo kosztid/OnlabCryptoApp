@@ -1,10 +1,11 @@
 import Foundation
+import Resolver
 
 class LoginScreenInteractor {
     private let userService: UserService
 
     init() {
-        userService = UserService()
+        userService = Resolver.resolve()
     }
     func signIn(email: String, password: String) {
         userService.signin(email, password)

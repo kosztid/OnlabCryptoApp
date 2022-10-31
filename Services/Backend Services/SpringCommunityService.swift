@@ -1,5 +1,5 @@
-import Foundation
 import Combine
+import Foundation
 import FirebaseAuth
 
 class SpringCommunityService: BaseCommunityService, CommunityService {
@@ -65,25 +65,22 @@ class SpringCommunityService: BaseCommunityService, CommunityService {
 
             self.communitySub = URLSession.shared.dataTaskPublisher(for: request)
                 .subscribe(on: DispatchQueue.global(qos: .default))
-                .tryMap { (output) -> Data in
-                    guard let response = output.response as? HTTPURLResponse,
-                          response.statusCode >= 200 && response.statusCode < 300 else {
-
-                              throw URLError(.badServerResponse)
-                          }
+                .tryMap { output -> Data in
+                    guard let response = output.response as? HTTPURLResponse, response.statusCode >= 200 && response.statusCode < 300 else {
+                        throw URLError(.badServerResponse)
+                    }
                     return output.data
                 }
                 .receive(on: DispatchQueue.main)
                 .decode(type: [CommunityModel].self, decoder: JSONDecoder())
-                .sink {(completion) in
+                .sink { completion in
                     switch completion {
                     case .finished:
                         break
                     case .failure(let error):
                         print(error.localizedDescription)
                     }
-                } receiveValue: { [weak self] (community) in
-
+                } receiveValue: { [weak self] community in
                     self?.communities = community
                     for index in 0...(community.count - 1) {
                         let dateFormatter = DateFormatter()
@@ -99,7 +96,6 @@ class SpringCommunityService: BaseCommunityService, CommunityService {
                 }
         }
     }
-
     func addCommunity(_ communityName: String) {
         self.auth.currentUser?.getIDTokenForcingRefresh(true) { apikey, error in
             if let error = error {

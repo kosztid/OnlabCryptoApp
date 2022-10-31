@@ -1,10 +1,11 @@
 import Foundation
+import Resolver
 
 class RegisterScreenInteractor {
     private let userService: UserService
 
     init() {
-        userService = UserService()
+        userService = Resolver.resolve()
     }
     func register(email: String, password: String) {
         userService.register(email, password)

@@ -1,4 +1,5 @@
 import Combine
+import Resolver
 
 class ListOfStocksInteractor {
     let stockService: StockService
@@ -6,7 +7,7 @@ class ListOfStocksInteractor {
 
     init() {
         stockService = StockService()
-        userService = UserService()
+        userService = Resolver.resolve()
         userService.userReload("listofstocks")
     }
 

@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import Resolver
 
 class SwapInteractor {
     private var userService: UserService
@@ -8,8 +9,8 @@ class SwapInteractor {
 
     init() {
         coinService = CoinService()
-        userService = UserService()
-        communityService = CommunityService()
+        userService = Resolver.resolve()
+        communityService = Resolver.resolve()
     }
 
     func loadService() {

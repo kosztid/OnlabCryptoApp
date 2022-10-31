@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import Resolver
 
 class PortfolioInteractor {
     private var userService: UserService
@@ -7,7 +8,7 @@ class PortfolioInteractor {
 
     init() {
         coinService = CoinService()
-        userService = UserService()
+        userService = Resolver.resolve()
         userService.userReload("portfolio")
     }
 

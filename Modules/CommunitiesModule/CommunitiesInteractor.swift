@@ -1,12 +1,13 @@
 import Foundation
+import Resolver
 
 class CommunitiesInteractor {
     private let userService: UserService
     private let communityService: CommunityService
 
     init() {
-        userService = UserService()
-        communityService = CommunityService()
+        userService = Resolver.resolve()
+        communityService = Resolver.resolve()
 
         userService.loadUser()
         userService.loadUsers()

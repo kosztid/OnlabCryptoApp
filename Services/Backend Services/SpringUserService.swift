@@ -79,7 +79,7 @@ final class SpringUserService: BaseUserService, UserService, ObservableObject {
 
     func userReload(_ origin: String = "Basic") {
         if Auth.auth().currentUser?.uid != nil {
-            auth.currentUser?.reload(completion: { (error) in
+            auth.currentUser?.reload(completion: { error in
                 if let error = error {
                     print(String(describing: error))
                 } else {
@@ -144,24 +144,22 @@ final class SpringUserService: BaseUserService, UserService, ObservableObject {
 
             self.userSub = URLSession.shared.dataTaskPublisher(for: request)
                 .subscribe(on: DispatchQueue.global(qos: .default))
-                .tryMap { (output) -> Data in
-                    guard let response = output.response as? HTTPURLResponse,
-                          response.statusCode >= 200 && response.statusCode < 300 else {
-
+                .tryMap { output -> Data in
+                    guard let response = output.response as? HTTPURLResponse, response.statusCode >= 200 && response.statusCode < 300 else {
                         throw URLError(.badServerResponse)
                     }
                     return output.data
                 }
                 .receive(on: DispatchQueue.main)
                 .decode(type: UserModel.self, decoder: JSONDecoder())
-                .sink {(completion) in
+                .sink { completion in
                     switch completion {
                     case .finished:
                         break
                     case .failure(let error):
                         print(error.localizedDescription)
                     }
-                } receiveValue: { [weak self] (returnedUser) in
+                } receiveValue: { [weak self] returnedUser in
                     self?.accountVisible = returnedUser.visibility
                     self?.subscriptions = returnedUser.subscriptions
                     self?.cryptoFavs = returnedUser.favfolio
@@ -476,24 +474,22 @@ final class SpringUserService: BaseUserService, UserService, ObservableObject {
 
             self.usersSub = URLSession.shared.dataTaskPublisher(for: request)
                 .subscribe(on: DispatchQueue.global(qos: .default))
-                .tryMap { (output) -> Data in
-                    guard let response = output.response as? HTTPURLResponse,
-                          response.statusCode >= 200 && response.statusCode < 300 else {
-
+                .tryMap { output -> Data in
+                    guard let response = output.response as? HTTPURLResponse, response.statusCode >= 200 && response.statusCode < 300 else {
                         throw URLError(.badServerResponse)
                     }
                     return output.data
                 }
                 .receive(on: DispatchQueue.main)
                 .decode(type: [UserModel].self, decoder: JSONDecoder())
-                .sink {(completion) in
+                .sink {completion in
                     switch completion {
                     case .finished:
                         break
                     case .failure(let error):
                         print(error.localizedDescription)
                     }
-                } receiveValue: { [weak self] (returnedUsers) in
+                } receiveValue: { [weak self] returnedUsers in
                     let list = returnedUsers.filter({$0.visibility})
                     self?.userList = list.filter({$0.id != self?.auth.currentUser!.uid})
                     self?.usersSub?.cancel()
@@ -518,24 +514,22 @@ final class SpringUserService: BaseUserService, UserService, ObservableObject {
 
             self.userLogsSub = URLSession.shared.dataTaskPublisher(for: request)
                 .subscribe(on: DispatchQueue.global(qos: .default))
-                .tryMap { (output) -> Data in
-                    guard let response = output.response as? HTTPURLResponse,
-                          response.statusCode >= 200 && response.statusCode < 300 else {
-
+                .tryMap { output -> Data in
+                    guard let response = output.response as? HTTPURLResponse, response.statusCode >= 200 && response.statusCode < 300 else {
                         throw URLError(.badServerResponse)
                     }
                     return output.data
                 }
                 .receive(on: DispatchQueue.main)
                 .decode(type: [UserLog].self, decoder: JSONDecoder())
-                .sink {(completion) in
+                .sink { completion in
                     switch completion {
                     case .finished:
                         break
                     case .failure(let error):
                         print(error.localizedDescription)
                     }
-                } receiveValue: { [weak self] (logs) in
+                } receiveValue: { [weak self] logs in
                     self?.subsLogList = logs
                     let dateFormatter = DateFormatter()
                     dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
@@ -547,3 +541,4 @@ final class SpringUserService: BaseUserService, UserService, ObservableObject {
         }
     }
 }
+// swiftlint:disable:this file_length
