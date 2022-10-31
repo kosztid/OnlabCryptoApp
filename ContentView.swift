@@ -3,7 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var selection: Tab = .listofcoins
     @Environment(\.scenePhase) var scenePhase
-    var currencyType = CurrencyTypes.crypto
+    @State private var currencyType = CurrencyTypes.crypto
 
     init() {
         UITabBar.appearance().barTintColor = UIColor(Color.theme.backgroundcolor)
@@ -26,7 +26,7 @@ struct ContentView: View {
             TabView(selection: $selection) {
                 // CoinList view
                 NavigationView {
-                    ListOfStocksView(presenter: ListOfStocksPresenter(interactor: ListOfStocksInteractor()))
+                    ListOfStocksView(presenter: ListOfStocksPresenter(interactor: ListOfStocksInteractor(changeBetweenCurrencyTypes)))
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .ignoresSafeArea()
@@ -79,7 +79,7 @@ struct ContentView: View {
             TabView(selection: $selection) {
                 // CoinList view
                 NavigationView {
-                    ListOfCoinsView(presenter: ListOfCoinsPresenter(interactor: ListOfCoinsInteractor()))
+                    ListOfCoinsView(presenter: ListOfCoinsPresenter(interactor: ListOfCoinsInteractor(changeBetweenCurrencyTypes)))
                 }
                 .navigationBarTitleDisplayMode(.inline)
                 .ignoresSafeArea()
@@ -124,18 +124,14 @@ struct ContentView: View {
                 .tag(Tab.communities)
             }
         }
-//        .onChange(of: scenePhase) { newPhase in
-//            if newPhase == .active {
-//                print("Active")
-//                model.loadNotification()
-//            } else if newPhase == .inactive {
-//                print("inactive")
-//            } else if newPhase == .background {
-//                print("background")
-//                model.saveNotification()
-//                model.isNotificationViewed = false
-//            }
-//        }
+    }
+
+    func changeBetweenCurrencyTypes() {
+        if currencyType == .crypto {
+            self.currencyType = .stocks
+        } else {
+            self.currencyType = .crypto
+        }
     }
 }
 

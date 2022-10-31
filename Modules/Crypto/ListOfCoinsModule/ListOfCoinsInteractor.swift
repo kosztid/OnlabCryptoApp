@@ -4,8 +4,10 @@ import Resolver
 class ListOfCoinsInteractor {
     let coinService: CoinService
     let userService: UserService
+    let changeView: () -> Void
 
-    init() {
+    init(_ action: @escaping () -> Void = {}) {
+        changeView = action
         coinService = CoinService()
         userService = Resolver.resolve()
         userService.userReload("listofcoins")
@@ -30,7 +32,4 @@ class ListOfCoinsInteractor {
         userService.userReload("listofcoins")
     }
 
-    func changeView() {
-//       TODO: model.currencyType = .stocks
-    }
 }
