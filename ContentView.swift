@@ -4,16 +4,10 @@ struct ContentView: View {
     @State private var selection: Tab = .listofcoins
     @Environment(\.scenePhase) var scenePhase
     var currencyType = CurrencyTypes.crypto
+
     init() {
         UITabBar.appearance().barTintColor = UIColor(Color.theme.backgroundcolor)
         UINavigationBar.appearance().barTintColor = UIColor(Color.theme.backgroundcolor)
-    }
-    enum Tab {
-        case listofcoins
-        case communities
-        case swap
-        case portfolio
-        case news
     }
 
     var body: some View {

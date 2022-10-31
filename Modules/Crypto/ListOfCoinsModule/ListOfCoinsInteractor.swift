@@ -19,11 +19,11 @@ class ListOfCoinsInteractor {
     }
 
     func getSignInStatus() -> Published<Bool>.Publisher {
-        return userService.$isSignedIn
+        userService.$isSignedIn
     }
 
     func getPublisher() -> Published<[CoinModel]>.Publisher {
-        return coinService.$coins
+        coinService.$coins
     }
 
     func reloadData() {
