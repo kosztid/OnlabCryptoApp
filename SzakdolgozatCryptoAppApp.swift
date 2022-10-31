@@ -2,7 +2,7 @@ import SwiftUI
 import Firebase
 
 @main
-struct OnlabCryptoAppApp: App {
+struct SzakdolgozatCryptoAppApp: App {
     init() {
         FirebaseApp.configure()
     }
