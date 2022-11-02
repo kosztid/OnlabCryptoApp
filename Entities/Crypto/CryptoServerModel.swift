@@ -7,6 +7,6 @@ struct CryptoServerModel: Codable, Equatable {
     var buytotal: Double?
 
     static func == (lhs: CryptoServerModel, rhs: CryptoServerModel) -> Bool {
-        return lhs.count == rhs.count
+        lhs.count == rhs.count
     }
 }

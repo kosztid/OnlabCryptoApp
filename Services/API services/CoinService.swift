@@ -1,5 +1,5 @@
-import Foundation
 import Combine
+import Foundation
 
 class CoinService {
     @Published var coins: [CoinModel] = []

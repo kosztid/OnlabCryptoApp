@@ -14,7 +14,7 @@ class CommunitiesInteractor {
     }
 
     func getCommunities() -> Published<[CommunityModel]>.Publisher {
-        return communityService.$communities
+        communityService.$communities
     }
 
     func addCommunity(_ name: String) {
@@ -22,11 +22,11 @@ class CommunitiesInteractor {
     }
 
     func getSubLogs() -> Published<[UserLog]>.Publisher {
-        return userService.$subsLogList
+        userService.$subsLogList
     }
 
     func getUsersList() -> [UserModel] {
-        return userService.userList
+        userService.userList
     }
     func getSubsList() -> [String] {
         print(userService.subscriptions.count)
@@ -43,6 +43,6 @@ class CommunitiesInteractor {
         MessagerInteractor(userService, communityService)
     }
     func getSignInStatus() -> Published<Bool>.Publisher {
-        return userService.$isSignedIn
+        userService.$isSignedIn
     }
 }

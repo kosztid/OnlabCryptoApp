@@ -1,6 +1,6 @@
+import Combine
 import Foundation
 import SwiftUI
-import Combine
 
 class ListOfCoinsPresenter: ObservableObject {
     @Published var coins: [CoinModel] = []
@@ -19,7 +19,6 @@ class ListOfCoinsPresenter: ObservableObject {
         interactor.getSignInStatus()
             .assign(to: \.signedin, on: self)
             .store(in: &cancellables)
-
     }
 
     func reloadData() {
@@ -35,11 +34,11 @@ class ListOfCoinsPresenter: ObservableObject {
             .opacity(0)
     }
     func makeButtonForLogin() -> some View {
-        NavigationLink("Account", destination: router.makeLoginView())
+        NavigationLink(Strings.account, destination: router.makeLoginView())
     }
 
     func makeButtonForAccount() -> some View {
-        NavigationLink("Account", destination: router.makeAccountView())
+        NavigationLink(Strings.account, destination: router.makeAccountView())
     }
     func makeButtonForViewchange() -> some View {
         Button {

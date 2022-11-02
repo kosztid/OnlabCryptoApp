@@ -2,6 +2,7 @@ import Combine
 import Foundation
 import SwiftUI
 
+// swiftlint:disable:next type_body_length
 class PortfolioPresenter: ObservableObject {
     @Published var selection: String = "portfolio"
     @Published var coins: [CoinModel] = []
@@ -29,7 +30,6 @@ class PortfolioPresenter: ObservableObject {
 
     func changeViewTo(viewname: String) {
         selection = viewname
-        //        interactor.changeViewTo(viewname: viewname)
     }
 
     func linkBuilder<Content: View>(
@@ -42,17 +42,17 @@ class PortfolioPresenter: ObservableObject {
     }
 
     func heldcoins() -> [String] {
-        return interactor.heldcoins()
+        interactor.heldcoins()
     }
 
     func heldfavcoins() -> [String] {
-        return interactor.heldfavcoins()
+        interactor.heldfavcoins()
     }
     func ownedcoins() -> [String] {
-        return interactor.ownedcoins()
+        interactor.ownedcoins()
     }
     func isSelected(selected: String) -> Bool {
-        return selected == self.selection
+        selected == self.selection
     }
 
     func removeCoin(_ index: IndexSet) {
@@ -63,11 +63,11 @@ class PortfolioPresenter: ObservableObject {
     }
 
     func makeButtonForLogin() -> some View {
-        NavigationLink("Account", destination: router.makeLoginView())
+        NavigationLink(Strings.account, destination: router.makeLoginView())
     }
 
     func makeButtonForAccount() -> some View {
-        NavigationLink("Account", destination: router.makeAccountView())
+        NavigationLink(Strings.account, destination: router.makeAccountView())
     }
 
     func portfoliototal() -> Double {
@@ -115,6 +115,7 @@ class PortfolioPresenter: ObservableObject {
                             ZStack {
                                 Color.theme.backgroundcolor
                                     .ignoresSafeArea()
+//                                swiftlint:disable:next line_length
                                 FavfolioListItemView(presenter: FavfolioListItemPresenter(interactor: FavfolioListItemInteractor(coin: coin, self.interactor.updateFav, self.interactor.isFav)))
                                     .frame(height: 80)
                                 self.linkBuilder(for: coin) {
@@ -165,7 +166,7 @@ class PortfolioPresenter: ObservableObject {
         Button {
             self.changeViewTo(viewname: "portfolio")
         } label: {
-            Text("Portfolio")
+            Text(Strings.portfolio)
                 .frame(height: 30)
                 .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
                 .font(.system(size: 20))
@@ -178,7 +179,7 @@ class PortfolioPresenter: ObservableObject {
         Button {
             self.changeViewTo(viewname: "favfolio")
         } label: {
-            Text("Favorites")
+            Text(Strings.favorites)
                 .frame(height: 30)
                 .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
                 .font(.system(size: 20))
@@ -281,7 +282,7 @@ class PortfolioPresenter: ObservableObject {
         Button {
             self.changeViewTo(viewname: "wallet")
         } label: {
-            Text("Wallet")
+            Text(Strings.wallet)
                 .frame(height: 30)
                 .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
                 .font(.system(size: 20))

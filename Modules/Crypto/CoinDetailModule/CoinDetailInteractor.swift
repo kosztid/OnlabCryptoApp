@@ -34,7 +34,7 @@ class CoinDetailInteractor {
     }
 
     func isFav() -> Bool {
-        !(userService.cryptoFavs.filter({ $0.coinid == self.coin.id }).isEmpty)
+        userService.cryptoFavs.contains { $0.coinid == self.coin.id }
     }
 
     func addHolding(count: Double) {

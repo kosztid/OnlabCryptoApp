@@ -1,9 +1,9 @@
-import Foundation
 import Combine
+import Foundation
 import SwiftUI
 
 class NewsPresenter: ObservableObject {
-    @Published var news: News = News(status: nil, totalResults: nil, articles: nil)
+    @Published var news = News(status: nil, totalResults: nil, articles: nil)
     private let interactor: NewsInteractor
     private var cancellables = Set<AnyCancellable>()
     private let router = NewsRouter()
@@ -21,7 +21,6 @@ class NewsPresenter: ObservableObject {
                 .assign(to: \.news, on: self)
                 .store(in: &cancellables)
         }
-
     }
     func linkBuilder<Content: View>(
         for article: Article,

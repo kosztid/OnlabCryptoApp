@@ -26,7 +26,7 @@ struct StockFavListItem: View {
                 Button {
                     setFav(stock.stockSymbol)
                 } label: {
-                    Label("", systemImage: true ? "star.fill" : "star")
+                    Label("", systemImage: "star.fill")
                         .foregroundColor(Color.theme.accentcolor)
                         .font(.system(size: 22))
                 }

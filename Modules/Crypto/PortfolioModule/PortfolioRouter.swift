@@ -8,7 +8,7 @@ class PortfolioRouter {
     }
 
     func makeAccountView() -> some View {
-        return AccountView(presenter: AccountPresenter(interactor: AccountInteractor()))
+        AccountView(presenter: AccountPresenter(interactor: AccountInteractor()))
     }
 
     func makeLoginView() -> some View {

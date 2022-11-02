@@ -14,10 +14,10 @@ struct SearchView: View {
                 searchBarBlock
                 List {
                     if coinname == "coin1" {
-                        ForEach(presenter.coins.filter({ coin -> Bool in
+                        ForEach(presenter.coins.filter { coin -> Bool in
                             // swiftlint:disable:next line_length
-                            return presenter.ownedcoins.filter({ $0.coinid == coin.id }).isEmpty == false && (coin.name.hasPrefix(searchText) || coin.symbol.hasPrefix(searchText.lowercased()) || (searchText.isEmpty))
-                        })) { coin in
+                            presenter.ownedcoins.contains { $0.coinid == coin.id } && (coin.name.hasPrefix(searchText) || coin.symbol.hasPrefix(searchText.lowercased()) || (searchText.isEmpty))
+                        }) { coin in
                             ZStack {
                                 Button("") {
                                     presenter.setCoin1(coin1: coin.id)
@@ -29,9 +29,9 @@ struct SearchView: View {
                         .listRowSeparatorTint(Color.theme.backgroundsecondary)
                         .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                     } else {
-                        ForEach(presenter.coins.filter({ coin -> Bool in
-                            return coin.name.hasPrefix(searchText) || coin.symbol.hasPrefix(searchText.lowercased()) || (searchText.isEmpty)
-                        })) { coin in
+                        ForEach(presenter.coins.filter { coin -> Bool in
+                            coin.name.hasPrefix(searchText) || coin.symbol.hasPrefix(searchText.lowercased()) || (searchText.isEmpty)
+                        }) { coin in
                             ZStack {
                                 Button("") {
                                     presenter.setCoin2(coin2: coin.id)

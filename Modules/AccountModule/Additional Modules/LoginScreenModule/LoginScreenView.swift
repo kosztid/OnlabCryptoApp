@@ -14,40 +14,13 @@ struct LoginScreenView: View {
                 Color.theme.backgroundcolor.ignoresSafeArea(.all)
 
                 VStack {
-                    Label("", systemImage: "bitcoinsign.circle")
-                        .font(.system(size: 200))
-                        .foregroundColor(Color.theme.accentcolor)
-                    Text("Bejelentkezés")
-                        .font(.system(size: 50))
-                        .padding(10)
-                    TextField("Email", text: $email)
-                        .padding(.horizontal)
-                        .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                        .font(.system(size: 20))
-                        .background(Color.theme.backgroundsecondary)
-                        .cornerRadius(10)
-                        .disableAutocorrection(true)
-                        .autocapitalization(.none)
-                        .accessibilityIdentifier("LoginEmailTextField")
-
+                    loginHeader
+                    emailField
                     ZStack(alignment: .trailing) {
                         if isSecured {
-                            SecureField("Password", text: $password)
-                                .padding(.horizontal)
-                                .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                                .font(.system(size: 20))
-                                .background(Color.theme.backgroundsecondary)
-                                .cornerRadius(10)
-                                .disableAutocorrection(true)
-                                .accessibilityIdentifier("LoginPasswordTextField")
+                            securedPwField
                         } else {
-                            TextField("Password", text: $password)
-                                .padding(.horizontal)
-                                .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                                .font(.system(size: 20))
-                                .background(Color.theme.backgroundsecondary)
-                                .cornerRadius(10)
-                                .disableAutocorrection(true)
+                            nonsecuredPwField
                         }
                         Button(action: {
                             isSecured.toggle()
@@ -56,22 +29,7 @@ struct LoginScreenView: View {
                                 .accentColor(.gray)
                         }.offset(x: -20)
                     }
-
-                    Button {
-                        guard presenter.isValidEmail(email: self.email), !self.password.isEmpty else {
-                            return
-                        }
-                        presenter.signIn(email: self.email, password: self.password)
-                        // self.presentationMode.wrappedValue.dismiss()
-                    } label: {
-                        Text("Bejelentkezés")
-                            .frame(height: 50)
-                            .frame(maxWidth: .infinity)
-                            .font(.system(size: 20))
-                            .background(Color.theme.backgroundsecondary)
-                            .foregroundColor(Color.theme.accentcolor)
-                            .cornerRadius(10)
-                    }
+                    signInButton
                     .alert("Wrong email-password", isPresented: $showingAlert) {
                         Button("OK", role: .cancel) {presenter.setlogerrorfalse() }
                     }
@@ -101,5 +59,67 @@ struct LoginScreenView: View {
         .onAppear(perform: presenter.load)
         .navigationBarHidden(true)
         .background(Color.theme.backgroundcolor)
+    }
+
+    var loginHeader: some View {
+        VStack {
+            Label("", systemImage: "bitcoinsign.circle")
+                .font(.system(size: 200))
+                .foregroundColor(Color.theme.accentcolor)
+            Text("Bejelentkezés")
+                .font(.system(size: 50))
+                .padding(10)
+        }
+    }
+
+    var emailField: some View {
+        TextField("Email", text: $email)
+            .padding(.horizontal)
+            .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+            .font(.system(size: 20))
+            .background(Color.theme.backgroundsecondary)
+            .cornerRadius(10)
+            .disableAutocorrection(true)
+            .autocapitalization(.none)
+            .accessibilityIdentifier("LoginEmailTextField")
+    }
+
+    var securedPwField: some View {
+        SecureField("Password", text: $password)
+            .padding(.horizontal)
+            .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+            .font(.system(size: 20))
+            .background(Color.theme.backgroundsecondary)
+            .cornerRadius(10)
+            .disableAutocorrection(true)
+            .accessibilityIdentifier("LoginPasswordTextField")
+    }
+
+    var nonsecuredPwField: some View {
+        TextField("Password", text: $password)
+            .padding(.horizontal)
+            .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+            .font(.system(size: 20))
+            .background(Color.theme.backgroundsecondary)
+            .cornerRadius(10)
+            .disableAutocorrection(true)
+    }
+
+    var signInButton: some View {
+        Button {
+            guard presenter.isValidEmail(email: self.email), !self.password.isEmpty else {
+                return
+            }
+            presenter.signIn(email: self.email, password: self.password)
+            // self.presentationMode.wrappedValue.dismiss()
+        } label: {
+            Text("Bejelentkezés")
+                .frame(height: 50)
+                .frame(maxWidth: .infinity)
+                .font(.system(size: 20))
+                .background(Color.theme.backgroundsecondary)
+                .foregroundColor(Color.theme.accentcolor)
+                .cornerRadius(10)
+        }
     }
 }

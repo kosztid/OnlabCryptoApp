@@ -1,5 +1,5 @@
-import Foundation
 import Combine
+import Foundation
 import Resolver
 
 class PortfolioInteractor {
@@ -17,14 +17,14 @@ class PortfolioInteractor {
     }
 
     func getCoins() -> Published<[CoinModel]>.Publisher {
-        return coinService.$coins
+        coinService.$coins
     }
 
     func getFavs() -> Published<[CryptoServerModel]>.Publisher {
-        return userService.$cryptoFavs
+        userService.$cryptoFavs
     }
     func getservice() -> UserService {
-        return userService
+        userService
     }
 
     func reloadData() {
@@ -76,19 +76,19 @@ class PortfolioInteractor {
     }
 
     func portfoliototal() -> Double {
-        if userService.cryptoPortfolio.count == 0 {
+        if userService.cryptoPortfolio.isEmpty {
             return 0
         }
         var total: Double = 0
         for ind in 0...(userService.cryptoPortfolio.count - 1) {
-            let currentprice = coinService.coins.first(where: {$0.id == userService.cryptoPortfolio[ind].coinid})?.currentPrice ?? 0.0
+            let currentprice = coinService.coins.first {$0.id == userService.cryptoPortfolio[ind].coinid}?.currentPrice ?? 0.0
             total += (userService.cryptoPortfolio[ind].count * currentprice)
         }
         return total
     }
 
     func portfoliobuytotal() -> Double {
-        if userService.cryptoPortfolio.count == 0 {
+        if userService.cryptoPortfolio.isEmpty {
             return 0
         }
         var total: Double = 0
@@ -99,26 +99,26 @@ class PortfolioInteractor {
     }
 
     func wallettotal() -> Double {
-        if userService.cryptoWallet.count == 0 {
+        if userService.cryptoWallet.isEmpty {
             return 0
         }
         var total: Double = 0
         for ind in 0...(userService.cryptoWallet.count - 1) {
-            let coindx = coinService.coins.firstIndex(where: { $0.id == userService.cryptoWallet[ind].coinid })
+            let coindx = coinService.coins.firstIndex { $0.id == userService.cryptoWallet[ind].coinid }
             total += userService.cryptoWallet[ind].count * coinService.coins[coindx!].currentPrice
         }
         return total
     }
     func walletyesterday() -> Double {
-        return (self.wallettotal() - self.walletchange())
+        (self.wallettotal() - self.walletchange())
     }
     func walletchange() -> Double {
-        if userService.cryptoWallet.count == 0 {
+        if userService.cryptoWallet.isEmpty {
             return 0
         }
         var total: Double = 0
         for ind in 0...(userService.cryptoWallet.count - 1) {
-            let idx = coinService.coins.firstIndex(where: { $0.id == userService.cryptoWallet[ind].coinid })
+            let idx = coinService.coins.firstIndex { $0.id == userService.cryptoWallet[ind].coinid }
             let change = coinService.coins[idx!].priceChange24H ?? 0
             let changecounted = userService.cryptoWallet[ind].count * change
             total += changecounted
@@ -127,12 +127,12 @@ class PortfolioInteractor {
     }
 
     func favfoliochange() -> Double {
-        if userService.cryptoFavs.count == 0 {
+        if userService.cryptoFavs.isEmpty {
             return 0
         }
         var total: Double = 0
         for ind in 0...(userService.cryptoFavs.count - 1) {
-            let idx = coinService.coins.firstIndex(where: { $0.id == userService.cryptoFavs[ind].coinid })
+            let idx = coinService.coins.firstIndex { $0.id == userService.cryptoFavs[ind].coinid }
             total += coinService.coins[idx!].priceChangePercentage24H ?? 0
         }
         total /= Double(userService.cryptoFavs.count)
@@ -143,19 +143,11 @@ class PortfolioInteractor {
         userService.$isSignedIn
     }
 
-    func changeViewTo(viewname: String) {
-//        model.selection = viewname
-    }
-
     func updateFav(_ id: String) {
         userService.updateFavs(id)
     }
 
     func isFav(_ id: String) -> Bool {
-        !(userService.cryptoFavs.filter({ $0.coinid == id }).isEmpty)
-    }
-
-    func warningTest() -> Double {
-        return 1 + 2 + 3
+        userService.cryptoFavs.contains { $0.coinid == id }
     }
 }

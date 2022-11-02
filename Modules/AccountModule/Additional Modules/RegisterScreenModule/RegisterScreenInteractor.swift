@@ -12,10 +12,10 @@ class RegisterScreenInteractor {
     }
 
     func getRegisterError() -> Published<Bool>.Publisher {
-        return userService.$registerError
+        userService.$registerError
     }
     func getRegistered() -> Published<Bool>.Publisher {
-        return userService.$registered
+        userService.$registered
     }
 
     func load() {

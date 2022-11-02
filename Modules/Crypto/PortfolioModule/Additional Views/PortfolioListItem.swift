@@ -3,8 +3,6 @@ import SwiftUI
 struct PortfolioListItem: View {
     @ObservedObject var presenter: PortfolioPresenter
     var holding: Double
-    // swiftlint:disable:next line_length
-   // var coin = CoinModel(id: "bitcoin", symbol: "btc", name: "teszt", image: "teszt", currentPrice: 10, marketCap: 10, marketCapRank: 279, fullyDilutedValuation: 10, totalVolume: 10, high24H: 10, low24H: 10, priceChange24H: 10, priceChangePercentage24H: 10, marketCapChange24H: 10, marketCapChangePercentage24H: 10, circulatingSupply: 10, totalSupply: 10, maxSupply: 10, ath: 10, athChangePercentage: 10, athDate: "teszt", atl: 10, atlChangePercentage: 10, atlDate: "teszt", lastUpdated: "teszt", sparklineIn7D: SparklineIn7D(price: []), priceChangePercentage24HInCurrency: 10)
     var coin: CoinModel
 
     var body: some View {
@@ -14,29 +12,12 @@ struct PortfolioListItem: View {
 
             HStack {
                 HStack(alignment: .center) {
-                    CachedAsyncImage(url: URL(string: coin.image)) { image in
-                        image
-                            .resizable()
-                            .scaledToFit()
-                    } placeholder: {
-                        Circle()
-                            .frame(width: 20, height: 20)
-                    }
-                    .frame(width: 20, height: 20)
-                    .cornerRadius(20)
+                    coinImage
                     Text(coin.symbol.uppercased())
                         .foregroundColor(Color.theme.accentcolor)
                         .font(.system(size: 18))
                     Spacer()
-                    VStack(alignment: .trailing) {
-                        Text(coin.currentPrice.formatcurrency6digits())
-                            .foregroundColor(Color.theme.accentcolor)
-                            .font(.system(size: 16))
-                            .frame(alignment: .leading)
-                        Text(coin.priceChangePercentage24H?.formatpercent() ?? "0%")
-                            .foregroundColor((coin.priceChangePercentage24H ?? 0) >= 0 ? Color.theme.green : Color.theme.red)
-                            .font(.system(size: 12))
-                    }
+                    priceStack
                     .frame(alignment: .trailing)
                 }
                 .padding(.trailing, 10)
@@ -58,6 +39,30 @@ struct PortfolioListItem: View {
                 .frame(width: UIScreen.main.bounds.width / 2.5, alignment: .trailing)
             }
             .padding(.horizontal, 10.0)
+        }
+    }
+
+    var coinImage: some View {
+        CachedAsyncImage(url: URL(string: coin.image)) { image in
+            image
+                .resizable()
+                .scaledToFit()
+        } placeholder: {
+            Circle()
+                .frame(width: 20, height: 20)
+        }
+        .frame(width: 20, height: 20)
+        .cornerRadius(20)
+    }
+    var priceStack: some View {
+        VStack(alignment: .trailing) {
+            Text(coin.currentPrice.formatcurrency6digits())
+                .foregroundColor(Color.theme.accentcolor)
+                .font(.system(size: 16))
+                .frame(alignment: .leading)
+            Text(coin.priceChangePercentage24H?.formatpercent() ?? "0%")
+                .foregroundColor((coin.priceChangePercentage24H ?? 0) >= 0 ? Color.theme.green : Color.theme.red)
+                .font(.system(size: 12))
         }
     }
 }

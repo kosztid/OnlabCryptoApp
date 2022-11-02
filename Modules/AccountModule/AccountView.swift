@@ -14,7 +14,6 @@ struct AccountView: View {
 
                 logoutButton
                     .accessibilityIdentifier("AccountSignOutButton")
-
             }
             .padding(10)
         }

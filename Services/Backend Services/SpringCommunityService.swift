@@ -1,6 +1,6 @@
 import Combine
-import Foundation
 import FirebaseAuth
+import Foundation
 
 class SpringCommunityService: BaseCommunityService, CommunityService {
     let port = "8090"
@@ -47,7 +47,9 @@ class SpringCommunityService: BaseCommunityService, CommunityService {
         }
     }
 
-    func loadCommunities() {
+//    swiftlint:disable:next function_body_length
+    func loadCommunities() { //    swiftlint:disable:this cyclomatic_complexity
+        //    swiftlint:disable:next closure_body_length
         self.auth.currentUser?.getIDTokenForcingRefresh(true) { apikey, error in
             if let error = error {
                 print(error.localizedDescription)

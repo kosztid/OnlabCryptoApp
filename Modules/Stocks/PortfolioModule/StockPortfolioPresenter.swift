@@ -1,6 +1,6 @@
+import Combine
 import Foundation
 import SwiftUI
-import Combine
 
 class StockPortfolioPresenter: ObservableObject {
     @Published var selection: String = "portfolio"
@@ -33,18 +33,18 @@ class StockPortfolioPresenter: ObservableObject {
     }
 
     func isSelected(selected: String) -> Bool {
-        return selected == self.selection
+        selected == self.selection
     }
 
     func portfoliototal() -> Double {
-        return interactor.portfoliototal()
+        interactor.portfoliototal()
     }
 
     func portfoliobuytotal() -> Double {
-        return interactor.portfoliobuytotal()
+        interactor.portfoliobuytotal()
     }
     func favfoliochange() -> Double {
-        return interactor.favfoliochange()
+        interactor.favfoliochange()
     }
     func reloadData() {
         interactor.reloadData()
@@ -190,7 +190,7 @@ class StockPortfolioPresenter: ObservableObject {
     }
 
     func winlosepercent() -> Double {
-        return (1 - (self.portfoliobuytotal() / self.portfoliototal())) * 100
+        (1 - (self.portfoliobuytotal() / self.portfoliototal())) * 100
     }
 
     func makefavfolioData() -> some View {

@@ -1,5 +1,5 @@
-import Foundation
 import Combine
+import Foundation
 import SwiftUI
 
 class StockSwapPresenter: ObservableObject {
@@ -62,7 +62,7 @@ class StockSwapPresenter: ObservableObject {
 
     func selected(stock: String) -> StockListItem {
         // swiftlint:disable:next line_length
-        return stocks.first(where: {$0.symbol == stock}) ?? StockListItem(symbol: "-", name: "-", lastsale: "-", netchange: "-", pctchange: "-", marketCap: "-", url: "-")
+        return stocks.first {$0.symbol == stock} ?? StockListItem(symbol: "-", name: "-", lastsale: "-", netchange: "-", pctchange: "-", marketCap: "-", url: "-")
     }
 
     func swap() {
@@ -76,11 +76,11 @@ class StockSwapPresenter: ObservableObject {
     }
 
     func ownedamount(stockSymbol: String) -> Double {
-        return interactor.ownedamount(stockSymbol: stockSymbol)
+        interactor.ownedamount(stockSymbol: stockSymbol)
     }
 
     func isOwned(stock: StockListItem) -> Bool {
-        return interactor.isOwned(stock: stock)
+        interactor.isOwned(stock: stock)
     }
 
     func makeButtonForSwap() -> some View {

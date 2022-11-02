@@ -14,7 +14,7 @@ class ListOfStocksInteractor {
     }
 
     func getSignInStatus() -> Published<Bool>.Publisher {
-        return userService.$isSignedIn
+        userService.$isSignedIn
     }
 
     func makeDetailInteractor(symbol: String, item: StockListItem) -> StockDetailInteractor {
@@ -22,11 +22,10 @@ class ListOfStocksInteractor {
     }
 
     func getPublisher() -> Published<[StockListItem]>.Publisher {
-        return stockService.$stocks
+        stockService.$stocks
     }
 
     func reloadData() {
         userService.userReload("listofstocks")
     }
-
 }

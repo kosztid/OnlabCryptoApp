@@ -7,7 +7,7 @@ class CommunitiesRouter {
         return MessagerView(presenter: presenter)
     }
 
-    func makeSubscriptionView(userList: [UserModel], subList: [String], action: @escaping (String) -> Void) -> some View {
+    func makeSubsView(_ userList: [UserModel], _ subList: [String], _ action: @escaping (String) -> Void) -> some View {
         SubscriptionView(userList, subList, action)
     }
     func makeAccountView() -> some View {

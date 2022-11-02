@@ -1,10 +1,3 @@
-//
-//  ListOfStocksListItem.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 09. 28..
-//
-
 import SwiftUI
 
 struct ListOfStocksListItem: View {
@@ -31,6 +24,5 @@ struct ListOfStocksListItem: View {
         .padding(5)
         .padding(.leading, 10)
         .frame(height: 40)
-
     }
 }

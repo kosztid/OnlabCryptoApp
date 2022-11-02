@@ -1,10 +1,3 @@
-//
-//  RegisterScreenView.swift
-//  Onlab
-//
-//  Created by Kosztolánczi Dominik on 2022. 02. 22..
-//
-
 import SwiftUI
 
 struct RegisterScreenView: View {
@@ -12,44 +5,20 @@ struct RegisterScreenView: View {
     @ObservedObject var presenter: RegisterScreenPresenter
     @State var email = ""
     @State var password = ""
-    @State var isSecured: Bool = true
+    @State var isSecured = true
     @State private var showingAlert = false
 
     var body: some View {
         ScrollView {
             VStack {
-                Label("", systemImage: "network")
-                    .font(.system(size: 200))
-                    .foregroundColor(Color.theme.accentcolor)
-                Text("Regisztráció")
-                    .font(.system(size: 50))
-                    .padding(10)
-                TextField("Email", text: $email)
-                    .padding(.horizontal)
-                    .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                    .font(.system(size: 20))
-                    .background(Color.theme.backgroundsecondary)
-                    .cornerRadius(10)
-                    .disableAutocorrection(true)
-                    .autocapitalization(.none)
+                registrationHeader
+                emailField
 
                 ZStack(alignment: .trailing) {
                     if isSecured {
-                        SecureField("Password", text: $password)
-                            .padding(.horizontal)
-                            .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                            .font(.system(size: 20))
-                            .background(Color.theme.backgroundsecondary)
-                            .cornerRadius(10)
-                            .disableAutocorrection(true)
+                        securedPwField
                     } else {
-                        TextField("Password", text: $password)
-                            .padding(.horizontal)
-                            .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
-                            .font(.system(size: 20))
-                            .background(Color.theme.backgroundsecondary)
-                            .cornerRadius(10)
-                            .disableAutocorrection(true)
+                        nonsecuredPwField
                     }
                     Button(action: {
                         isSecured.toggle()
@@ -91,5 +60,47 @@ struct RegisterScreenView: View {
         .onAppear(perform: presenter.load)
         .navigationTitle("Regisztráció")
         .background(Color.theme.backgroundcolor)
+    }
+
+    var registrationHeader: some View {
+        VStack {
+            Label("", systemImage: "network")
+                .font(.system(size: 200))
+                .foregroundColor(Color.theme.accentcolor)
+            Text("Regisztráció")
+                .font(.system(size: 50))
+                .padding(10)
+        }
+    }
+
+    var emailField: some View {
+        TextField("Email", text: $email)
+            .padding(.horizontal)
+            .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+            .font(.system(size: 20))
+            .background(Color.theme.backgroundsecondary)
+            .cornerRadius(10)
+            .disableAutocorrection(true)
+            .autocapitalization(.none)
+    }
+
+    var securedPwField: some View {
+        SecureField("Password", text: $password)
+            .padding(.horizontal)
+            .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+            .font(.system(size: 20))
+            .background(Color.theme.backgroundsecondary)
+            .cornerRadius(10)
+            .disableAutocorrection(true)
+    }
+
+    var nonsecuredPwField: some View {
+        TextField("Password", text: $password)
+            .padding(.horizontal)
+            .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+            .font(.system(size: 20))
+            .background(Color.theme.backgroundsecondary)
+            .cornerRadius(10)
+            .disableAutocorrection(true)
     }
 }

@@ -1,6 +1,5 @@
 import Combine
 import Foundation
-import Combine
 
 class RegisterScreenPresenter: ObservableObject {
     private let interactor: RegisterScreenInteractor

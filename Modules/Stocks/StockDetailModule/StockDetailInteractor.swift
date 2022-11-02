@@ -15,7 +15,7 @@ class StockDetailInteractor {
     }
 
     func getStockData() -> StockListItem {
-        return stockListItem
+        stockListItem
     }
     func makeGraphData(values: [Double]) -> [CGFloat] {
         var data: [CGFloat]
@@ -24,11 +24,11 @@ class StockDetailInteractor {
     }
 
     func getFavs() -> Published<[StockServerModel]>.Publisher {
-        return userService.$stockFavs
+        userService.$stockFavs
     }
 
     func getSignInStatus() -> Published<Bool>.Publisher {
-        return userService.$isSignedIn
+        userService.$isSignedIn
     }
     func getStock() {
         downloader.loadSingleStock(symbol: symbol)
@@ -38,12 +38,12 @@ class StockDetailInteractor {
         userService.updateStockFavs(symbol)
     }
     func isFav() -> Bool {
-        return !(userService.stockFavs.filter({ $0.stockSymbol == self.symbol }).isEmpty)
+        userService.stockFavs.contains { $0.stockSymbol == self.symbol }
     }
     func addPortfolio(amount: Double, currentprice: Double) {
         userService.updateStockPortfolio(self.symbol, amount, currentprice)
     }
     func getDownloader() -> SingleStockDownloader {
-        return downloader
+        downloader
     }
 }

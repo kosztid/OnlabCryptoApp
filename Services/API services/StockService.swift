@@ -1,5 +1,5 @@
-import Foundation
 import Combine
+import Foundation
 
 class StockService {
     @Published var stocks: [StockListItem] = []
@@ -9,6 +9,7 @@ class StockService {
 
     init() {
         loadStocks()
+        print("stocksinit")
     }
 
     func loadStocks() {

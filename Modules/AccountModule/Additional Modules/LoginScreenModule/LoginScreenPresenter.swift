@@ -1,13 +1,6 @@
-//
-//  LoginScreenPresenter.swift
-//  Onlab
-//
-//  Created by Kosztolánczi Dominik on 2022. 02. 22..
-//
-
+import Combine
 import Foundation
 import SwiftUI
-import Combine
 
 class LoginScreenPresenter: ObservableObject {
     private let interactor: LoginScreenInteractor
@@ -29,7 +22,7 @@ class LoginScreenPresenter: ObservableObject {
     }
 
     func signIn(email: String, password: String) {
-        return interactor.signIn(email: email, password: password)
+        interactor.signIn(email: email, password: password)
     }
     func setlogerrorfalse() {
         interactor.setlogerrorfalse()

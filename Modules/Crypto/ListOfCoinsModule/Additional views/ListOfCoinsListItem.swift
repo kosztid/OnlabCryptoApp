@@ -15,16 +15,7 @@ struct ListOfCoinsListItem: View {
                     .frame(minWidth: 25)
                     .frame(alignment: .trailing)
 
-                CachedAsyncImage(url: URL(string: coin.image)) { image in
-                    image
-                        .resizable()
-                        .scaledToFit()
-                } placeholder: {
-                    Circle()
-                        .frame(width: 30, height: 30)
-                }
-                .frame(width: 30, height: 30)
-                .cornerRadius(20)
+                coinImage
 
                 Text(coin.symbol.uppercased())
                     .foregroundColor(Color.theme.accentcolor)
@@ -33,20 +24,37 @@ struct ListOfCoinsListItem: View {
                 Text(coin.priceChangePercentage24H?.formatpercent() ?? "0%")
                     .foregroundColor((coin.priceChangePercentage24H ?? 0) >= 0 ? Color.theme.green : Color.theme.red)
                     .font(.system(size: 12))
-                VStack(alignment: .trailing) {
-                    Text(coin.currentPrice.formatcurrency6digits())
-                        .foregroundColor(Color.theme.accentcolor)
-                        .font(.system(size: 16))
-                        .frame(alignment: .leading)
-                    Text(coin.marketCap?.formatcurrency0digits() ?? "$0.00")
-                        .foregroundColor(Color.theme.accentcolorsecondary)
-                        .font(.system(size: 10))
-                        .frame(alignment: .leading)
-                }
+                priceStack
                 .frame(width: UIScreen.main.bounds.width / 4, alignment: .trailing)
             }
             .padding(.all, 5)
-        }}
+        }
+    }
+
+    var coinImage: some View {
+        CachedAsyncImage(url: URL(string: coin.image)) { image in
+            image
+                .resizable()
+                .scaledToFit()
+        } placeholder: {
+            Circle()
+                .frame(width: 30, height: 30)
+        }
+        .frame(width: 30, height: 30)
+        .cornerRadius(20)
+    }
+    var priceStack: some View {
+        VStack(alignment: .trailing) {
+            Text(coin.currentPrice.formatcurrency6digits())
+                .foregroundColor(Color.theme.accentcolor)
+                .font(.system(size: 16))
+                .frame(alignment: .leading)
+            Text(coin.marketCap?.formatcurrency0digits() ?? "$0.00")
+                .foregroundColor(Color.theme.accentcolorsecondary)
+                .font(.system(size: 10))
+                .frame(alignment: .leading)
+        }
+    }
 }
 
 struct ListOfCoinsListItem_Previews: PreviewProvider {

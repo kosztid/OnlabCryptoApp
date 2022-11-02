@@ -1,10 +1,3 @@
-//
-//  ImagePicker.swift
-//  OnlabCryptoApp
-//
-//  Created by Kosztolánczi Dominik on 2022. 04. 14..
-//
-
 import Foundation
 import SwiftUI
 
@@ -14,7 +7,7 @@ struct ImagePicker: UIViewControllerRepresentable {
     private let controller = UIImagePickerController()
 
     func makeCoordinator() -> Coordinator {
-        return Coordinator(parent: self)
+        Coordinator(parent: self)
     }
 
     class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {

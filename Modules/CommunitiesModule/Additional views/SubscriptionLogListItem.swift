@@ -44,7 +44,7 @@ struct SubscriptionLogListItem: View {
             moreorless = "Increased"
             toOrFrom = ""
             holdingChange = "from \(log.count2) to \(log.count) "
-        } else if log.count < log.count2 && log.count > 0 {
+        } else if log.count < log.count2 && log.count > 0 { // swiftlint:disable:this empty_count
             moreorless = "Reduced"
             toOrFrom = ""
             holdingChange = "from \(log.count2) to \(log.count) "
@@ -63,7 +63,7 @@ struct SubscriptionLogListItem: View {
     }
 
     func makeLogForWallet() -> AnyView {
-        return AnyView(
+        AnyView(
             VStack(alignment: .leading) {
                 Text(log.userEmail)
                     .font(.title)

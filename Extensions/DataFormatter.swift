@@ -41,11 +41,11 @@ extension Double {
     }
 
     func formatintstring() -> String {
-        return (String(Int(self)))
+        (String(Int(self)))
     }
 
     func formatpercent() -> String {
-        return (String(format: "%.2f", self) + "%")
+        (String(format: "%.2f", self) + "%")
     }
 
     func formatcurrency4digits() -> String {

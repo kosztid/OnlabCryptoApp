@@ -1,5 +1,5 @@
-import Foundation
 import Combine
+import Foundation
 import SwiftUI
 
 class SwapPresenter: ObservableObject {
@@ -34,7 +34,6 @@ class SwapPresenter: ObservableObject {
 
         coinmodel1 = selected(coin: "ethereum")
         coinmodel2 = selected(coin: "tether")
-
     }
 
     func makeButtonForSelector(coin: String) -> some View {
@@ -57,7 +56,7 @@ class SwapPresenter: ObservableObject {
 
     func selected(coin: String) -> CoinModel {
         // swiftlint:disable:next line_length
-        return coins.first(where: {$0.id == coin}) ?? CoinModel(id: "-", symbol: "-", name: "-", image: "btc", currentPrice: 10, marketCap: 10, marketCapRank: 10, fullyDilutedValuation: 10, totalVolume: 10, high24H: 10, low24H: 10, priceChange24H: 10, priceChangePercentage24H: 10, marketCapChange24H: 10, marketCapChangePercentage24H: 10, circulatingSupply: 10, totalSupply: 10, maxSupply: 10, ath: 10, athChangePercentage: 10, athDate: "btc", atl: 10, atlChangePercentage: 10, atlDate: "btc", lastUpdated: "btc", sparklineIn7D: nil, priceChangePercentage24HInCurrency: 10)
+        return coins.first {$0.id == coin} ?? CoinModel(id: "-", symbol: "-", name: "-", image: "btc", currentPrice: 10, marketCap: 10, marketCapRank: 10, fullyDilutedValuation: 10, totalVolume: 10, high24H: 10, low24H: 10, priceChange24H: 10, priceChangePercentage24H: 10, marketCapChange24H: 10, marketCapChangePercentage24H: 10, circulatingSupply: 10, totalSupply: 10, maxSupply: 10, ath: 10, athChangePercentage: 10, athDate: "btc", atl: 10, atlChangePercentage: 10, atlDate: "btc", lastUpdated: "btc", sparklineIn7D: nil, priceChangePercentage24HInCurrency: 10)
     }
 
     func swap() {
@@ -74,15 +73,6 @@ class SwapPresenter: ObservableObject {
     func loadService() {
         interactor.loadService()
     }
-//
-//    func setCoinstobuy(amount: Double) {
-//        interactor.setCoinstoBuy(amount: amount)
-//    }
-//
-//    func setCoinstosell(amount: Double) {
-//        interactor.setCoinstoSell(amount: amount)
-//    }
-
     func setCoin1(coin1: String) {
         coinmodel1 = selected(coin: coin1)
         setBuyAmount()
@@ -98,8 +88,8 @@ class SwapPresenter: ObservableObject {
     }
 
     func ownedamount(coinid: String) -> Double {
-        let idx = ownedcoins.firstIndex(where: { $0.coinid == coinid})
-        if ownedcoins.filter({ $0.coinid == coinid }).isEmpty == false {
+        let idx = ownedcoins.firstIndex { $0.coinid == coinid }
+        if ownedcoins.contains(where: { $0.coinid == coinid }) {
             return ownedcoins[idx!].count
         } else {
             return 0.0
@@ -107,7 +97,7 @@ class SwapPresenter: ObservableObject {
     }
 
     func isOwned(coin: CoinModel) -> Bool {
-        return interactor.isOwned(coin: coin)
+        interactor.isOwned(coin: coin)
     }
 
     func makeButtonForSwap() -> some View {

@@ -14,16 +14,7 @@ struct SearchListItem: View {
                 .frame(minWidth: 25)
                 .frame(alignment: .trailing)
 
-            CachedAsyncImage(url: URL(string: coin.image)) { image in
-                image
-                    .resizable()
-                    .scaledToFit()
-            } placeholder: {
-                Circle()
-                    .frame(width: 30, height: 30)
-            }
-            .frame(width: 30, height: 30)
-            .cornerRadius(20)
+            coinImage
 
             Text(coin.symbol.uppercased())
                 .foregroundColor(Color.theme.accentcolor)
@@ -33,7 +24,7 @@ struct SearchListItem: View {
                 .foregroundColor((coin.priceChangePercentage24H ?? 0) >= 0 ? Color.theme.green : Color.theme.red)
                 .font(.system(size: 12))
 
-                VStack(alignment: .trailing) {
+            VStack(alignment: .trailing) {
                 Text(coin.currentPrice.formatcurrency6digits())
                     .foregroundColor(Color.theme.accentcolor)
                     .font(.system(size: 18))
@@ -42,7 +33,20 @@ struct SearchListItem: View {
             .frame(width: UIScreen.main.bounds.width / 4, alignment: .trailing)
         }
         .padding(.all, 5)
-        }}
+        }
+    }
+    var coinImage: some View {
+        CachedAsyncImage(url: URL(string: coin.image)) { image in
+            image
+                .resizable()
+                .scaledToFit()
+        } placeholder: {
+            Circle()
+                .frame(width: 30, height: 30)
+        }
+        .frame(width: 30, height: 30)
+        .cornerRadius(20)
+    }
 }
 /*
 struct SearchListItem_Previews: PreviewProvider {

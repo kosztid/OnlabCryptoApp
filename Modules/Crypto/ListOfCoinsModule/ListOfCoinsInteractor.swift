@@ -31,5 +31,4 @@ class ListOfCoinsInteractor {
     func reloadData() {
         userService.userReload("listofcoins")
     }
-
 }

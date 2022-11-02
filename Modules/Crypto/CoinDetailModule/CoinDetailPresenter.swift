@@ -9,11 +9,14 @@ class CoinDetailPresenter: ObservableObject {
 
     let coin: CoinModel
 
+    @Published var isFav: Bool
     @Published var signedin = false
 
     init(interactor: CoinDetailInteractor) {
         self.interactor = interactor
         self.coin = interactor.getCoin() /* 1 */
+
+        self.isFav = interactor.isFav()
 
         interactor.getSignInStatus()
             .assign(to: \.signedin, on: self)
@@ -39,8 +42,9 @@ class CoinDetailPresenter: ObservableObject {
     func makeFavButton() -> some View {
         Button {
             self.interactor.addFavCoin()
+            self.isFav.toggle()
         } label: {
-            Label("", systemImage: interactor.isFav() ? "star.fill" : "star")
+            Label("", systemImage: self.isFav ? "star.fill" : "star")
                 .foregroundColor(Color.theme.accentcolor)
                 .font(.system(size: 25))
         }

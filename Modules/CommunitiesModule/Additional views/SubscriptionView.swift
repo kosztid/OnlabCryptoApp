@@ -16,11 +16,10 @@ struct SubscriptionView: View {
                         action(user.id)
                         self.presentationMode.wrappedValue.dismiss()
                     } label: {
-                        Text(subbedList.contains(where: {$0 == user.id}) ? "Unsubscribe" : "Subscribe")
+                        Text(subbedList.contains {$0 == user.id} ? "Unsubscribe" : "Subscribe")
                     }
                 }
             }
-
         }
     }
 

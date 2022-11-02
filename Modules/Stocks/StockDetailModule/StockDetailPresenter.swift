@@ -1,9 +1,10 @@
+import Combine
 import Foundation
 import SwiftUI
-import Combine
 
 class StockDetailPresenter: ObservableObject {
     private let interactor: StockDetailInteractor
+//    swiftlint:disable:next line_length
     @Published var stock = Stock(ticker: "Loading...", queryCount: 1, resultsCount: 1, adjusted: false, results: [], status: "Loading...", requestID: "Loading...", count: 1)
     @Published var favStocks: [StockServerModel] = []
     @Published var currentPrices: [Double] = [1]
@@ -14,7 +15,7 @@ class StockDetailPresenter: ObservableObject {
     @Published var marketCap = ""
     @Published var changePct = ""
     @Published var fullName = ""
-    @Published var graphColor: Color = Color.accentColor
+    @Published var graphColor = Color.accentColor
     @Published var signedin = false
     private var cancellables = Set<AnyCancellable>()
 
@@ -74,7 +75,7 @@ class StockDetailPresenter: ObservableObject {
         interactor.addPortfolio(amount: amount, currentprice: self.lastPrice)
     }
     func getGraphData() -> [CGFloat] {
-        return interactor.makeGraphData(values: currentPrices)
+        interactor.makeGraphData(values: currentPrices)
     }
 
     func onAppear() {

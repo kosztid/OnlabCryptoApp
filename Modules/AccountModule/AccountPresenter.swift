@@ -1,6 +1,6 @@
+import Combine
 import Foundation
 import SwiftUI
-import Combine
 
 class AccountPresenter {
     private let interactor: AccountInteractor
@@ -17,7 +17,7 @@ class AccountPresenter {
     }
 
     func currentUserEmail() -> String {
-        return interactor.currentUserEmail()
+        interactor.currentUserEmail()
     }
 
     func changeVisibility() {

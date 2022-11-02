@@ -24,47 +24,28 @@ struct ContentView: View {
                 .ignoresSafeArea()
             // main view with tab selections
             TabView(selection: $selection) {
-                // CoinList view
-                NavigationView {
-                    ListOfStocksView(presenter: ListOfStocksPresenter(interactor: ListOfStocksInteractor(changeBetweenCurrencyTypes)))
-                }
-                .navigationBarTitleDisplayMode(.inline)
-                .ignoresSafeArea()
-                .tabItem { Label("Stocks", systemImage: "list.bullet")
-                }
+                stocksListView
+                .tabItem { Label("Stocks", systemImage: "list.bullet") }
                 .tag(Tab.listofcoins)
 
                 // Portfolio tab
-                NavigationView {
-                    VStack {
-                        StockPortfolioView(presenter: StockPortfolioPresenter(interactor: StockPortfolioInteractor()))
-                    }
-                }
+                stockPortfolioView
                 .tabItem { Label("Portfolio", systemImage: "star") }
                 .accessibilityIdentifier("PortfolioViewButton")
                 .tag(Tab.portfolio)
 
                 // swap tab
-                NavigationView {
-                    StockSwapView(presenter: StockSwapPresenter(interactor: StockSwapInteractor()))
-                }
+                stockSwapView
                 .tabItem { Label("Swap", systemImage: "arrow.left.arrow.right") }
                 .accessibilityIdentifier("SwapViewButton")
                 .tag(Tab.swap)
                 // News tab
-                NavigationView {
-                    NewsView(presenter: NewsPresenter(interactor: NewsInteractor(), newsType: .stock))
-                }
-                .navigationBarTitleDisplayMode(.inline)
+                stockNewsView
                 .tabItem { Label("News", systemImage: "newspaper") }
                 .tag(Tab.news)
 
                 // Communities tab
-                NavigationView {
-                    VStack(spacing: 10) {
-                        CommunitiesView(presenter: CommunitiesPresenter(interactor: CommunitiesInteractor()))
-                    }
-                }
+                communitiesTab
                 .tabItem { Label("Communities", systemImage: "message") }
                 .tag(Tab.communities)
             }
@@ -78,48 +59,28 @@ struct ContentView: View {
             // main view with tab selections
             TabView(selection: $selection) {
                 // CoinList view
-                NavigationView {
-                    ListOfCoinsView(presenter: ListOfCoinsPresenter(interactor: ListOfCoinsInteractor(changeBetweenCurrencyTypes)))
-                }
-                .navigationBarTitleDisplayMode(.inline)
-                .ignoresSafeArea()
-                .tabItem { Label("List", systemImage: "list.bullet")
-                }
+                cryptoListView
+                .tabItem { Label("List", systemImage: "list.bullet") }
                 .tag(Tab.listofcoins)
 
                 // Portfolio tab
-                NavigationView {
-                    VStack(spacing: 10) {
-                        PortfolioView(presenter: PortfolioPresenter(interactor: PortfolioInteractor()))
-                    }
-                }
+                cryptoPortfolioView
                 .tabItem { Label("Portfolio", systemImage: "star") }
                 .accessibilityIdentifier("PortfolioViewButton")
                 .tag(Tab.portfolio)
 
                 // swap tab
-                NavigationView {
-                    VStack(spacing: 10) {
-                        SwapView(presenter: SwapPresenter(interactor: SwapInteractor()))
-                    }
-                }
+                cryptoSwapView
                 .tabItem { Label("Swap", systemImage: "arrow.left.arrow.right") }
                 .accessibilityIdentifier("SwapViewButton")
                 .tag(Tab.swap)
                 // News tab
-                NavigationView {
-                    NewsView(presenter: NewsPresenter(interactor: NewsInteractor(), newsType: .crypto))
-                }
-                .navigationBarTitleDisplayMode(.inline)
+                cryptoNewsView
                 .tabItem { Label("News", systemImage: "newspaper") }
                 .tag(Tab.news)
 
                 // Communities tab
-                NavigationView {
-                    VStack(spacing: 10) {
-                        CommunitiesView(presenter: CommunitiesPresenter(interactor: CommunitiesInteractor()))
-                    }
-                }
+                communitiesTab
                 .tabItem { Label("Communities", systemImage: "message") }
                 .tag(Tab.communities)
             }
@@ -132,6 +93,74 @@ struct ContentView: View {
         } else {
             self.currencyType = .crypto
         }
+    }
+    // MARK: - View elements
+
+    var cryptoListView: some View {
+        NavigationView {
+            ListOfCoinsView(presenter: ListOfCoinsPresenter(interactor: ListOfCoinsInteractor(changeBetweenCurrencyTypes)))
+        }
+        .ignoresSafeArea()
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    var cryptoPortfolioView: some View {
+        NavigationView {
+            VStack(spacing: 10) {
+                PortfolioView(presenter: PortfolioPresenter(interactor: PortfolioInteractor()))
+            }
+        }
+    }
+
+    var cryptoSwapView: some View {
+        NavigationView {
+            VStack(spacing: 10) {
+                SwapView(presenter: SwapPresenter(interactor: SwapInteractor()))
+            }
+        }
+    }
+
+    var cryptoNewsView: some View {
+        NavigationView {
+            NewsView(presenter: NewsPresenter(interactor: NewsInteractor(), newsType: .crypto))
+        }
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    var communitiesTab: some View {
+        NavigationView {
+            VStack(spacing: 10) {
+                CommunitiesView(presenter: CommunitiesPresenter(interactor: CommunitiesInteractor()))
+            }
+        }
+    }
+    var stocksListView: some View {
+        NavigationView {
+            ListOfStocksView(presenter: ListOfStocksPresenter(interactor: ListOfStocksInteractor(changeBetweenCurrencyTypes)))
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .ignoresSafeArea()
+    }
+
+    var stockPortfolioView: some View {
+        NavigationView {
+            VStack {
+                StockPortfolioView(presenter: StockPortfolioPresenter(interactor: StockPortfolioInteractor()))
+            }
+        }
+    }
+
+    var stockSwapView: some View {
+        NavigationView {
+            StockSwapView(presenter: StockSwapPresenter(interactor: StockSwapInteractor()))
+        }
+    }
+
+    var stockNewsView: some View {
+        NavigationView {
+            NewsView(presenter: NewsPresenter(interactor: NewsInteractor(), newsType: .stock))
+        }
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

@@ -18,47 +18,48 @@ class StockPortfolioInteractor {
     }
 
     func getCoins() -> Published<[StockListItem]>.Publisher {
-        return stockService.$stocks
+        stockService.$stocks
     }
 
     func getSignInStatus() -> Published<Bool>.Publisher {
-        return userService.$isSignedIn
+        userService.$isSignedIn
     }
 
     func getFavs() -> Published<[StockServerModel]>.Publisher {
-        return userService.$stockFavs
+        userService.$stockFavs
     }
     func getHeld() -> Published<[StockServerModel]>.Publisher {
-        return userService.$stockPortfolio
+        userService.$stockPortfolio
     }
     func getOwned() -> Published<[StockServerModel]>.Publisher {
-        return userService.$stockWallet
+        userService.$stockWallet
     }
     func getservice() -> UserService {
-        return userService
+        userService
     }
 
     func getStock(symbol: String) -> StockListItem {
-        return stockService.stocks.first(where: {$0.symbol == symbol.uppercased()}) ?? StockListItem(symbol: "", name: "", lastsale: "", netchange: "", pctchange: "", marketCap: "", url: "")
+        let baseItem = StockListItem(symbol: "", name: "", lastsale: "", netchange: "", pctchange: "", marketCap: "", url: "")
+        return stockService.stocks.first {$0.symbol == symbol.uppercased()} ?? baseItem
     }
     func makeDetailInteractor(symbol: String, item: StockListItem) -> StockDetailInteractor {
         StockDetailInteractor(symbol: symbol, item: item, service: userService)
     }
 
     func portfoliototal() -> Double {
-        if userService.stockPortfolio.count == 0 {
+        if userService.stockPortfolio.isEmpty {
             return 0
         }
         var total: Double = 0
         for ind in 0...(userService.stockPortfolio.count - 1) {
-            let currentprice = Double(stockService.stocks.first(where: {$0.symbol == userService.stockPortfolio[ind].stockSymbol})?.lastsale.dropFirst() ?? "") ?? 0
+            let currentprice = Double(stockService.stocks.first {$0.symbol == userService.stockPortfolio[ind].stockSymbol}?.lastsale.dropFirst() ?? "") ?? 0
             total += (userService.stockPortfolio[ind].count * currentprice)
         }
         return total
     }
 
     func portfoliobuytotal() -> Double {
-        if userService.stockPortfolio.count == 0 {
+        if userService.stockPortfolio.isEmpty {
             return 0
         }
         var total: Double = 0
@@ -69,12 +70,12 @@ class StockPortfolioInteractor {
     }
 
     func favfoliochange() -> Double {
-        if userService.stockFavs.count == 0 {
+        if userService.stockFavs.isEmpty {
             return 0
         }
         var total: Double = 0
         for ind in 0...(userService.stockFavs.count - 1) {
-            let idx = stockService.stocks.firstIndex(where: { $0.symbol == stockService.stocks[ind].symbol })
+            let idx = stockService.stocks.firstIndex { $0.symbol == stockService.stocks[ind].symbol }
             total += Double(stockService.stocks[idx!].pctchange.dropFirst()) ?? 0
         }
         total /= Double(userService.stockFavs.count)
@@ -82,26 +83,26 @@ class StockPortfolioInteractor {
     }
 
     func wallettotal() -> Double {
-        if userService.stockWallet.count == 0 {
+        if userService.stockWallet.isEmpty {
             return 0
         }
         var total: Double = 0
         for ind in 0...(userService.stockWallet.count - 1) {
-            let coindx = stockService.stocks.firstIndex(where: { $0.symbol == userService.stockWallet[ind].stockSymbol })
+            let coindx = stockService.stocks.firstIndex { $0.symbol == userService.stockWallet[ind].stockSymbol }
             total += userService.stockWallet[ind].count * (Double(stockService.stocks[coindx!].lastsale.dropFirst()) ?? 0)
         }
         return total
     }
     func walletyesterday() -> Double {
-        return (self.wallettotal() - self.walletchange())
+        (self.wallettotal() - self.walletchange())
     }
     func walletchange() -> Double {
-        if userService.cryptoWallet.count == 0 {
+        if userService.cryptoWallet.isEmpty {
             return 0
         }
         var total: Double = 0
         for ind in 0...(userService.stockWallet.count - 1) {
-            let idx = stockService.stocks.firstIndex(where: { $0.symbol == userService.stockWallet[ind].stockSymbol })
+            let idx = stockService.stocks.firstIndex { $0.symbol == userService.stockWallet[ind].stockSymbol }
             let change = Double(stockService.stocks[idx!].pctchange.dropLast(1)) ?? 0
             let changecounted = userService.stockWallet[ind].count * change
             total += changecounted
@@ -117,6 +118,6 @@ class StockPortfolioInteractor {
         userService.updateStockFavs(symbol)
     }
     func getDownloader() -> SingleStockDownloader {
-        return downloader
+        downloader
     }
 }

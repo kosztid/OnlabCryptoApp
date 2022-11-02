@@ -18,6 +18,7 @@ struct StockDetailView: View {
                 .padding(20)
             }
             .navigationBarItems(trailing: Button("Add") {
+//                swiftlint:disable:next line_length
                 alertWithTfNumpad(title: presenter.stock.ticker, message: "Adja meg a mennyiséget", hintText: "Mennyiség", primaryTitle: "Változtatás", secTitle: "Vissza") { text in
                     presenter.addPortfolio(amount: Double(text))
                 } secondaryAction: {
@@ -93,5 +94,4 @@ struct StockDetailView: View {
                 .font(.system(size: 16))
         }.padding(5)
     }
-
 }

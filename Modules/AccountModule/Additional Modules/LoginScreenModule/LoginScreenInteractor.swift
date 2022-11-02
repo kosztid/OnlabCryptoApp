@@ -12,11 +12,11 @@ class LoginScreenInteractor {
     }
 
     func getSignInStatus() -> Published<Bool>.Publisher {
-        return userService.$isSignedIn
+        userService.$isSignedIn
     }
 
     func getLoginError() -> Published<Bool>.Publisher {
-        return userService.$loginError
+        userService.$loginError
     }
     func load() {
         userService.userReload("loginint")

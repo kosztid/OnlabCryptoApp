@@ -8,9 +8,9 @@ class NewsInteractor {
     }
 
     func getCryptoNews() -> Published<News>.Publisher {
-        return newsService.$news
+        newsService.$news
     }
     func getStockNews() -> Published<News>.Publisher {
-        return newsService.$stockNews
+        newsService.$stockNews
     }
 }

@@ -18,42 +18,12 @@ struct SwapView: View {
             VStack {
                 HStack {
                     Spacer()
-                    VStack {
-                        Text("From")
-                            .font(.system(size: 26))
-                            .bold()
-                        presenter.makeButtonForSelector(coin: "coin1")
-                            .accessibilityIdentifier("SwapSellSelectorButton")
-                        sellCoinData
-                        VStack {
-                            Text("Owned:")
-                            Text("\(presenter.ownedamount(coinid: presenter.coinmodel1.id)) \(presenter.coinmodel1.symbol) ")
-                        }
-                        .font(.system(size: 12))
-                        sellTextfield
-                    }
-                    .font(.system(size: 24))
-                    .foregroundColor(Color.theme.accentcolor)
+                    sellStack
                     Spacer()
                     Image(systemName: "arrow.right")
                         .font(.system(size: 26))
                     Spacer()
-                    VStack {
-                        Text("To")
-                            .font(.system(size: 26))
-                            .bold()
-                        presenter.makeButtonForSelector(coin: "coin2")
-                            .accessibilityIdentifier("SwapBuySelectorButton")
-                        buyCoinData
-                        VStack {
-                            Text("Owned:")
-                            Text("\(presenter.ownedamount(coinid: presenter.coinmodel2.id)) \(presenter.coinmodel2.symbol)")
-                        }
-                        .font(.system(size: 12))
-                        buyTextfield
-                    }
-                    .font(.system(size: 24))
-                    .foregroundColor(Color.theme.accentcolor)
+                    buyStack
                     Spacer()
                 }
                 .padding(10)
@@ -67,7 +37,45 @@ struct SwapView: View {
         .background(Color.theme.backgroundcolor)
     }
 
+    var sellStack: some View {
+        VStack {
+            Text("From")
+                .font(.system(size: 26))
+                .bold()
+            presenter.makeButtonForSelector(coin: "coin1")
+                .accessibilityIdentifier("SwapSellSelectorButton")
+            sellCoinData
+            VStack {
+                Text("Owned:")
+                Text("\(presenter.ownedamount(coinid: presenter.coinmodel1.id)) \(presenter.coinmodel1.symbol) ")
+            }
+            .font(.system(size: 12))
+            sellTextfield
+        }
+        .font(.system(size: 24))
+        .foregroundColor(Color.theme.accentcolor)
+    }
+
+    var buyStack: some View {
+        VStack {
+            Text("To")
+                .font(.system(size: 26))
+                .bold()
+            presenter.makeButtonForSelector(coin: "coin2")
+                .accessibilityIdentifier("SwapBuySelectorButton")
+            buyCoinData
+            VStack {
+                Text("Owned:")
+                Text("\(presenter.ownedamount(coinid: presenter.coinmodel2.id)) \(presenter.coinmodel2.symbol)")
+            }
+            .font(.system(size: 12))
+            buyTextfield
+        }
+        .font(.system(size: 24))
+        .foregroundColor(Color.theme.accentcolor)
+    }
     var buyTextfield: some View {
+        // swiftlint:disable:next trailing_closure
         TextField("Amount to buy", value: $presenter.coinstobuy, formatter: formatter, onEditingChanged: { changed in
             isFocused1 = changed
         })
@@ -89,6 +97,7 @@ struct SwapView: View {
     }
 
     var sellTextfield: some View {
+        // swiftlint:disable:next trailing_closure
         TextField("Amount to sell", value: $presenter.coinstosell, formatter: formatter, onEditingChanged: { changed in
             isFocused2 = changed
         })

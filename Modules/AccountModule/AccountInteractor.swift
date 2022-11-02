@@ -2,7 +2,6 @@ import Foundation
 import Resolver
 
 class AccountInteractor {
-
     private let userService: UserService
 
     init() {
@@ -17,7 +16,7 @@ class AccountInteractor {
     }
 
     func getVisibility() -> Published<Bool>.Publisher {
-        return userService.$accountVisible
+        userService.$accountVisible
     }
     func currentUserEmail() -> String {
         userService.getUserEmail()

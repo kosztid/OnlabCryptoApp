@@ -53,6 +53,7 @@ struct CommunitiesView: View {
         .background(Color.theme.backgroundcolor)
         .scrollContentBackground(.hidden)
         .navigationBarItems(trailing: Button("Add Community") {
+            // swiftlint:disable:next line_length
             alertWithTf(title: "Új csoport létrehozása", message: "Kérem adja meg csoport nevét", hintText: "Név", primaryTitle: "Hozzáadás", secondaryTitle: "Vissza") { text in
                 presenter.addCommunity(text)
             } secondaryAction: {

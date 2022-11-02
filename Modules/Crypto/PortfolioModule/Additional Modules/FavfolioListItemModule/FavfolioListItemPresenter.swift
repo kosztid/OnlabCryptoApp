@@ -9,7 +9,7 @@ class FavfolioListItemPresenter: ObservableObject {
     }
 
     func getcoin() -> CoinModel {
-        return interactor.getcoin()
+        interactor.getcoin()
     }
     func makeFavButton() -> some View {
         Button {

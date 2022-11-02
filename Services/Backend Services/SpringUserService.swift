@@ -1,6 +1,6 @@
 import Combine
-import Foundation
 import FirebaseAuth
+import Foundation
 
 struct Favfolio: Codable {
     let id: Int
@@ -51,7 +51,6 @@ final class SpringUserService: BaseUserService, UserService, ObservableObject {
                     //   self.communityService.loadCommunities(apikey: idToken ?? "error")
                 }
             }
-
         }
     }
 
@@ -79,6 +78,7 @@ final class SpringUserService: BaseUserService, UserService, ObservableObject {
 
     func userReload(_ origin: String = "Basic") {
         if Auth.auth().currentUser?.uid != nil {
+            // swiftlint:disable:next trailing_closure
             auth.currentUser?.reload(completion: { error in
                 if let error = error {
                     print(String(describing: error))
@@ -117,15 +117,17 @@ final class SpringUserService: BaseUserService, UserService, ObservableObject {
     }
 
     func getUserId() -> String {
-        return auth.currentUser?.uid ?? "nouser"
+        auth.currentUser?.uid ?? "nouser"
     }
 
     func getUserEmail() -> String {
-        return auth.currentUser?.email ?? "nomail"
+        auth.currentUser?.email ?? "nomail"
     }
 
     // MARK: - User data, account
+    // swiftlint:disable:next function_body_length
     func loadUser() {
+        // swiftlint:disable:next closure_body_length
         self.auth.currentUser?.getIDTokenForcingRefresh(true) { idToken, error in
             if let error = error {
                 print(error.localizedDescription)
@@ -417,7 +419,7 @@ final class SpringUserService: BaseUserService, UserService, ObservableObject {
                     return
                 }
                 if self.subscriptions.contains(subId) {
-                    self.subscriptions.removeAll(where: {$0 == subId})
+                    self.subscriptions.removeAll {$0 == subId}
                 } else {
                     self.subscriptions.append(subId)
                 }
@@ -490,13 +492,15 @@ final class SpringUserService: BaseUserService, UserService, ObservableObject {
                         print(error.localizedDescription)
                     }
                 } receiveValue: { [weak self] returnedUsers in
-                    let list = returnedUsers.filter({$0.visibility})
-                    self?.userList = list.filter({$0.id != self?.auth.currentUser!.uid})
+                    let list = returnedUsers.filter {$0.visibility}
+                    self?.userList = list.filter {$0.id != self?.auth.currentUser!.uid}
                     self?.usersSub?.cancel()
                 }
         }
     }
+    // swiftlint:disable:next function_body_length
     func loadUserActionLogs() {
+        // swiftlint:disable:next closure_body_length
         self.auth.currentUser?.getIDTokenForcingRefresh(true) { apikey, error in
             if let error = error {
                 print(error.localizedDescription)
