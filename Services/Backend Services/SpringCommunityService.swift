@@ -1,14 +1,18 @@
 import Combine
 import FirebaseAuth
+import FirebaseStorage
 import Foundation
+import SwiftUI
 
 class SpringCommunityService: BaseCommunityService, CommunityService {
     let port = "8090"
     let auth: Auth
+    let storage: Storage
     var communitySub: AnyCancellable?
 
     override init() {
         self.auth = Auth.auth()
+        self.storage = Storage.storage()
         super.init()
         loadCommunities()
     }
@@ -44,6 +48,26 @@ class SpringCommunityService: BaseCommunityService, CommunityService {
                 self.loadCommunities()
             }
             task.resume()
+        }
+    }
+
+    func sendPhoto(image: UIImage, message: MessageModel, communityid: String) {
+        let id = UUID().uuidString
+        let ref = storage.reference(withPath: id)
+        guard let imagedata = image.jpegData(compressionQuality: 0.1) else {return}
+        ref.putData(imagedata, metadata: nil) { _, error in
+            if error == nil {
+            } else {
+                print(error!.localizedDescription)
+            }
+            ref.downloadURL { url, error in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+                var messagewithurl = message
+                messagewithurl.message = url?.absoluteString ?? "nolink"
+                self.sendMessage(communityid, messagewithurl)
+            }
         }
     }
 

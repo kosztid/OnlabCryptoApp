@@ -24,6 +24,6 @@ class MessagerInteractor {
         userService.isSignedIn
     }
     func sendPhoto(image: UIImage, message: MessageModel, id: String) {
-     // TODO:   model.sendPhoto(image: image, message: message, communityid: id)
+        communityService.sendPhoto(image: image, message: message, communityid: id)
     }
 }
