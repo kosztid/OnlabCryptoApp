@@ -2,7 +2,7 @@ import Combine
 import Foundation
 import SwiftUI
 
-class AccountPresenter {
+class AccountPresenter: ObservableObject {
     private let interactor: AccountInteractor
     private var cancellables = Set<AnyCancellable>()
 
@@ -11,9 +11,7 @@ class AccountPresenter {
     init(interactor: AccountInteractor) {
         self.interactor = interactor
 
-        interactor.getVisibility()
-            .assign(to: \.accountVisibility, on: self)
-            .store(in: &cancellables)
+        self.accountVisibility = interactor.getVisibility()
     }
 
     func currentUserEmail() -> String {
@@ -21,6 +19,7 @@ class AccountPresenter {
     }
 
     func changeVisibility() {
+        self.accountVisibility.toggle()
         interactor.changeVisibility()
     }
 

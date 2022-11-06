@@ -15,8 +15,8 @@ class AccountInteractor {
         userService.userReload("account")
     }
 
-    func getVisibility() -> Published<Bool>.Publisher {
-        userService.$accountVisible
+    func getVisibility() -> Bool {
+        userService.accountVisible
     }
     func currentUserEmail() -> String {
         userService.getUserEmail()
