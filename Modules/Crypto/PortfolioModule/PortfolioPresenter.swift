@@ -4,7 +4,7 @@ import SwiftUI
 
 // swiftlint:disable:next type_body_length
 class PortfolioPresenter: ObservableObject {
-    @Published var selection: String = "portfolio"
+    @Published var selection = Folio.portfolio
     @Published var coins: [CoinModel] = []
     @Published var favcoins: [CryptoServerModel] = []
     @Published var signedin = false
@@ -28,7 +28,7 @@ class PortfolioPresenter: ObservableObject {
             .store(in: &cancellables)
     }
 
-    func changeViewTo(viewname: String) {
+    func changeViewTo(viewname: Folio) {
         selection = viewname
     }
 
@@ -51,7 +51,7 @@ class PortfolioPresenter: ObservableObject {
     func ownedcoins() -> [String] {
         interactor.ownedcoins()
     }
-    func isSelected(selected: String) -> Bool {
+    func isSelected(selected: Folio) -> Bool {
         selected == self.selection
     }
 
@@ -86,8 +86,8 @@ class PortfolioPresenter: ObservableObject {
     }
 
     // swiftlint:disable:next function_body_length
-    func makeList(selected: String) -> AnyView {
-        if selected == "portfolio" {
+    func makeList(selected: Folio) -> AnyView {
+        if selected == .portfolio {
             return AnyView(
                 List {
                     ForEach(self.coins) { coin in
@@ -108,7 +108,7 @@ class PortfolioPresenter: ObservableObject {
                     .listRowSeparatorTint(Color.theme.backgroundsecondary)
                     .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                 }.accessibilityIdentifier("PortfolioList")
-            )} else if selected == "favfolio" { return AnyView(
+            )} else if selected == .favorites { return AnyView(
                 List {
                     ForEach(self.coins) { coin in
                         if self.heldfavcoins().contains(coin.id) {
@@ -150,11 +150,11 @@ class PortfolioPresenter: ObservableObject {
                         })}
     }
 
-    func makeFolioData(selected: String) -> AnyView {
-        if selected == "portfolio" {
+    func makeFolioData(selected: Folio) -> AnyView {
+        if selected == Folio.portfolio {
             return AnyView(
                 self.makeportfolioData()
-            )} else if selected == "favfolio" { return AnyView(
+            )} else if selected == Folio.favorites { return AnyView(
                 self.makefavfolioData()
             )} else {
                 return AnyView(
@@ -164,27 +164,27 @@ class PortfolioPresenter: ObservableObject {
 
     func makeButtonforPortfolioList() -> some View {
         Button {
-            self.changeViewTo(viewname: "portfolio")
+            self.changeViewTo(viewname: .portfolio)
         } label: {
             Text(Strings.portfolio)
                 .frame(height: 30)
                 .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
                 .font(.system(size: 20))
-                .background(self.isSelected(selected: "portfolio") ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
-                .foregroundColor(self.isSelected(selected: "portfolio") ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
+                .background(self.isSelected(selected: .portfolio) ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
+                .foregroundColor(self.isSelected(selected: .portfolio) ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
                 .cornerRadius(10)
         }
     }
     func makeButtonforFavfolioList() -> some View {
         Button {
-            self.changeViewTo(viewname: "favfolio")
+            self.changeViewTo(viewname: .favorites)
         } label: {
             Text(Strings.favorites)
                 .frame(height: 30)
                 .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
                 .font(.system(size: 20))
-                .background(self.isSelected(selected: "favfolio") ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
-                .foregroundColor(self.isSelected(selected: "favfolio") ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
+                .background(self.isSelected(selected: .favorites) ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
+                .foregroundColor(self.isSelected(selected: .favorites) ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
                 .cornerRadius(10)
         }
     }
@@ -193,23 +193,23 @@ class PortfolioPresenter: ObservableObject {
             HStack {
                 VStack(alignment: .leading) {
                     HStack {
-                        Text("Portfolio Total:")
-                            .font(.system(size: 19))
+                        Text(Strings.portfolioTotal)
+                            .font(.system(size: 18))
                         Spacer()
                         Text("\(self.portfoliototal().formatcurrency4digits())")
-                            .font(.system(size: 19))
+                            .font(.system(size: 18))
                             .frame(alignment: .leading)
                     }
                     HStack {
-                        Text("Portfolio invested:")
-                            .font(.system(size: 17))
+                        Text(Strings.portfolioInvested)
+                            .font(.system(size: 16))
                         Spacer()
                         Text("\(self.portfoliobuytotal().formatcurrency4digits())")
                             .foregroundColor(Color.theme.accentcolorsecondary)
-                            .font(.system(size: 17))
+                            .font(.system(size: 16))
                             .frame(alignment: .leading)
                     }
-                }.frame(width: UIScreen.main.bounds.width * 0.7)
+                }.frame(width: UIScreen.main.bounds.width * 0.75)
                 Spacer()
                 Text("\(self.winlosepercent().formatpercent())")
                     .foregroundColor((self.winlosepercent() >= 0) ? Color.theme.green : Color.theme.red )
@@ -225,12 +225,12 @@ class PortfolioPresenter: ObservableObject {
             HStack {
                 VStack {
                     HStack {
-                        Text("Your favorites price")
+                        Text(Strings.favoritesTotal)
                             .font(.system(size: 20))
                         Spacer()
                     }
                     HStack {
-                        Text("change in the last 24 hours")
+                        Text(Strings.favoritesChange)
                             .font(.system(size: 18))
                         Spacer()
                     }
@@ -251,23 +251,23 @@ class PortfolioPresenter: ObservableObject {
             HStack {
                 VStack(alignment: .leading) {
                     HStack {
-                        Text("Wallet Total:")
-                            .font(.system(size: 19))
+                        Text(Strings.walletTotal)
+                            .font(.system(size: 18))
                         Spacer()
                         Text("\(self.interactor.wallettotal().formatcurrency4digits())")
-                            .font(.system(size: 19))
+                            .font(.system(size: 18))
                             .frame(alignment: .leading)
                     }
                     HStack {
-                        Text("Wallet yesterday:")
-                            .font(.system(size: 17))
+                        Text(Strings.walletyesterday)
+                            .font(.system(size: 16))
                         Spacer()
                         Text("\(self.interactor.walletyesterday().formatcurrency4digits())")
                             .foregroundColor(Color.theme.accentcolorsecondary)
-                            .font(.system(size: 17))
+                            .font(.system(size: 16))
                             .frame(alignment: .leading)
                     }
-                }.frame(width: UIScreen.main.bounds.width * 0.7)
+                }.frame(width: UIScreen.main.bounds.width * 0.75)
                 Spacer()
                 Text("\((self.interactor.wallettotal() / self.interactor.walletyesterday()).formatpercent())")
                     .foregroundColor(((self.interactor.wallettotal() / self.interactor.walletyesterday()) >= 0) ? Color.theme.green : Color.theme.red )
@@ -280,14 +280,14 @@ class PortfolioPresenter: ObservableObject {
 
     func makeButtonforWalletList() -> some View {
         Button {
-            self.changeViewTo(viewname: "wallet")
+            self.changeViewTo(viewname: .wallet)
         } label: {
             Text(Strings.wallet)
                 .frame(height: 30)
                 .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
                 .font(.system(size: 20))
-                .background(self.isSelected(selected: "wallet") ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
-                .foregroundColor(self.isSelected(selected: "wallet") ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
+                .background(self.isSelected(selected: .wallet) ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
+                .foregroundColor(self.isSelected(selected: .wallet) ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
                 .cornerRadius(10)
         }
     }

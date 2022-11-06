@@ -38,6 +38,7 @@ class CommunitiesInteractor {
     func reload() {
         userService.userReload("communitiesreload")
         communityService.loadCommunities()
+        userService.loadUsers()
     }
     func makeMessagerInteractor() -> MessagerInteractor {
         MessagerInteractor(userService, communityService)

@@ -24,12 +24,11 @@ class MessagerPresenter: ObservableObject {
         community.members
     }
     func makeButtonForUsers() -> some View {
-        Button {} label: { Text("Members no use")}
-//  TODO: memebrs       NavigationLink("Members", destination: router.makeMembersView(model: interactor.getmodel(), community: self.community))
+        NavigationLink(Strings.members, destination: router.makeMembersView(community: self.community))
     }
     func sendmessage(message: String) {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        dateFormatter.dateFormat = Strings.dateformat
         let stringdate = dateFormatter.string(from: Date())
         let email = interactor.getAccountEmail()
         let message = MessageModel(id: 1, sender: interactor.getAccountInfo(), senderemail: email, message: message, time: stringdate, image: false)
@@ -37,7 +36,7 @@ class MessagerPresenter: ObservableObject {
     }
     func sendPhoto(image: UIImage) {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        dateFormatter.dateFormat = Strings.dateformat
         let stringdate = dateFormatter.string(from: Date())
         let email = interactor.getAccountEmail()
         let message = MessageModel(id: 1, sender: interactor.getAccountInfo(), senderemail: email, message: "lateinit", time: stringdate, image: true)

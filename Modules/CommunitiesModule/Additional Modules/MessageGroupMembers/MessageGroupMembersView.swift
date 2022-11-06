@@ -7,7 +7,7 @@ struct MessageGroupMembersView: View {
             Color.theme.backgroundcolor
                 .ignoresSafeArea()
             VStack {
-                Text("Members of the Group")
+                Text(Strings.groupMembers)
                     .font(.system(size: 20))
                 List {
                     ForEach(presenter.community.members, id: \.self) { member in

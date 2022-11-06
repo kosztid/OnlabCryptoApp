@@ -33,6 +33,13 @@ class StockDetailInteractor {
     func getStock() {
         downloader.loadSingleStock(symbol: symbol)
     }
+    func getStockCount() -> Double {
+        if let index = userService.stockPortfolio.firstIndex(where: { $0.stockSymbol == self.symbol}) {
+            return userService.stockPortfolio[index].count
+        } else {
+            return 0.0
+        }
+    }
 
     func addFavStock() {
         userService.updateStockFavs(symbol)

@@ -29,14 +29,15 @@ struct CoinDetailView: View {
                 }
                 .padding(10)
             }
-            .navigationBarItems(trailing: Button("Add") {
+            .navigationBarItems(trailing: Button(Strings.add) {
                 // swiftlint:disable:next line_length
-                alertWithTfNumpad(title: presenter.coin.symbol.uppercased(), message: "Adja meg a mennyiséget", hintText: presenter.hintText(), primaryTitle: "Változtatás", secTitle: "Vissza") { text in
+                alertWithTfNumpad(title: presenter.coin.symbol.uppercased(), message: Strings.putAmount, hintText: presenter.hintText(), primaryTitle: Strings.change, secTitle: Strings.back) { text in
                     presenter.addHolding(Double(text) ?? 0)
                 } secondaryAction: {
                     print("cancelled")
                 }
-            })
+            }
+                .accessibilityIdentifier("AddButton"))
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("\(presenter.coin.name)  (\(presenter.coin.symbol.uppercased()))")
         }
@@ -57,7 +58,7 @@ struct CoinDetailView: View {
     }
     var marketCap: some View {
         HStack {
-            Text("MarketCap: ")
+            Text(Strings.marketCap)
                 .foregroundColor(Color.theme.accentcolorsecondary)
             Spacer()
             Text("\(presenter.coin.marketCap?.formatcurrency0digits() ?? "0")")
@@ -70,7 +71,7 @@ struct CoinDetailView: View {
     var dailyHighLow: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text("24H High")
+                Text(Strings.dailymax)
                     .font(.system(size: 18))
                     .foregroundColor(Color.theme.accentcolorsecondary)
                 HStack {
@@ -81,7 +82,7 @@ struct CoinDetailView: View {
             }
             Spacer()
             VStack(alignment: .trailing) {
-                Text("24H Low")
+                Text(Strings.dailylow)
                     .font(.system(size: 18))
                     .foregroundColor(Color.theme.accentcolorsecondary)
                 HStack {
@@ -97,7 +98,7 @@ struct CoinDetailView: View {
     var allTimeHighLow: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text("All-Time High")
+                Text(Strings.ath)
                     .font(.system(size: 18))
                     .foregroundColor(Color.theme.accentcolorsecondary)
                     .frame(alignment: .leading)
@@ -112,7 +113,7 @@ struct CoinDetailView: View {
             }
             Spacer()
             VStack(alignment: .trailing) {
-                Text("All-Time Low")
+                Text(Strings.atl)
                     .font(.system(size: 18))
                     .foregroundColor(Color.theme.accentcolorsecondary)
                 HStack {
@@ -131,11 +132,11 @@ struct CoinDetailView: View {
         HStack {
             VStack(alignment: .leading) {
                 HStack(alignment: .top) {
-                    Text("Available Supply")
+                    Text(Strings.availableSupply)
                         .font(.system(size: 18))
                         .foregroundColor(Color.theme.accentcolorsecondary)
                     Spacer()
-                    Text("Total Supply")
+                    Text(Strings.totalSupply)
                         .font(.system(size: 18))
                         .foregroundColor(Color.theme.accentcolorsecondary)
                 }

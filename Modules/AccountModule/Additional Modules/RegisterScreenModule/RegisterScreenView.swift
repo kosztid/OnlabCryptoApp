@@ -42,8 +42,8 @@ struct RegisterScreenView: View {
                         .foregroundColor(Color.theme.accentcolor)
                         .cornerRadius(10)
                 }
-                .alert("Email already registered/password shorter than 6 characters", isPresented: $showingAlert) {
-                    Button("OK", role: .cancel) {presenter.setregistererrorfalse() }
+                .alert(Strings.wrongRegCreds, isPresented: $showingAlert) {
+                    Button(Strings.back, role: .cancel) {presenter.setregistererrorfalse() }
                 }
             }
             .padding(10)
@@ -58,23 +58,23 @@ struct RegisterScreenView: View {
             presenter.setregisteredfalse()
         }
         .onAppear(perform: presenter.load)
-        .navigationTitle("Regisztráció")
+        .navigationTitle(Strings.registration)
         .background(Color.theme.backgroundcolor)
     }
 
     var registrationHeader: some View {
         VStack {
-            Label("", systemImage: "network")
+            Image.network
                 .font(.system(size: 200))
                 .foregroundColor(Color.theme.accentcolor)
-            Text("Regisztráció")
+            Text(Strings.registration)
                 .font(.system(size: 50))
                 .padding(10)
         }
     }
 
     var emailField: some View {
-        TextField("Email", text: $email)
+        TextField(Strings.email, text: $email)
             .padding(.horizontal)
             .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             .font(.system(size: 20))
@@ -85,7 +85,7 @@ struct RegisterScreenView: View {
     }
 
     var securedPwField: some View {
-        SecureField("Password", text: $password)
+        SecureField(Strings.password, text: $password)
             .padding(.horizontal)
             .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             .font(.system(size: 20))
@@ -95,7 +95,7 @@ struct RegisterScreenView: View {
     }
 
     var nonsecuredPwField: some View {
-        TextField("Password", text: $password)
+        TextField(Strings.password, text: $password)
             .padding(.horizontal)
             .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             .font(.system(size: 20))

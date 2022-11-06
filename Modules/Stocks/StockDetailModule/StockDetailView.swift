@@ -17,9 +17,9 @@ struct StockDetailView: View {
                 }
                 .padding(20)
             }
-            .navigationBarItems(trailing: Button("Add") {
+            .navigationBarItems(trailing: Button(Strings.add) {
 //                swiftlint:disable:next line_length
-                alertWithTfNumpad(title: presenter.stock.ticker, message: "Adja meg a mennyiséget", hintText: "Mennyiség", primaryTitle: "Változtatás", secTitle: "Vissza") { text in
+                alertWithTfNumpad(title: presenter.stock.ticker, message: Strings.putAmount, hintText: presenter.hintText(), primaryTitle: Strings.change, secTitle: Strings.back) { text in
                     presenter.addPortfolio(amount: Double(text))
                 } secondaryAction: {
                     print("cancelled")
@@ -70,14 +70,14 @@ struct StockDetailView: View {
     }
     var volumeSection: some View {
         HStack {
-            Text("Last Day's volume:")
+            Text(Strings.lastVolume)
             Spacer()
             Text("\(presenter.lastVolume)")
         }.padding(5)
     }
     var marketcap: some View {
         HStack {
-            Text("Current marketcap:")
+            Text(Strings.marketCap)
             Spacer()
             Text("\(presenter.marketCap)")
         }.padding(5)

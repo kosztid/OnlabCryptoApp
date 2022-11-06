@@ -43,7 +43,7 @@ class StockSwapPresenter: ObservableObject {
     }
 
     func makeButtonForSelector(bos: BuyOrSell) -> some View {
-        NavigationLink("Select stock", destination: router.makeSelectorView(presenter: self, buyorsell: bos))
+        NavigationLink(Strings.selectStock, destination: router.makeSelectorView(presenter: self, buyorsell: bos))
     }
 
     func setSellAmount() {
@@ -87,7 +87,7 @@ class StockSwapPresenter: ObservableObject {
         Button {
             self.swap()
         } label: {
-            Text("Swap")
+            Text(Strings.swap)
                 .frame(height: 60)
                 .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
                 .font(.system(size: 20))

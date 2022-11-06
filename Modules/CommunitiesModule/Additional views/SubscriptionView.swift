@@ -11,12 +11,13 @@ struct SubscriptionView: View {
             ForEach(list) { user in
                 HStack {
                     Text(user.email)
+                        .foregroundColor(user.visibility ? Color.accentColor : Color.gray)
                     Spacer()
                     Button {
                         action(user.id)
                         self.presentationMode.wrappedValue.dismiss()
                     } label: {
-                        Text(subbedList.contains {$0 == user.id} ? "Unsubscribe" : "Subscribe")
+                        Text(subbedList.contains {$0 == user.id} ? Strings.unsubscribe : Strings.subscribe)
                     }
                 }
             }

@@ -20,7 +20,7 @@ struct SwapView: View {
                     Spacer()
                     sellStack
                     Spacer()
-                    Image(systemName: "arrow.right")
+                    Image.arrowRight
                         .font(.system(size: 26))
                     Spacer()
                     buyStack
@@ -39,14 +39,14 @@ struct SwapView: View {
 
     var sellStack: some View {
         VStack {
-            Text("From")
+            Text(Strings.from)
                 .font(.system(size: 26))
                 .bold()
             presenter.makeButtonForSelector(coin: "coin1")
                 .accessibilityIdentifier("SwapSellSelectorButton")
             sellCoinData
             VStack {
-                Text("Owned:")
+                Text(Strings.owned)
                 Text("\(presenter.ownedamount(coinid: presenter.coinmodel1.id)) \(presenter.coinmodel1.symbol) ")
             }
             .font(.system(size: 12))
@@ -58,14 +58,14 @@ struct SwapView: View {
 
     var buyStack: some View {
         VStack {
-            Text("To")
+            Text(Strings.to)
                 .font(.system(size: 26))
                 .bold()
             presenter.makeButtonForSelector(coin: "coin2")
                 .accessibilityIdentifier("SwapBuySelectorButton")
             buyCoinData
             VStack {
-                Text("Owned:")
+                Text(Strings.owned)
                 Text("\(presenter.ownedamount(coinid: presenter.coinmodel2.id)) \(presenter.coinmodel2.symbol)")
             }
             .font(.system(size: 12))
@@ -76,7 +76,7 @@ struct SwapView: View {
     }
     var buyTextfield: some View {
         // swiftlint:disable:next trailing_closure
-        TextField("Amount to buy", value: $presenter.coinstobuy, formatter: formatter, onEditingChanged: { changed in
+        TextField(Strings.buyAmount, value: $presenter.coinstobuy, formatter: formatter, onEditingChanged: { changed in
             isFocused1 = changed
         })
         .onChange(of: presenter.coinstobuy) { _ in
@@ -98,7 +98,7 @@ struct SwapView: View {
 
     var sellTextfield: some View {
         // swiftlint:disable:next trailing_closure
-        TextField("Amount to sell", value: $presenter.coinstosell, formatter: formatter, onEditingChanged: { changed in
+        TextField(Strings.sellAmount, value: $presenter.coinstosell, formatter: formatter, onEditingChanged: { changed in
             isFocused2 = changed
         })
         .onChange(of: presenter.coinstosell) { _ in

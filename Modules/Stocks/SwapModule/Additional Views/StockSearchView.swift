@@ -19,7 +19,7 @@ struct StockSearchView: View {
                             presenter.ownedStocks.contains { $0.stockSymbol == stock.symbol } && (stock.symbol.lowercased().contains(searchText.lowercased()) || (searchText.isEmpty))
                         }) { stock in
                             ZStack {
-                                Button("") {
+                                Button(Strings.empty) {
                                     presenter.setStock1(stock: stock.symbol)
                                     self.presentationMode.wrappedValue.dismiss()
                                 }
@@ -32,7 +32,7 @@ struct StockSearchView: View {
                             stock.symbol.lowercased().contains(searchText.lowercased()) || (searchText.isEmpty)
                         }) { stock in
                             ZStack {
-                                Button("") {
+                                Button(Strings.empty) {
                                     presenter.setStock2(stock: stock.symbol)
                                     self.presentationMode.wrappedValue.dismiss()
                                 }
@@ -54,8 +54,8 @@ struct StockSearchView: View {
             Rectangle()
                 .foregroundColor(Color(UIColor.systemGray5))
             HStack {
-                Image(systemName: "magnifyingglass")
-                TextField("Search ..", text: $searchText) { startedEditing in
+                Image.magnifyglass
+                TextField(Strings.search, text: $searchText) { startedEditing in
                     if startedEditing {
                         withAnimation {
                             searching = true

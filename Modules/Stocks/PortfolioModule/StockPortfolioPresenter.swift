@@ -3,7 +3,7 @@ import Foundation
 import SwiftUI
 
 class StockPortfolioPresenter: ObservableObject {
-    @Published var selection: String = "portfolio"
+    @Published var selection = Folio.portfolio
     private let interactor: StockPortfolioInteractor
     @Published var signedin = false
     @Published var favStocks: [StockServerModel] = []
@@ -32,7 +32,7 @@ class StockPortfolioPresenter: ObservableObject {
             .store(in: &cancellables)
     }
 
-    func isSelected(selected: String) -> Bool {
+    func isSelected(selected: Folio) -> Bool {
         selected == self.selection
     }
 
@@ -59,8 +59,8 @@ class StockPortfolioPresenter: ObservableObject {
             .opacity(0)
     }
 
-    func makeList(selected: String) -> AnyView {
-        if selected == "portfolio" {
+    func makeList(selected: Folio) -> AnyView {
+        if selected == .portfolio {
             return AnyView(
                 List {
                     ForEach(heldStocks) { stock in
@@ -69,7 +69,7 @@ class StockPortfolioPresenter: ObservableObject {
                     .listRowSeparatorTint(Color.theme.backgroundsecondary)
                     .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                 }
-            )} else if selected == "favfolio" { return AnyView(
+            )} else if selected == .favorites { return AnyView(
                 List {
                     ForEach(favStocks) { stock in
                         StockFavListItem(stock: stock, stockData: self.interactor.getStock(symbol: stock.stockSymbol), setFav: self.interactor.setFav)
@@ -90,63 +90,63 @@ class StockPortfolioPresenter: ObservableObject {
     }
 
     func makeButtonForLogin() -> some View {
-        NavigationLink("Account", destination: router.makeLoginView())
+        NavigationLink(Strings.account, destination: router.makeLoginView())
     }
 
     func makeButtonForAccount() -> some View {
-        NavigationLink("Account", destination: router.makeAccountView())
+        NavigationLink(Strings.account, destination: router.makeAccountView())
     }
 
-    func changeViewTo(viewname: String) {
+    func changeViewTo(viewname: Folio) {
         selection = viewname
     }
 
     func makeButtonforPortfolioList() -> some View {
         Button {
-            self.changeViewTo(viewname: "portfolio")
+            self.changeViewTo(viewname: .portfolio)
         } label: {
-            Text("Portfolio")
+            Text(Strings.portfolio)
                 .frame(height: 30)
                 .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
                 .font(.system(size: 20))
-                .background(self.isSelected(selected: "portfolio") ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
-                .foregroundColor(self.isSelected(selected: "portfolio") ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
+                .background(self.isSelected(selected: .portfolio) ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
+                .foregroundColor(self.isSelected(selected: .portfolio) ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
                 .cornerRadius(10)
         }
     }
     func makeButtonforFavfolioList() -> some View {
         Button {
-            self.changeViewTo(viewname: "favfolio")
+            self.changeViewTo(viewname: .favorites)
         } label: {
-            Text("Favorites")
+            Text(Strings.favorites)
                 .frame(height: 30)
                 .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
                 .font(.system(size: 20))
-                .background(self.isSelected(selected: "favfolio") ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
-                .foregroundColor(self.isSelected(selected: "favfolio") ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
+                .background(self.isSelected(selected: .favorites) ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
+                .foregroundColor(self.isSelected(selected: .favorites) ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
                 .cornerRadius(10)
         }
     }
     func makeButtonforWalletList() -> some View {
         Button {
-            self.changeViewTo(viewname: "wallet")
+            self.changeViewTo(viewname: .wallet)
         } label: {
-            Text("Wallet")
+            Text(Strings.wallet)
                 .frame(height: 30)
                 .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
                 .font(.system(size: 20))
-                .background(self.isSelected(selected: "wallet") ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
-                .foregroundColor(self.isSelected(selected: "wallet") ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
+                .background(self.isSelected(selected: .wallet) ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
+                .foregroundColor(self.isSelected(selected: .wallet) ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
                 .cornerRadius(10)
         }
     }
 
-    func makeFolioData(selected: String) -> AnyView {
-        if selected == "portfolio" {
+    func makeFolioData(selected: Folio) -> AnyView {
+        if selected == .portfolio {
             return AnyView(
                 self.makeportfolioData()
             )
-        } else if selected == "favfolio" {
+        } else if selected == .favorites {
             return AnyView(
                 self.makefavfolioData()
             )
@@ -162,20 +162,20 @@ class StockPortfolioPresenter: ObservableObject {
             HStack {
                 VStack(alignment: .leading) {
                     HStack {
-                        Text("Portfolio Total:")
-                            .font(.system(size: 19))
+                        Text(Strings.portfolioTotal)
+                            .font(.system(size: 18))
                         Spacer()
                         Text("\(self.portfoliototal().formatcurrency4digits())")
-                            .font(.system(size: 19))
+                            .font(.system(size: 18))
                             .frame(alignment: .leading)
                     }
                     HStack {
-                        Text("Portfolio invested:")
-                            .font(.system(size: 17))
+                        Text(Strings.portfolioInvested)
+                            .font(.system(size: 16))
                         Spacer()
                         Text("\(self.portfoliobuytotal().formatcurrency4digits())")
                             .foregroundColor(Color.theme.accentcolorsecondary)
-                            .font(.system(size: 17))
+                            .font(.system(size: 16))
                             .frame(alignment: .leading)
                     }
                 }.frame(width: UIScreen.main.bounds.width * 0.7)
@@ -198,12 +198,12 @@ class StockPortfolioPresenter: ObservableObject {
             HStack {
                 VStack {
                     HStack {
-                        Text("Your favorites price")
+                        Text(Strings.favoritesTotal)
                             .font(.system(size: 20))
                         Spacer()
                     }
                     HStack {
-                        Text("change in the last 24 hours")
+                        Text(Strings.favoritesChange)
                             .font(.system(size: 18))
                         Spacer()
                     }
@@ -224,20 +224,20 @@ class StockPortfolioPresenter: ObservableObject {
             HStack {
                 VStack(alignment: .leading) {
                     HStack {
-                        Text("Wallet Total:")
-                            .font(.system(size: 19))
+                        Text(Strings.walletTotal)
+                            .font(.system(size: 18))
                         Spacer()
                         Text("\(self.interactor.wallettotal().formatcurrency4digits())")
-                            .font(.system(size: 19))
+                            .font(.system(size: 18))
                             .frame(alignment: .leading)
                     }
                     HStack {
-                        Text("Wallet yesterday:")
-                            .font(.system(size: 17))
+                        Text(Strings.walletyesterday)
+                            .font(.system(size: 16))
                         Spacer()
                         Text("\(self.interactor.walletyesterday().formatcurrency4digits())")
                             .foregroundColor(Color.theme.accentcolorsecondary)
-                            .font(.system(size: 17))
+                            .font(.system(size: 16))
                             .frame(alignment: .leading)
                     }
                 }.frame(width: UIScreen.main.bounds.width * 0.7)

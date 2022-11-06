@@ -11,11 +11,15 @@ class FavfolioListItemPresenter: ObservableObject {
     func getcoin() -> CoinModel {
         interactor.getcoin()
     }
+
+    func getFavImage() -> Image {
+        interactor.isFav() ? Image.starFill : Image.star
+    }
     func makeFavButton() -> some View {
         Button {
             self.interactor.addFavCoin()
         } label: {
-            Label("", systemImage: interactor.isFav() ? "star.fill" : "star")
+            self.getFavImage()
                 .foregroundColor(Color.theme.accentcolor)
                 .font(.system(size: 22))
         }

@@ -3,7 +3,7 @@ import SwiftUI
 
 struct MessagerView: View {
     @ObservedObject var presenter: MessagerPresenter
-    @State var newmessage: String = ""
+    @State var newmessage: String = Strings.empty
     @State var showImagePicker = false
     @State var image: UIImage?
 
@@ -63,10 +63,15 @@ struct MessagerView: View {
             Button {
                 showImagePicker.toggle()
             } label: {
-                Image(systemName: self.image == nil ? "photo" : "photo.fill")
-                    .accentColor(Color.theme.accentcolorsecondary)
-                    .font(.system(size: 18))
-            }.offset(x: -(UIScreen.main.bounds.width * 0.15))
+                if self.image == nil {
+                    Image.photo
+                } else {
+                    Image.photoFill
+                }
+            }
+            .accentColor(Color.theme.accentcolorsecondary)
+            .font(.system(size: 18))
+            .offset(x: -(UIScreen.main.bounds.width * 0.15))
             messageSendButton
                 .accessibilityIdentifier("MessageSendButton")
         }
@@ -75,7 +80,7 @@ struct MessagerView: View {
         .padding(10)
     }
     var messageTextField: some View {
-        TextField("Type in a new message", text: $newmessage)
+        TextField(Strings.newMessage, text: $newmessage)
             .background(Color.theme.textbox)
             .foregroundColor(Color.black)
             .font(.system(size: 20))
@@ -96,10 +101,10 @@ struct MessagerView: View {
                 if !newmessage.isEmpty {
                     presenter.sendmessage(message: newmessage)
                 }
-                newmessage = ""
+                newmessage = Strings.empty
             }
         }) {
-            Image(systemName: "paperplane")
+            Image.paperplane
                 .accentColor(Color.theme.accentcolorsecondary)
                 .font(.system(size: 18))
         }.offset(x: -(UIScreen.main.bounds.width * 0.05))

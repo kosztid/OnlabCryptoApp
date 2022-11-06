@@ -29,12 +29,9 @@ class LoginScreenPresenter: ObservableObject {
     }
 
     func toRegisterView() -> some View {
-        NavigationLink("Regisztráció", destination: router.makeRegisterView())
+        NavigationLink(Strings.registration, destination: router.makeRegisterView())
     }
 
-    func toForgotPasswordView() -> some View {
-        NavigationLink("Elfelejtett jelszó", destination: Text("elfejeletett pw"))
-    }
     func load() {
         interactor.load()
     }

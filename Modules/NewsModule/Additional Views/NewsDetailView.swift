@@ -17,7 +17,7 @@ struct NewsDetailView: View {
             ScrollView {
                 VStack(alignment: .leading) {
                     HStack {
-                        Text(article.title ?? "Nincs cím")
+                        Text(article.title ?? Strings.noTitle)
                             .font(.system(size: 26))
                             .frame(alignment: .leading)
                             .foregroundColor(Color.theme.accentcolor)
@@ -27,12 +27,12 @@ struct NewsDetailView: View {
                 }
                 .padding(.bottom, 10)
                 VStack {
-                    Text(article.content?.dropLast(13) ?? "Nincs szöveg")
+                    Text(article.content?.dropLast(13) ?? "")
                         .font(.body)
                         .foregroundColor(Color.theme.accentcolor)
                         .multilineTextAlignment(.leading)
 
-                    Button("Continue reading") {
+                    Button(Strings.continueReading) {
                         self.showSafari = true
                     }
                         .foregroundColor(Color.theme.accentcolorsecondary)
@@ -47,14 +47,14 @@ struct NewsDetailView: View {
     var publishData: some View {
         HStack {
             HStack {
-                Text(article.author ?? "Nincs szerző")
+                Text(article.author ?? Strings.noAuthor)
                     .font(.system(size: 16))
                     .frame(alignment: .leading)
                     .foregroundColor(Color.theme.accentcolorsecondary)
             }
             Spacer()
             HStack {
-                Text(article.publishedAt ?? "PublishDate")
+                Text(article.publishedAt ?? Strings.publishDate)
                     .font(.system(size: 16))
                     .frame(alignment: .leading)
                     .foregroundColor(Color.theme.accentcolorsecondary)
@@ -63,7 +63,7 @@ struct NewsDetailView: View {
         .padding(.horizontal, 5.0)
     }
     var headerImage: some View {
-        CachedAsyncImage(url: URL(string: article.urlToImage ?? "")) { image in
+        CachedAsyncImage(url: URL(string: article.urlToImage ?? Strings.empty)) { image in
             image
                 .resizable()
                 .scaledToFit()

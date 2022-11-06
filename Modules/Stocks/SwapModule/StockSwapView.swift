@@ -21,7 +21,7 @@ struct StockSwapView: View {
                     Spacer()
                     sellStack
                     Spacer()
-                    Image(systemName: "arrow.right")
+                    Image.arrowRight
                         .font(.system(size: 26))
                     Spacer()
                     buyStack
@@ -41,7 +41,7 @@ struct StockSwapView: View {
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
                 Spacer()
-                Button("Kész") {
+                Button(Strings.done) {
                     keyboardIsFocused = false
                 }
             }
@@ -52,7 +52,7 @@ struct StockSwapView: View {
 
     var sellStack: some View {
         VStack {
-            Text("From")
+            Text(Strings.from)
                 .font(.system(size: 26))
                 .bold()
             presenter.makeButtonForSelector(bos: .toSell)
@@ -60,7 +60,7 @@ struct StockSwapView: View {
             Text(presenter.stockmodel1.symbol)
                 .font(.system(size: 20))
             VStack {
-                Text("Owned:")
+                Text(Strings.owned)
                 Text("\(presenter.ownedamount(stockSymbol: presenter.stockmodel1.symbol)) \(presenter.stockmodel1.symbol) ")
             }.font(.system(size: 12))
 
@@ -72,7 +72,7 @@ struct StockSwapView: View {
 
     var buyStack: some View {
         VStack {
-            Text("To")
+            Text(Strings.to)
                 .font(.system(size: 26))
                 .bold()
             presenter.makeButtonForSelector(bos: .toBuy)
@@ -80,7 +80,7 @@ struct StockSwapView: View {
             Text(presenter.stockmodel2.symbol)
                 .font(.system(size: 20))
             VStack {
-                Text("Owned:")
+                Text(Strings.owned)
                 Text("\(presenter.ownedamount(stockSymbol: presenter.stockmodel2.symbol)) \(presenter.stockmodel2.symbol) ")
             }.font(.system(size: 12))
 
@@ -91,7 +91,7 @@ struct StockSwapView: View {
     }
     var sellTextfield: some View {
         // swiftlint:disable:next trailing_closure
-        TextField("Amount to sell", value: $presenter.stockstosell, formatter: formatter, onEditingChanged: { changed in
+        TextField(Strings.sellAmount, value: $presenter.stockstosell, formatter: formatter, onEditingChanged: { changed in
             isFocused2 = changed
         })
         .onChange(of: presenter.stockstosell) { _ in
@@ -113,7 +113,7 @@ struct StockSwapView: View {
 
     var buyTextfield: some View {
         // swiftlint:disable:next trailing_closure
-        TextField("Amount to buy", value: $presenter.stockstobuy, formatter: formatter, onEditingChanged: { changed in
+        TextField(Strings.buyAmount, value: $presenter.stockstobuy, formatter: formatter, onEditingChanged: { changed in
             isFocused1 = changed
         })
         .onChange(of: presenter.stockstobuy) { _ in

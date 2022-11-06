@@ -110,7 +110,7 @@ class SpringCommunityService: BaseCommunityService, CommunityService {
                     self?.communities = community
                     for index in 0...(community.count - 1) {
                         let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                        dateFormatter.dateFormat = Strings.dateformat
                         self?.communities[index].messages.sort {
                             dateFormatter.date(from: $0.time)! < dateFormatter.date(from: $1.time)!
                         }

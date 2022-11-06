@@ -13,9 +13,6 @@ class ListOfCoinsInteractor {
         userService.userReload("listofcoins")
     }
 
-    func setIsnotificationViewed() {
-    }
-
     func makeDetailInteractor(coin: CoinModel) -> CoinDetailInteractor {
         CoinDetailInteractor(coin: coin, service: userService)
     }

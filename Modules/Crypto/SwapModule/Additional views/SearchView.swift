@@ -19,7 +19,7 @@ struct SearchView: View {
                             presenter.ownedcoins.contains { $0.coinid == coin.id } && (coin.name.hasPrefix(searchText) || coin.symbol.hasPrefix(searchText.lowercased()) || (searchText.isEmpty))
                         }) { coin in
                             ZStack {
-                                Button("") {
+                                Button(Strings.empty) {
                                     presenter.setCoin1(coin1: coin.id)
                                     self.presentationMode.wrappedValue.dismiss()
                                 }
@@ -33,7 +33,7 @@ struct SearchView: View {
                             coin.name.hasPrefix(searchText) || coin.symbol.hasPrefix(searchText.lowercased()) || (searchText.isEmpty)
                         }) { coin in
                             ZStack {
-                                Button("") {
+                                Button(Strings.empty) {
                                     presenter.setCoin2(coin2: coin.id)
                                     self.presentationMode.wrappedValue.dismiss()
                                 }
@@ -55,8 +55,8 @@ struct SearchView: View {
             Rectangle()
                 .foregroundColor(Color(UIColor.systemGray5))
             HStack {
-                Image(systemName: "magnifyingglass")
-                TextField("Search ..", text: $searchText) { startedEditing in
+                Image.magnifyglass
+                TextField(Strings.search, text: $searchText) { startedEditing in
                     if startedEditing {
                         withAnimation {
                             searching = true
@@ -87,8 +87,8 @@ struct SearchBar: View {
             Rectangle()
                 .foregroundColor(Color(UIColor.systemGray5))
             HStack {
-                Image(systemName: "magnifyingglass")
-                TextField("Search ..", text: $searchText) { startedEditing in
+                Image.magnifyglass
+                TextField(Strings.search, text: $searchText) { startedEditing in
                     if startedEditing {
                         withAnimation {
                             searching = true

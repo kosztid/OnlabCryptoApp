@@ -37,7 +37,7 @@ class SwapPresenter: ObservableObject {
     }
 
     func makeButtonForSelector(coin: String) -> some View {
-        NavigationLink("Select coin", destination: router.makeSelectorView(presenter: self, coin: coin))
+        NavigationLink(Strings.selectCoin, destination: router.makeSelectorView(presenter: self, coin: coin))
     }
 
     func setSellAmount() {
@@ -56,7 +56,7 @@ class SwapPresenter: ObservableObject {
 
     func selected(coin: String) -> CoinModel {
         // swiftlint:disable:next line_length
-        return coins.first {$0.id == coin} ?? CoinModel(id: "-", symbol: "-", name: "-", image: "btc", currentPrice: 10, marketCap: 10, marketCapRank: 10, fullyDilutedValuation: 10, totalVolume: 10, high24H: 10, low24H: 10, priceChange24H: 10, priceChangePercentage24H: 10, marketCapChange24H: 10, marketCapChangePercentage24H: 10, circulatingSupply: 10, totalSupply: 10, maxSupply: 10, ath: 10, athChangePercentage: 10, athDate: "btc", atl: 10, atlChangePercentage: 10, atlDate: "btc", lastUpdated: "btc", sparklineIn7D: nil, priceChangePercentage24HInCurrency: 10)
+        return coins.first {$0.id == coin} ?? CoinModel(id: Strings.error, symbol: Strings.error, name: Strings.error, image: Strings.error, currentPrice: 10, marketCap: 10, marketCapRank: 10, fullyDilutedValuation: 10, totalVolume: 10, high24H: 10, low24H: 10, priceChange24H: 10, priceChangePercentage24H: 10, marketCapChange24H: 10, marketCapChangePercentage24H: 10, circulatingSupply: 10, totalSupply: 10, maxSupply: 10, ath: 10, athChangePercentage: 10, athDate: Strings.error, atl: 10, atlChangePercentage: 10, atlDate: Strings.error, lastUpdated: Strings.error, sparklineIn7D: nil, priceChangePercentage24HInCurrency: 10)
     }
 
     func swap() {
@@ -104,7 +104,7 @@ class SwapPresenter: ObservableObject {
         Button {
             self.swap()
         } label: {
-            Text("Swap")
+            Text(Strings.swap)
                 .frame(height: 60)
                 .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
                 .font(.system(size: 20))

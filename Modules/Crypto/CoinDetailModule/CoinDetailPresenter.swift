@@ -35,8 +35,11 @@ class CoinDetailPresenter: ObservableObject {
         if interactor.getCoinCount() > 0 {
             return String(interactor.getCoinCount())
         } else {
-            return "Mennyiség"
+            return Strings.amount
         }
+    }
+    func returnFavImage() -> Image {
+        self.isFav ?  Image.starFill : Image.star
     }
 
     func makeFavButton() -> some View {
@@ -44,7 +47,7 @@ class CoinDetailPresenter: ObservableObject {
             self.interactor.addFavCoin()
             self.isFav.toggle()
         } label: {
-            Label("", systemImage: self.isFav ? "star.fill" : "star")
+            self.returnFavImage()
                 .foregroundColor(Color.theme.accentcolor)
                 .font(.system(size: 25))
         }

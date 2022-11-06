@@ -452,7 +452,6 @@ final class SpringUserService: BaseUserService, UserService, ObservableObject {
                 guard error == nil else {
                     return
                 }
-                self.accountVisible.toggle()
                 self.loadUser()
             }
             task.resume()
@@ -492,8 +491,7 @@ final class SpringUserService: BaseUserService, UserService, ObservableObject {
                         print(error.localizedDescription)
                     }
                 } receiveValue: { [weak self] returnedUsers in
-                    let list = returnedUsers.filter {$0.visibility}
-                    self?.userList = list.filter {$0.id != self?.auth.currentUser!.uid}
+                    self?.userList = returnedUsers.filter {$0.id != self?.auth.currentUser!.uid}
                     self?.usersSub?.cancel()
                 }
         }
@@ -536,7 +534,7 @@ final class SpringUserService: BaseUserService, UserService, ObservableObject {
                 } receiveValue: { [weak self] logs in
                     self?.subsLogList = logs
                     let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                    dateFormatter.dateFormat = Strings.dateformat
                     self?.subsLogList.sort {
                         dateFormatter.date(from: $0.time)! > dateFormatter.date(from: $1.time)!
                     }

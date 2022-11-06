@@ -28,7 +28,10 @@ class SwapInteractor {
 
     func swap(_ cointosell: String, _ sellamount: Double, _ cointobuy: String, _ buyamount: Double) {
         let ownedamountfromsell: Double = userService.cryptoWallet[userService.cryptoWallet.firstIndex { $0.coinid == cointosell }!].count
-        if ownedamountfromsell > sellamount {
+        print(ownedamountfromsell)
+        print(sellamount)
+        if ownedamountfromsell >= sellamount {
+            print("lefut")
             userService.updateWallet(cointosell, cointobuy, sellamount, buyamount)
             sendTradeHistory(id: "1", cointosell: cointosell, sellamount: sellamount, cointobuy: cointobuy, buyamount: buyamount)
         }
@@ -68,7 +71,7 @@ class SwapInteractor {
         let dateFormatter = DateFormatter()
         let historyId = "AB78B2E3-4CE1-401C-9187-824387846365"
         let mail = userService.getUserEmail()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        dateFormatter.dateFormat = Strings.dateformat
         let date = dateFormatter.string(from: Date())
         let sellprice = self.selected(coin: cointosell).currentPrice
         let buyprice = self.selected(coin: cointobuy).currentPrice

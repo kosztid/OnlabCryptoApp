@@ -52,9 +52,9 @@ struct CommunitiesView: View {
         }
         .background(Color.theme.backgroundcolor)
         .scrollContentBackground(.hidden)
-        .navigationBarItems(trailing: Button("Add Community") {
+        .navigationBarItems(trailing: Button(Strings.addCommunity) {
             // swiftlint:disable:next line_length
-            alertWithTf(title: "Új csoport létrehozása", message: "Kérem adja meg csoport nevét", hintText: "Név", primaryTitle: "Hozzáadás", secondaryTitle: "Vissza") { text in
+            alertWithTf(title: Strings.newGroupMake, message: Strings.putGroupName, hintText: Strings.name, primaryTitle: Strings.add, secondaryTitle: Strings.back) { text in
                 presenter.addCommunity(text)
             } secondaryAction: {
                 print("cancelled")
@@ -68,7 +68,7 @@ struct CommunitiesView: View {
             Button {
                 presenter.viewType = .subs
             } label: {
-                Text("Subs")
+                Text(Strings.subscriptions)
                     .frame(height: 30)
                     .frame(maxWidth: UIScreen.main.bounds.width * 0.4)
                     .font(.system(size: 20))
@@ -79,7 +79,7 @@ struct CommunitiesView: View {
             Button {
                 presenter.viewType = .communities
             } label: {
-                Text("Communities")
+                Text(Strings.communities)
                     .frame(height: 30)
                     .frame(maxWidth: UIScreen.main.bounds.width * 0.4)
                     .font(.system(size: 20))

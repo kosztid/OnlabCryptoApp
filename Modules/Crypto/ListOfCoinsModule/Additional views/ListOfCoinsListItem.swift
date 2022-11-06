@@ -60,7 +60,7 @@ struct ListOfCoinsListItem: View {
 struct ListOfCoinsListItem_Previews: PreviewProvider {
     static var previews: some View {
         // swiftlint:disable:next line_length
-        ListOfCoinsListItem(presenter: ListOfCoinsPresenter(interactor: ListOfCoinsInteractor()), coin: CoinModel(id: "teszt", symbol: "teszt", name: "teszt", image: "teszt", currentPrice: 10, marketCap: 10, marketCapRank: 279, fullyDilutedValuation: 10, totalVolume: 10, high24H: 10, low24H: 10, priceChange24H: 10, priceChangePercentage24H: 10, marketCapChange24H: 10, marketCapChangePercentage24H: 10, circulatingSupply: 10, totalSupply: 10, maxSupply: 10, ath: 10, athChangePercentage: 10, athDate: "teszt", atl: 10, atlChangePercentage: 10, atlDate: "teszt", lastUpdated: "teszt", sparklineIn7D: SparklineIn7D(price: []), priceChangePercentage24HInCurrency: 10))
+        ListOfCoinsListItem(presenter: ListOfCoinsPresenter(interactor: ListOfCoinsInteractor()), coin: CoinModel(id: Strings.test, symbol: Strings.test, name: Strings.test, image: Strings.test, currentPrice: 10, marketCap: 10, marketCapRank: 279, fullyDilutedValuation: 10, totalVolume: 10, high24H: 10, low24H: 10, priceChange24H: 10, priceChangePercentage24H: 10, marketCapChange24H: 10, marketCapChangePercentage24H: 10, circulatingSupply: 10, totalSupply: 10, maxSupply: 10, ath: 10, athChangePercentage: 10, athDate: Strings.test, atl: 10, atlChangePercentage: 10, atlDate: Strings.test, lastUpdated: Strings.test, sparklineIn7D: SparklineIn7D(price: []), priceChangePercentage24HInCurrency: 10))
             .preferredColorScheme(.dark)
     }
 }

@@ -17,11 +17,9 @@ struct SubscriptionLogListItem: View {
     }
 
     func makeLogForFav() -> AnyView {
-        var removedOrAdded = "Removed"
-        var toOrFrom = "from"
+        var removedOrAdded = Strings.removed
         if log.count == 1.0 {
-            removedOrAdded = "Added"
-            toOrFrom = "to"
+            removedOrAdded = Strings.removed
         }
         return AnyView(
             VStack(alignment: .leading) {
@@ -29,7 +27,7 @@ struct SubscriptionLogListItem: View {
                     .font(.title)
                 Text(log.time)
                     .font(.caption)
-                Text("\(removedOrAdded) \(log.itemId) \(toOrFrom) favorites")
+                Text("\(Strings.favorites) \(removedOrAdded) \(log.itemId) ")
                     .fixedSize(horizontal: false, vertical: true)
                     .font(.callout)
             }
@@ -37,17 +35,14 @@ struct SubscriptionLogListItem: View {
     }
 
     func makeLogForPortfolio() -> AnyView {
-        var moreorless = "Removed"
-        var toOrFrom = "from "
-        var holdingChange = ""
+        var moreorless = Strings.removed
+        var holdingChange = Strings.empty
         if log.count > log.count2 {
-            moreorless = "Increased"
-            toOrFrom = ""
-            holdingChange = "from \(log.count2) to \(log.count) "
+            moreorless = Strings.increased
+            holdingChange = "\(log.count2) \(Strings.arrow) \(log.count) "
         } else if log.count < log.count2 && log.count > 0 { // swiftlint:disable:this empty_count
-            moreorless = "Reduced"
-            toOrFrom = ""
-            holdingChange = "from \(log.count2) to \(log.count) "
+            moreorless = Strings.reduced
+            holdingChange = "\(log.count2) \(Strings.arrow) \(log.count) "
         }
         return AnyView(
             VStack(alignment: .leading) {
@@ -55,7 +50,7 @@ struct SubscriptionLogListItem: View {
                     .font(.title)
                 Text(log.time)
                     .font(.caption)
-                Text("\(moreorless) \(log.itemId) holdings \(holdingChange)\(toOrFrom)portfolio")
+                Text("\(Strings.portfolio) \(moreorless) \(log.itemId)  \(holdingChange)")
                     .fixedSize(horizontal: false, vertical: true)
                     .font(.callout)
             }
@@ -69,7 +64,7 @@ struct SubscriptionLogListItem: View {
                     .font(.title)
                 Text(log.time)
                     .font(.caption)
-                Text("Swapped \(log.count.format2digits()) \(log.itemId) for \(log.count2.format2digits()) \(log.itemId2)")
+                Text("\(Strings.swapped) \(log.count.format2digits()) \(log.itemId) \(Strings.arrow) \(log.count2.format2digits()) \(log.itemId2)")
                     .fixedSize(horizontal: false, vertical: true)
                     .font(.callout)
             }

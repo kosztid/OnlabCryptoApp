@@ -27,7 +27,7 @@ class StockSwapInteractor {
 
     func swap(stockToSell: String, sellamount: Double, stockToBuy: String, buyamount: Double) {
         let ownedamountfromsell: Double = userService.stockWallet[userService.stockWallet.firstIndex { $0.stockSymbol == stockToSell }!].count
-        if ownedamountfromsell > sellamount {
+        if ownedamountfromsell >= sellamount {
             userService.updateStockWallet(stockToSell, stockToBuy, sellamount, buyamount)
             sendTradeHistory(id: "1", stockToSell: stockToSell, sellamount: sellamount, stockToBuy: stockToBuy, buyamount: buyamount)
         }
@@ -67,7 +67,7 @@ class StockSwapInteractor {
         let dateFormatter = DateFormatter()
         let historyId = "AB78B2E3-4CE1-401C-9187-824387846365"
         let mail = userService.getUserEmail()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        dateFormatter.dateFormat = Strings.dateformat
         let date = dateFormatter.string(from: Date())
         let sellPrice = Double(self.selected(stock: stockToSell).lastsale) ?? 1
         let buyPrice = Double(self.selected(stock: stockToBuy).lastsale) ?? 1

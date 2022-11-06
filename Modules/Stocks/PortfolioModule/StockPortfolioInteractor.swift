@@ -13,10 +13,6 @@ class StockPortfolioInteractor {
         userService.userReload("stockportfoliointeracotr")
     }
 
-    func changeViewTo(viewname: String) {
-//        model.selection = viewname
-    }
-
     func getCoins() -> Published<[StockListItem]>.Publisher {
         stockService.$stocks
     }
@@ -64,7 +60,7 @@ class StockPortfolioInteractor {
         }
         var total: Double = 0
         for ind in 0...(userService.stockPortfolio.count - 1) {
-            total += (userService.stockPortfolio[ind].buytotal ?? 0)
+            total += (userService.stockPortfolio[ind].count * (userService.stockPortfolio[ind].buytotal ?? 0))
         }
         return total
     }

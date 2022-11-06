@@ -33,17 +33,17 @@ class ListOfStocksPresenter: ObservableObject {
             .opacity(0)
     }
     func makeButtonForLogin() -> some View {
-        NavigationLink("Account", destination: router.makeLoginView())
+        NavigationLink(Strings.account, destination: router.makeLoginView())
     }
 
     func makeButtonForAccount() -> some View {
-        NavigationLink("Account", destination: router.makeAccountView())
+        NavigationLink(Strings.account, destination: router.makeAccountView())
     }
     func makeButtonForViewchange() -> some View {
         Button {
             self.interactor.changeView()
         } label: {
-            Image(systemName: "dollarsign.circle.fill")
+            Image.dollarSignFill
                 .font(.system(size: 20))
         }
     }

@@ -56,12 +56,23 @@ class StockDetailPresenter: ObservableObject {
         currentMax = currentPrices.max() ?? 0
         currentMin = currentPrices.min() ?? 0
     }
+    func getFavImage() -> Image {
+        interactor.isFav() ? Image.starFill : Image.star
+    }
+
+    func hintText() -> String {
+        if interactor.getStockCount() > 0 {
+            return String(interactor.getStockCount())
+        } else {
+            return Strings.amount
+        }
+    }
 
     func makeFavButton() -> some View {
         Button {
             self.interactor.addFavStock()
         } label: {
-            Label("", systemImage: interactor.isFav() ? "star.fill" : "star")
+            self.getFavImage()
                 .foregroundColor(Color.theme.accentcolor)
                 .font(.system(size: 25))
         }

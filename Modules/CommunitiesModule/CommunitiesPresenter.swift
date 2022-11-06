@@ -41,15 +41,16 @@ class CommunitiesPresenter: ObservableObject {
     }
 
     func navigateToSubs() -> some View {
-        NavigationLink { router.makeSubsView(interactor.getUsersList(), interactor.getSubsList(), interactor.subscribe) } label: { Image(systemName: "plus")}
+        NavigationLink { router.makeSubsView(interactor.getUsersList(), interactor.getSubsList(), interactor.subscribe) } label: {
+            Image.plus}
     }
     func reload() {
         interactor.reload()
     }
     func makeButtonForLogin() -> some View {
-        NavigationLink("Account", destination: router.makeLoginView())
+        NavigationLink(Strings.account, destination: router.makeLoginView())
     }
     func makeButtonForAccount() -> some View {
-        NavigationLink("Account", destination: router.makeAccountView())
+        NavigationLink(Strings.account, destination: router.makeAccountView())
     }
 }

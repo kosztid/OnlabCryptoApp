@@ -44,7 +44,7 @@ class ListOfCoinsPresenter: ObservableObject {
         Button {
             self.interactor.changeView()
         } label: {
-            Image(systemName: "dollarsign.circle.fill")
+            Image.dollarSignFill
                 .font(.system(size: 20))
         }
     }

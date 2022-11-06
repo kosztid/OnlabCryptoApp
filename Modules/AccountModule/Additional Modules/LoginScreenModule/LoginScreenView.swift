@@ -3,8 +3,8 @@ import SwiftUI
 struct LoginScreenView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @ObservedObject var presenter: LoginScreenPresenter
-    @State var email = ""
-    @State var password = ""
+    @State var email = Strings.empty
+    @State var password = Strings.empty
     @State private var isSecured = true
     @State private var showingAlert = false
 
@@ -22,23 +22,18 @@ struct LoginScreenView: View {
                         } else {
                             nonsecuredPwField
                         }
-                        Button(action: {
-                            isSecured.toggle()
-                        }) {
-                            Image(systemName: self.isSecured ? "eye.slash" : "eye")
-                                .accentColor(.gray)
-                        }.offset(x: -20)
+                        eyeButton
                     }
                     signInButton
-                    .alert("Wrong email-password", isPresented: $showingAlert) {
-                        Button("OK", role: .cancel) {presenter.setlogerrorfalse() }
+                        .alert(Strings.wrongCreds, isPresented: $showingAlert) {
+                        Button(Strings.back, role: .cancel) {presenter.setlogerrorfalse() }
                     }
                     .accessibilityIdentifier("LoginButton")
                     HStack {
                         Spacer()
                         presenter.toRegisterView()
                         Spacer()
-                        Button("Mégse") {
+                        Button(Strings.return) {
                             self.presentationMode.wrappedValue.dismiss()
                         }.foregroundColor(Color.theme.accentcolor)
                         Spacer()
@@ -63,17 +58,17 @@ struct LoginScreenView: View {
 
     var loginHeader: some View {
         VStack {
-            Label("", systemImage: "bitcoinsign.circle")
+            Image.bitcoinSignFill
                 .font(.system(size: 200))
                 .foregroundColor(Color.theme.accentcolor)
-            Text("Bejelentkezés")
+            Text(Strings.login)
                 .font(.system(size: 50))
                 .padding(10)
         }
     }
 
     var emailField: some View {
-        TextField("Email", text: $email)
+        TextField(Strings.email, text: $email)
             .padding(.horizontal)
             .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             .font(.system(size: 20))
@@ -85,7 +80,7 @@ struct LoginScreenView: View {
     }
 
     var securedPwField: some View {
-        SecureField("Password", text: $password)
+        SecureField(Strings.password, text: $password)
             .padding(.horizontal)
             .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             .font(.system(size: 20))
@@ -96,7 +91,7 @@ struct LoginScreenView: View {
     }
 
     var nonsecuredPwField: some View {
-        TextField("Password", text: $password)
+        TextField(Strings.password, text: $password)
             .padding(.horizontal)
             .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             .font(.system(size: 20))
@@ -111,9 +106,8 @@ struct LoginScreenView: View {
                 return
             }
             presenter.signIn(email: self.email, password: self.password)
-            // self.presentationMode.wrappedValue.dismiss()
         } label: {
-            Text("Bejelentkezés")
+            Text(Strings.login)
                 .frame(height: 50)
                 .frame(maxWidth: .infinity)
                 .font(.system(size: 20))
@@ -121,5 +115,18 @@ struct LoginScreenView: View {
                 .foregroundColor(Color.theme.accentcolor)
                 .cornerRadius(10)
         }
+    }
+    var eyeButton: some View {
+        Button(action: {
+            isSecured.toggle()
+        }) {
+            if self.isSecured {
+                Image.eyeSlash
+                    .accentColor(.gray)
+            } else {
+                Image.eye
+                    .accentColor(.gray)
+            }
+        }.offset(x: -20)
     }
 }

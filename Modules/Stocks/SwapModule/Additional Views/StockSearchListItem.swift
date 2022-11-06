@@ -36,10 +36,3 @@ struct StockSearchListItem: View {
             .padding(.all, 5)
         }}
 }
-/*
- struct SearchListItem_Previews: PreviewProvider {
- static var previews: some View {
- SearchListItem(coin: CoinModel())
- }
- }
- */

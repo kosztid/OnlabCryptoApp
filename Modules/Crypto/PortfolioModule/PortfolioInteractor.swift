@@ -4,6 +4,7 @@ import Resolver
 
 class PortfolioInteractor {
     private var userService: UserService
+
     var coinService: CoinService
 
     init() {
@@ -104,8 +105,8 @@ class PortfolioInteractor {
         }
         var total: Double = 0
         for ind in 0...(userService.cryptoWallet.count - 1) {
-            let coindx = coinService.coins.firstIndex { $0.id == userService.cryptoWallet[ind].coinid }
-            total += userService.cryptoWallet[ind].count * coinService.coins[coindx!].currentPrice
+            let coindx = coinService.coins.firstIndex { $0.id == userService.cryptoWallet[ind].coinid } ?? 0
+            total += userService.cryptoWallet[ind].count * coinService.coins[coindx].currentPrice
         }
         return total
     }
