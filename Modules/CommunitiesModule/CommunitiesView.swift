@@ -59,7 +59,9 @@ struct CommunitiesView: View {
             } secondaryAction: {
                 print("cancelled")
             }
-        })
+        }
+            .buttonStyle(UnifiedBorderedButtonStyle())
+        )
         .listStyle(PlainListStyle())
     }
 
@@ -69,24 +71,14 @@ struct CommunitiesView: View {
                 presenter.viewType = .subs
             } label: {
                 Text(Strings.subscriptions)
-                    .frame(height: 30)
-                    .frame(maxWidth: UIScreen.main.bounds.width * 0.4)
-                    .font(.system(size: 20))
-                    .foregroundColor(presenter.viewType == .subs ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
-                    .background(presenter.viewType == .subs ? Color.theme.accentcolor :  Color.theme.backgroundsecondary)
-                    .cornerRadius(10)
             }
+            .buttonStyle(UnifiedSelectorBorderedButtonStyle(isSelected: presenter.viewType == .subs, buttonCount: 2, height: 30, fontSize: 20))
             Button {
                 presenter.viewType = .communities
             } label: {
                 Text(Strings.communities)
-                    .frame(height: 30)
-                    .frame(maxWidth: UIScreen.main.bounds.width * 0.4)
-                    .font(.system(size: 20))
-                    .foregroundColor(presenter.viewType == .communities ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
-                    .background(presenter.viewType == .communities ? Color.theme.accentcolor :  Color.theme.backgroundsecondary)
-                    .cornerRadius(10)
             }
+            .buttonStyle(UnifiedSelectorBorderedButtonStyle(isSelected: presenter.viewType == .communities, buttonCount: 2, height: 30, fontSize: 20))
         }
     }
 }

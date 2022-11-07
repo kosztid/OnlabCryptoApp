@@ -105,12 +105,10 @@ class SwapPresenter: ObservableObject {
             self.swap()
         } label: {
             Text(Strings.swap)
-                .frame(height: 60)
+                .frame(height: 30)
                 .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
                 .font(.system(size: 20))
-                .foregroundColor(Color.theme.accentcolor)
-                .background(Color.theme.backgroundsecondary)
-                .cornerRadius(10)
         }
+        .buttonStyle(UnifiedBorderedButtonStyle())
     }
 }

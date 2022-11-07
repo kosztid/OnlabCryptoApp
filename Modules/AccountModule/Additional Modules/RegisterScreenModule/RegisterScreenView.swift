@@ -35,13 +35,11 @@ struct RegisterScreenView: View {
                     presenter.register(email: self.email, password: self.password)
                 } label: {
                     Text("Fiók létrehozása")
-                        .frame(height: 50)
+                        .frame(height: 40)
                         .frame(maxWidth: .infinity)
                         .font(.system(size: 20))
-                        .background(Color.theme.backgroundsecondary)
-                        .foregroundColor(Color.theme.accentcolor)
-                        .cornerRadius(10)
                 }
+                .buttonStyle(UnifiedBorderedButtonStyle())
                 .alert(Strings.wrongRegCreds, isPresented: $showingAlert) {
                     Button(Strings.back, role: .cancel) {presenter.setregistererrorfalse() }
                 }

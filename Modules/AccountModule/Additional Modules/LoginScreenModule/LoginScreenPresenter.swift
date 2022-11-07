@@ -29,7 +29,11 @@ class LoginScreenPresenter: ObservableObject {
     }
 
     func toRegisterView() -> some View {
-        NavigationLink(Strings.registration, destination: router.makeRegisterView())
+        NavigationLink(destination: router.makeRegisterView()) {
+            Text(Strings.registration)
+                .frame(width: UIScreen.main.bounds.width * 0.3)
+        }
+            .buttonStyle(UnifiedBorderedButtonStyle())
     }
 
     func load() {

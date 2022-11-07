@@ -91,10 +91,12 @@ class StockPortfolioPresenter: ObservableObject {
 
     func makeButtonForLogin() -> some View {
         NavigationLink(Strings.account, destination: router.makeLoginView())
+            .buttonStyle(UnifiedBorderedButtonStyle())
     }
 
     func makeButtonForAccount() -> some View {
         NavigationLink(Strings.account, destination: router.makeAccountView())
+            .buttonStyle(UnifiedBorderedButtonStyle())
     }
 
     func changeViewTo(viewname: Folio) {
@@ -106,39 +108,24 @@ class StockPortfolioPresenter: ObservableObject {
             self.changeViewTo(viewname: .portfolio)
         } label: {
             Text(Strings.portfolio)
-                .frame(height: 30)
-                .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
-                .font(.system(size: 20))
-                .background(self.isSelected(selected: .portfolio) ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
-                .foregroundColor(self.isSelected(selected: .portfolio) ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
-                .cornerRadius(10)
         }
+        .buttonStyle(UnifiedSelectorBorderedButtonStyle(isSelected: self.isSelected(selected: .portfolio), buttonCount: 3.0, height: 30.0, fontSize: 20))
     }
     func makeButtonforFavfolioList() -> some View {
         Button {
             self.changeViewTo(viewname: .favorites)
         } label: {
             Text(Strings.favorites)
-                .frame(height: 30)
-                .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
-                .font(.system(size: 20))
-                .background(self.isSelected(selected: .favorites) ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
-                .foregroundColor(self.isSelected(selected: .favorites) ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
-                .cornerRadius(10)
         }
+        .buttonStyle(UnifiedSelectorBorderedButtonStyle(isSelected: self.isSelected(selected: .favorites), buttonCount: 3.0, height: 30.0, fontSize: 20))
     }
     func makeButtonforWalletList() -> some View {
         Button {
             self.changeViewTo(viewname: .wallet)
         } label: {
             Text(Strings.wallet)
-                .frame(height: 30)
-                .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
-                .font(.system(size: 20))
-                .background(self.isSelected(selected: .wallet) ? Color.theme.accentcolor : Color.theme.backgroundsecondary)
-                .foregroundColor(self.isSelected(selected: .wallet) ? Color.theme.backgroundsecondary : Color.theme.accentcolor)
-                .cornerRadius(10)
         }
+        .buttonStyle(UnifiedSelectorBorderedButtonStyle(isSelected: self.isSelected(selected: .wallet), buttonCount: 3.0, height: 30.0, fontSize: 20))
     }
 
     func makeFolioData(selected: Folio) -> AnyView {

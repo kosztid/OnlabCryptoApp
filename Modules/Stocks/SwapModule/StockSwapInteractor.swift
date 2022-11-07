@@ -26,10 +26,14 @@ class StockSwapInteractor {
     }
 
     func swap(stockToSell: String, sellamount: Double, stockToBuy: String, buyamount: Double) {
-        let ownedamountfromsell: Double = userService.stockWallet[userService.stockWallet.firstIndex { $0.stockSymbol == stockToSell }!].count
-        if ownedamountfromsell >= sellamount {
-            userService.updateStockWallet(stockToSell, stockToBuy, sellamount, buyamount)
-            sendTradeHistory(id: "1", stockToSell: stockToSell, sellamount: sellamount, stockToBuy: stockToBuy, buyamount: buyamount)
+        if stockToSell == "-" || stockToBuy == "-" {
+        } else {
+
+            let ownedamountfromsell: Double = userService.stockWallet[userService.stockWallet.firstIndex { $0.stockSymbol == stockToSell }!].count
+            if ownedamountfromsell >= sellamount {
+                userService.updateStockWallet(stockToSell, stockToBuy, sellamount, buyamount)
+                sendTradeHistory(id: "1", stockToSell: stockToSell, sellamount: sellamount, stockToBuy: stockToBuy, buyamount: buyamount)
+            }
         }
     }
 

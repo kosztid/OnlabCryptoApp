@@ -39,9 +39,8 @@ struct AccountView: View {
             Text(Strings.logout)
                 .font(.system(size: 20))
                 .frame(height: 30)
-                .cornerRadius(5)
-                .padding(5)
         }
+        .buttonStyle(UnifiedBorderedButtonStyle())
     }
 
     var privateToggle: some View {
@@ -56,9 +55,7 @@ struct AccountView: View {
             .frame(height: 30)
             .frame(maxWidth: UIScreen.main.bounds.width * 0.3)
             .font(.system(size: 20))
-            .background(Color.theme.backgroundsecondary)
-            .foregroundColor(Color.theme.accentcolor)
-            .cornerRadius(5)
+            .buttonStyle(UnifiedBorderedButtonStyle())
         }
     }
 }

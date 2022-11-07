@@ -27,13 +27,16 @@ class SwapInteractor {
     }
 
     func swap(_ cointosell: String, _ sellamount: Double, _ cointobuy: String, _ buyamount: Double) {
-        let ownedamountfromsell: Double = userService.cryptoWallet[userService.cryptoWallet.firstIndex { $0.coinid == cointosell }!].count
-        print(ownedamountfromsell)
-        print(sellamount)
-        if ownedamountfromsell >= sellamount {
-            print("lefut")
-            userService.updateWallet(cointosell, cointobuy, sellamount, buyamount)
-            sendTradeHistory(id: "1", cointosell: cointosell, sellamount: sellamount, cointobuy: cointobuy, buyamount: buyamount)
+        if cointosell == Strings.error || cointobuy == Strings.error {
+        } else {
+            let ownedamountfromsell: Double = userService.cryptoWallet[userService.cryptoWallet.firstIndex { $0.coinid == cointosell }!].count
+            print(ownedamountfromsell)
+            print(sellamount)
+            if ownedamountfromsell >= sellamount {
+                print("lefut")
+                userService.updateWallet(cointosell, cointobuy, sellamount, buyamount)
+                sendTradeHistory(id: "1", cointosell: cointosell, sellamount: sellamount, cointobuy: cointobuy, buyamount: buyamount)
+            }
         }
     }
 

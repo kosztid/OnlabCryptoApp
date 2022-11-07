@@ -33,9 +33,13 @@ struct LoginScreenView: View {
                         Spacer()
                         presenter.toRegisterView()
                         Spacer()
-                        Button(Strings.return) {
+                        Button {
                             self.presentationMode.wrappedValue.dismiss()
-                        }.foregroundColor(Color.theme.accentcolor)
+                        } label: {
+                            Text(Strings.return)
+                                .frame(width: UIScreen.main.bounds.width * 0.3)
+                        }
+                        .buttonStyle(UnifiedBorderedButtonStyle())
                         Spacer()
                     }
                     .foregroundColor(Color.theme.accentcolor)
@@ -108,13 +112,11 @@ struct LoginScreenView: View {
             presenter.signIn(email: self.email, password: self.password)
         } label: {
             Text(Strings.login)
-                .frame(height: 50)
+                .frame(height: 40)
                 .frame(maxWidth: .infinity)
                 .font(.system(size: 20))
-                .background(Color.theme.backgroundsecondary)
-                .foregroundColor(Color.theme.accentcolor)
-                .cornerRadius(10)
         }
+        .buttonStyle(UnifiedBorderedButtonStyle())
     }
     var eyeButton: some View {
         Button(action: {

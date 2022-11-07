@@ -35,10 +35,12 @@ class ListOfCoinsPresenter: ObservableObject {
     }
     func makeButtonForLogin() -> some View {
         NavigationLink(Strings.account, destination: router.makeLoginView())
+            .buttonStyle(UnifiedBorderedButtonStyle())
     }
 
     func makeButtonForAccount() -> some View {
         NavigationLink(Strings.account, destination: router.makeAccountView())
+            .buttonStyle(UnifiedBorderedButtonStyle())
     }
     func makeButtonForViewchange() -> some View {
         Button {
