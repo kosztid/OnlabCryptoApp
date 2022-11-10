@@ -24,7 +24,8 @@ struct StockDetailView: View {
                 } secondaryAction: {
                     print("cancelled")
                 }
-            })
+            }.foregroundColor(Color.theme.accentcolor)
+            )
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle(presenter.stock.ticker)
             .onAppear(perform: presenter.onAppear)
@@ -71,25 +72,33 @@ struct StockDetailView: View {
     var volumeSection: some View {
         HStack {
             Text(Strings.lastVolume)
+                .foregroundColor(Color.theme.accentcolorsecondary)
             Spacer()
             Text("\(presenter.lastVolume)")
-        }.padding(5)
+                .foregroundColor(Color.theme.accentcolor)
+        }
+        .padding(5)
     }
     var marketcap: some View {
         HStack {
             Text(Strings.marketCap)
+                .foregroundColor(Color.theme.accentcolorsecondary)
             Spacer()
             Text("\(presenter.marketCap)")
-        }.padding(5)
+                .foregroundColor(Color.theme.accentcolor)
+        }
+        .padding(5)
     }
     var chartsection: some View {
         VStack {
             Text("\(presenter.currentMax.formatcurrency4digits())")
+                .foregroundColor(Color.theme.accentcolorsecondary)
                 .font(.system(size: 16))
                 .frame(width: UIScreen.main.bounds.width, alignment: .trailing)
             ChartView(values: presenter.getGraphData())
                 .foregroundColor(presenter.graphColor)
             Text("\(presenter.currentMin.formatcurrency4digits())")
+                .foregroundColor(Color.theme.accentcolorsecondary)
                 .frame(width: UIScreen.main.bounds.width, alignment: .trailing)
                 .font(.system(size: 16))
         }.padding(5)

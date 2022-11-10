@@ -186,14 +186,17 @@ class PortfolioPresenter: ObservableObject {
                 VStack(alignment: .leading) {
                     HStack {
                         Text(Strings.portfolioTotal)
+                            .foregroundColor(Color.theme.accentcolor)
                             .font(.system(size: 18))
                         Spacer()
                         Text("\(self.portfoliototal().formatcurrency4digits())")
+                            .foregroundColor(Color.theme.accentcolor)
                             .font(.system(size: 18))
                             .frame(alignment: .leading)
                     }
                     HStack {
                         Text(Strings.portfolioInvested)
+                            .foregroundColor(Color.theme.accentcolor)
                             .font(.system(size: 16))
                         Spacer()
                         Text("\(self.portfoliobuytotal().formatcurrency4digits())")
@@ -201,7 +204,7 @@ class PortfolioPresenter: ObservableObject {
                             .font(.system(size: 16))
                             .frame(alignment: .leading)
                     }
-                }.frame(width: UIScreen.main.bounds.width * 0.75)
+                }.frame(width: UIScreen.main.bounds.width * 0.7)
                 Spacer()
                 Text("\(self.winlosepercent().formatpercent())")
                     .foregroundColor((self.winlosepercent() >= 0) ? Color.theme.green : Color.theme.red )
@@ -218,11 +221,13 @@ class PortfolioPresenter: ObservableObject {
                 VStack {
                     HStack {
                         Text(Strings.favoritesTotal)
+                            .foregroundColor(Color.theme.accentcolor)
                             .font(.system(size: 20))
                         Spacer()
                     }
                     HStack {
                         Text(Strings.favoritesChange)
+                            .foregroundColor(Color.theme.accentcolor)
                             .font(.system(size: 18))
                         Spacer()
                     }
@@ -244,14 +249,17 @@ class PortfolioPresenter: ObservableObject {
                 VStack(alignment: .leading) {
                     HStack {
                         Text(Strings.walletTotal)
+                            .foregroundColor(Color.theme.accentcolor)
                             .font(.system(size: 18))
                         Spacer()
                         Text("\(self.interactor.wallettotal().formatcurrency4digits())")
+                            .foregroundColor(Color.theme.accentcolor)
                             .font(.system(size: 18))
                             .frame(alignment: .leading)
                     }
                     HStack {
                         Text(Strings.walletyesterday)
+                            .foregroundColor(Color.theme.accentcolor)
                             .font(.system(size: 16))
                         Spacer()
                         Text("\(self.interactor.walletyesterday().formatcurrency4digits())")

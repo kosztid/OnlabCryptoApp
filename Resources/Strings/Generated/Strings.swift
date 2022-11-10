@@ -12,7 +12,7 @@ import Foundation
 internal enum Strings {
   /// Fiók
   internal static let account = Strings.tr("Strings", "account")
-  /// Account láthatósága
+  /// Fiók láthatósága
   internal static let accountVisibility = Strings.tr("Strings", "accountVisibility")
   /// Hozzáadás
   internal static let add = Strings.tr("Strings", "add")
@@ -68,6 +68,8 @@ internal enum Strings {
   internal static let increased = Strings.tr("Strings", "increased")
   /// Tegnapi forgalom
   internal static let lastVolume = Strings.tr("Strings", "lastVolume")
+  /// Lista
+  internal static let list = Strings.tr("Strings", "list")
   /// Bejelentkezés
   internal static let login = Strings.tr("Strings", "login")
   /// Kijelentkezés
@@ -84,6 +86,8 @@ internal enum Strings {
   internal static let newGroupMake = Strings.tr("Strings", "newGroupMake")
   /// Aa
   internal static let newMessage = Strings.tr("Strings", "newMessage")
+  /// Hírek
+  internal static let news = Strings.tr("Strings", "news")
   /// Nincs szerző
   internal static let noAuthor = Strings.tr("Strings", "noAuthor")
   /// Nincs szöveg
@@ -136,6 +140,8 @@ internal enum Strings {
   internal static let swap = Strings.tr("Strings", "swap")
   /// váltva
   internal static let swapped = Strings.tr("Strings", "swapped")
+  /// Váltó
+  internal static let swapTab = Strings.tr("Strings", "swapTab")
   /// Teszt
   internal static let test = Strings.tr("Strings", "test")
   /// Cél

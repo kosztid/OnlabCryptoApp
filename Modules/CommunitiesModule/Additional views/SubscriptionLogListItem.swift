@@ -3,17 +3,25 @@ import SwiftUI
 struct SubscriptionLogListItem: View {
     let log: UserLog
     var body: some View {
-        VStack {
-            if log.actionType == "favorite" {
-                makeLogForFav()
-            } else if log.actionType == "wallet" {
-                makeLogForWallet()
-            } else {
-                makeLogForPortfolio()
+        ZStack {
+            Color.theme.backgroundsecondary
+                .ignoresSafeArea()
+            HStack {
+                if log.actionType == "favorite" {
+                    makeLogForFav()
+                        .foregroundColor(Color.theme.accentcolor)
+                } else if log.actionType == "wallet" {
+                    makeLogForWallet()
+                        .foregroundColor(Color.theme.accentcolor)
+                } else {
+                    makeLogForPortfolio()
+                        .foregroundColor(Color.theme.accentcolor)
+                }
+                Spacer()
             }
+            .padding()
+            .frame(height: 120)
         }
-        .padding()
-        .frame(height: 120)
     }
 
     func makeLogForFav() -> AnyView {
@@ -27,9 +35,11 @@ struct SubscriptionLogListItem: View {
                     .font(.title)
                 Text(log.time)
                     .font(.caption)
+                Spacer()
                 Text("\(Strings.favorites) \(removedOrAdded) \(log.itemId) ")
                     .fixedSize(horizontal: false, vertical: true)
                     .font(.callout)
+                Spacer()
             }
         )
     }
@@ -50,9 +60,11 @@ struct SubscriptionLogListItem: View {
                     .font(.title)
                 Text(log.time)
                     .font(.caption)
+                Spacer()
                 Text("\(Strings.portfolio) \(moreorless) \(log.itemId)  \(holdingChange)")
                     .fixedSize(horizontal: false, vertical: true)
                     .font(.callout)
+                Spacer()
             }
         )
     }
@@ -64,9 +76,11 @@ struct SubscriptionLogListItem: View {
                     .font(.title)
                 Text(log.time)
                     .font(.caption)
+                Spacer()
                 Text("\(Strings.swapped) \(log.count.format2digits()) \(log.itemId) \(Strings.arrow) \(log.count2.format2digits()) \(log.itemId2)")
                     .fixedSize(horizontal: false, vertical: true)
                     .font(.callout)
+                Spacer()
             }
         )
     }

@@ -62,10 +62,11 @@ struct LoginScreenView: View {
 
     var loginHeader: some View {
         VStack {
-            Image.bitcoinSignFill
+            Image.bitcoinSign
                 .font(.system(size: 200))
                 .foregroundColor(Color.theme.accentcolor)
             Text(Strings.login)
+                .foregroundColor(Color.theme.accentcolor)
                 .font(.system(size: 50))
                 .padding(10)
         }
@@ -76,6 +77,7 @@ struct LoginScreenView: View {
             .padding(.horizontal)
             .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             .font(.system(size: 20))
+            .foregroundColor(Color.theme.accentcolor)
             .background(Color.theme.backgroundsecondary)
             .cornerRadius(10)
             .disableAutocorrection(true)
@@ -88,6 +90,7 @@ struct LoginScreenView: View {
             .padding(.horizontal)
             .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             .font(.system(size: 20))
+            .foregroundColor(Color.theme.accentcolor)
             .background(Color.theme.backgroundsecondary)
             .cornerRadius(10)
             .disableAutocorrection(true)
@@ -99,6 +102,7 @@ struct LoginScreenView: View {
             .padding(.horizontal)
             .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             .font(.system(size: 20))
+            .foregroundColor(Color.theme.accentcolor)
             .background(Color.theme.backgroundsecondary)
             .cornerRadius(10)
             .disableAutocorrection(true)
@@ -124,10 +128,10 @@ struct LoginScreenView: View {
         }) {
             if self.isSecured {
                 Image.eyeSlash
-                    .accentColor(.gray)
+                    .foregroundColor(Color.theme.accentcolorsecondary)
             } else {
                 Image.eye
-                    .accentColor(.gray)
+                    .foregroundColor(Color.theme.accentcolorsecondary)
             }
         }.offset(x: -20)
     }

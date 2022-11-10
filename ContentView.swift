@@ -25,28 +25,28 @@ struct ContentView: View {
             // main view with tab selections
             TabView(selection: $selection) {
                 stocksListView
-                .tabItem { Label("Stocks", systemImage: "list.bullet") }
+                    .tabItem { Label {Text(Strings.list) } icon: {Image.bulletList} }
                 .tag(Tab.listofcoins)
 
                 // Portfolio tab
                 stockPortfolioView
-                .tabItem { Label("Portfolio", systemImage: "star") }
+                    .tabItem { Label {Text(Strings.portfolio) } icon: {Image.star} }
                 .accessibilityIdentifier("PortfolioViewButton")
                 .tag(Tab.portfolio)
 
                 // swap tab
                 stockSwapView
-                .tabItem { Label("Swap", systemImage: "arrow.left.arrow.right") }
+                    .tabItem { Label {Text(Strings.swapTab) } icon: {Image.arrowLeftRight} }
                 .accessibilityIdentifier("SwapViewButton")
                 .tag(Tab.swap)
                 // News tab
                 stockNewsView
-                .tabItem { Label("News", systemImage: "newspaper") }
+                    .tabItem { Label {Text(Strings.news) } icon: {Image.newspaper} }
                 .tag(Tab.news)
 
                 // Communities tab
                 communitiesTab
-                .tabItem { Label("Communities", systemImage: "message") }
+                    .tabItem { Label {Text(Strings.communities) } icon: {Image.message} }
                 .tag(Tab.communities)
             }
         }
@@ -60,28 +60,28 @@ struct ContentView: View {
             TabView(selection: $selection) {
                 // CoinList view
                 cryptoListView
-                .tabItem { Label("List", systemImage: "list.bullet") }
+                    .tabItem { Label {Text(Strings.list) } icon: {Image.bulletList} }
                 .tag(Tab.listofcoins)
 
                 // Portfolio tab
                 cryptoPortfolioView
-                .tabItem { Label("Portfolio", systemImage: "star") }
+                    .tabItem { Label {Text(Strings.portfolio) } icon: {Image.star} }
                 .accessibilityIdentifier("PortfolioViewButton")
                 .tag(Tab.portfolio)
 
                 // swap tab
                 cryptoSwapView
-                .tabItem { Label("Swap", systemImage: "arrow.left.arrow.right") }
+                    .tabItem { Label {Text(Strings.swapTab) } icon: {Image.arrowLeftRight} }
                 .accessibilityIdentifier("SwapViewButton")
                 .tag(Tab.swap)
                 // News tab
                 cryptoNewsView
-                .tabItem { Label("News", systemImage: "newspaper") }
+                    .tabItem { Label {Text(Strings.news) } icon: {Image.newspaper} }
                 .tag(Tab.news)
 
                 // Communities tab
                 communitiesTab
-                .tabItem { Label("Communities", systemImage: "message") }
+                    .tabItem { Label {Text(Strings.communities) } icon: {Image.message} }
                 .tag(Tab.communities)
             }
         }

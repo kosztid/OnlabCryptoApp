@@ -25,6 +25,7 @@ class MessagerPresenter: ObservableObject {
     }
     func makeButtonForUsers() -> some View {
         NavigationLink(Strings.members, destination: router.makeMembersView(community: self.community))
+            .buttonStyle(UnifiedBorderedButtonStyle())
     }
     func sendmessage(message: String) {
         let dateFormatter = DateFormatter()

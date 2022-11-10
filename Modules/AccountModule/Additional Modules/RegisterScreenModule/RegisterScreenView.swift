@@ -20,12 +20,7 @@ struct RegisterScreenView: View {
                     } else {
                         nonsecuredPwField
                     }
-                    Button(action: {
-                        isSecured.toggle()
-                    }) {
-                        Image(systemName: self.isSecured ? "eye.slash" : "eye")
-                            .accentColor(.gray)
-                    }.offset(x: -20)
+                    eyeButton
                 }
 
                 Button {
@@ -33,6 +28,7 @@ struct RegisterScreenView: View {
                         return
                     }
                     presenter.register(email: self.email, password: self.password)
+                    self.presentationMode.wrappedValue.dismiss()
                 } label: {
                     Text("Fiók létrehozása")
                         .frame(height: 40)
@@ -66,6 +62,7 @@ struct RegisterScreenView: View {
                 .font(.system(size: 200))
                 .foregroundColor(Color.theme.accentcolor)
             Text(Strings.registration)
+                .foregroundColor(Color.theme.accentcolor)
                 .font(.system(size: 50))
                 .padding(10)
         }
@@ -76,6 +73,7 @@ struct RegisterScreenView: View {
             .padding(.horizontal)
             .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             .font(.system(size: 20))
+            .foregroundColor(Color.theme.accentcolor)
             .background(Color.theme.backgroundsecondary)
             .cornerRadius(10)
             .disableAutocorrection(true)
@@ -87,6 +85,7 @@ struct RegisterScreenView: View {
             .padding(.horizontal)
             .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             .font(.system(size: 20))
+            .foregroundColor(Color.theme.accentcolor)
             .background(Color.theme.backgroundsecondary)
             .cornerRadius(10)
             .disableAutocorrection(true)
@@ -97,8 +96,23 @@ struct RegisterScreenView: View {
             .padding(.horizontal)
             .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             .font(.system(size: 20))
+            .foregroundColor(Color.theme.accentcolor)
             .background(Color.theme.backgroundsecondary)
             .cornerRadius(10)
             .disableAutocorrection(true)
+    }
+
+    var eyeButton: some View {
+        Button(action: {
+            isSecured.toggle()
+        }) {
+            if self.isSecured {
+                Image.eyeSlash
+                    .foregroundColor(Color.theme.accentcolorsecondary)
+            } else {
+                Image.eye
+                    .foregroundColor(Color.theme.accentcolorsecondary)
+            }
+        }.offset(x: -20)
     }
 }

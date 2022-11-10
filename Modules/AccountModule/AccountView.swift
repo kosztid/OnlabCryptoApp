@@ -46,6 +46,7 @@ struct AccountView: View {
     var privateToggle: some View {
         HStack {
             Text(Strings.accountVisibility)
+                .foregroundColor(Color.theme.accentcolor)
             Spacer()
             Button {
                 presenter.changeVisibility()

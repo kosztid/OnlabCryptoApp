@@ -19,6 +19,9 @@
 "buyAmount" = "Vásárolandó mennyiség:";
 "sellAmount" = "Eladandó mennyiség:";
 "swap" = "Váltás";
+"swapTab" = "Váltó";
+"news" = "Hírek";
+"list" = "Lista";
 "selectCoin" = "Coin választása";
 "selectStock" = "Részvény választása";
 "dateformat" = "yyyy-MM-dd HH:mm:ss";
@@ -67,9 +70,10 @@
 "email" = "Email";
 "password" = "Jelszó";
 "logout" = "Kijelentkezés";
-"accountVisibility" = "Account láthatósága";
+"accountVisibility" = "Fiók láthatósága";
 "private" = "Privát";
 "public" = "Publikus";
+
 
 
 

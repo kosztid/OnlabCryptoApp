@@ -47,6 +47,7 @@ class ListOfCoinsPresenter: ObservableObject {
             self.interactor.changeView()
         } label: {
             Image.dollarSignFill
+                .foregroundColor(Color.theme.accentcolor)
                 .font(.system(size: 20))
         }
     }

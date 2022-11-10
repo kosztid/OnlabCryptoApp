@@ -18,18 +18,23 @@ struct CommunitiesView: View {
     }
 
     var subsList: some View {
-        ZStack {
-            Color.theme.backgroundcolor
-                .ignoresSafeArea()
-            List {
-                ForEach(presenter.subLogs) { log in
+        List {
+            ForEach(presenter.subLogs) { log in
+                ZStack {
+                    Color.theme.backgroundcolor
+                        .ignoresSafeArea()
                     SubscriptionLogListItem(log)
+                        .cornerRadius(10)
+                        .padding(5)
                 }
             }
-            .background(Color.theme.backgroundcolor)
-            .scrollContentBackground(.hidden)
+            .listRowSeparator(.hidden)
+            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
         }
-        .navigationBarItems(trailing: presenter.navigateToSubs())
+        .background(Color.theme.backgroundcolor)
+        .scrollContentBackground(.hidden)
+        .navigationBarItems(trailing: presenter.navigateToSubs().accessibilityIdentifier("AddSubscriptionButton"))
+        .listStyle(PlainListStyle())
     }
 
     var communitiesList: some View {
@@ -60,6 +65,7 @@ struct CommunitiesView: View {
                 print("cancelled")
             }
         }
+            .accessibilityIdentifier("AddCommunityButton")
             .buttonStyle(UnifiedBorderedButtonStyle())
         )
         .listStyle(PlainListStyle())
@@ -73,6 +79,7 @@ struct CommunitiesView: View {
                 Text(Strings.subscriptions)
             }
             .buttonStyle(UnifiedSelectorBorderedButtonStyle(isSelected: presenter.viewType == .subs, buttonCount: 2, height: 30, fontSize: 20))
+            .accessibilityIdentifier("SubscriptionsButton")
             Button {
                 presenter.viewType = .communities
             } label: {

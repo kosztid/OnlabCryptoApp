@@ -45,7 +45,8 @@ class ListOfStocksPresenter: ObservableObject {
         Button {
             self.interactor.changeView()
         } label: {
-            Image.dollarSignFill
+            Image.bitcoinSignFill
+                .foregroundColor(Color.theme.accentcolor)
                 .font(.system(size: 20))
         }
     }
