@@ -28,7 +28,6 @@ class StockSwapInteractor {
     func swap(stockToSell: String, sellamount: Double, stockToBuy: String, buyamount: Double) {
         if stockToSell == "-" || stockToBuy == "-" {
         } else {
-
             let ownedamountfromsell: Double = userService.stockWallet[userService.stockWallet.firstIndex { $0.stockSymbol == stockToSell }!].count
             if ownedamountfromsell >= sellamount {
                 userService.updateStockWallet(stockToSell, stockToBuy, sellamount, buyamount)

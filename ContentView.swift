@@ -8,6 +8,8 @@ struct ContentView: View {
     init() {
         UITabBar.appearance().barTintColor = UIColor(Color.theme.backgroundcolor)
         UINavigationBar.appearance().barTintColor = UIColor(Color.theme.backgroundcolor)
+        UINavigationBar.appearance().titleTextAttributes = [.foregroundColor: UIColor(Color.theme.accentcolor)]
+        UINavigationBar.appearance().largeTitleTextAttributes = [.foregroundColor: UIColor(Color.theme.accentcolor)]
     }
 
     var body: some View {

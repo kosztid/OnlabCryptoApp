@@ -29,6 +29,7 @@ final class TestUserService: BaseUserService, UserService, ObservableObject {
     }
 
     func register(_ email: String, _ password: String) {
+        self.registered = true
     }
 
     func userReload(_ origin: String = "Basic") {

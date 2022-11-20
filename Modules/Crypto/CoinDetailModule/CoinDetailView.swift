@@ -146,6 +146,7 @@ struct CoinDetailView: View {
                         .font(.system(size: 18))
                     Spacer()
                     Text("/")
+                        .foregroundColor(Color.theme.accentcolor)
                     Spacer()
                     Text("\(presenter.coin.totalSupply?.formatintstring() ?? "0")")
                         .foregroundColor(Color.theme.accentcolor)

@@ -491,6 +491,7 @@ final class SpringUserService: BaseUserService, UserService, ObservableObject {
                         print(error.localizedDescription)
                     }
                 } receiveValue: { [weak self] returnedUsers in
+                    print(returnedUsers)
                     self?.userList = returnedUsers.filter {$0.id != self?.auth.currentUser!.uid}
                     self?.usersSub?.cancel()
                 }
