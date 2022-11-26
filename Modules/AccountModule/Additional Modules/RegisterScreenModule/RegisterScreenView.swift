@@ -69,7 +69,10 @@ struct RegisterScreenView: View {
     }
 
     var emailField: some View {
-        TextField(Strings.email, text: $email)
+        TextField("", text: $email)
+            .placeholder(when: email.isEmpty) {
+                Text(Strings.email).foregroundColor(.gray)
+            }
             .padding(.horizontal)
             .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             .font(.system(size: 20))
@@ -81,7 +84,10 @@ struct RegisterScreenView: View {
     }
 
     var securedPwField: some View {
-        SecureField(Strings.password, text: $password)
+        SecureField("", text: $password)
+            .placeholder(when: password.isEmpty) {
+                Text(Strings.password).foregroundColor(.gray)
+            }
             .padding(.horizontal)
             .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             .font(.system(size: 20))
@@ -92,7 +98,10 @@ struct RegisterScreenView: View {
     }
 
     var nonsecuredPwField: some View {
-        TextField(Strings.password, text: $password)
+        TextField("", text: $password)
+            .placeholder(when: password.isEmpty) {
+                Text(Strings.password).foregroundColor(.gray)
+            }
             .padding(.horizontal)
             .frame(height: 50, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             .font(.system(size: 20))

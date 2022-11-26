@@ -180,7 +180,7 @@ class PortfolioPresenter: ObservableObject {
         }
         .buttonStyle(UnifiedSelectorBorderedButtonStyle(isSelected: self.isSelected(selected: .favorites), buttonCount: 3.0, height: 30.0, fontSize: 20))
     }
-    func makeportfolioData()-> some View {
+    func makeportfolioData() -> some View {
         VStack {
             HStack {
                 VStack(alignment: .leading) {
@@ -243,7 +243,7 @@ class PortfolioPresenter: ObservableObject {
         .frame(width: UIScreen.main.bounds.width * 0.95, height: UIScreen.main.bounds.height * 0.03)
     }
 
-    func makewalletData()-> some View {
+    func makewalletData() -> some View {
         VStack {
             HStack {
                 VStack(alignment: .leading) {

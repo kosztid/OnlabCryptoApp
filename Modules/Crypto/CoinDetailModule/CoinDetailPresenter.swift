@@ -39,7 +39,7 @@ class CoinDetailPresenter: ObservableObject {
         }
     }
     func returnFavImage() -> Image {
-        self.isFav ?  Image.starFill : Image.star
+        self.isFav ? Image.starFill : Image.star
     }
 
     func makeFavButton() -> some View {

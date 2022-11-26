@@ -144,7 +144,7 @@ class StockPortfolioPresenter: ObservableObject {
         }
     }
 
-    func makeportfolioData()-> some View {
+    func makeportfolioData() -> some View {
         VStack {
             HStack {
                 VStack(alignment: .leading) {
@@ -211,7 +211,7 @@ class StockPortfolioPresenter: ObservableObject {
         .frame(width: UIScreen.main.bounds.width * 0.95, height: UIScreen.main.bounds.height * 0.03)
     }
 
-    func makewalletData()-> some View {
+    func makewalletData() -> some View {
         VStack {
             HStack {
                 VStack(alignment: .leading) {
